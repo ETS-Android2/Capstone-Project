@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">LangExchange</string>
+    <string name="flashcard_title">Flashcards</string>
+    <string name="flashcard_instructions">Select a flashcard</string>
 </resources>
