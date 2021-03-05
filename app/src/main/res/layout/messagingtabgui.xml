@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:clipToPadding="false"
     android:focusableInTouchMode="true"
-    tools:context="edu.temple.langexchange.MainActivity">
+    tools:context="edu.temple.langexchange.ChatSystem">
 
     <ListView
         android:id="@+id/messages_view"
@@ -41,6 +41,7 @@
             android:padding="20dp"
             android:layout_marginHorizontal="10dp"
             android:background="@drawable/ic_send_black_24dp"
-            android:onClick="sendMessage" />
+            android:onClick="sendMessage"
+            android:contentDescription="TODO" />
     </LinearLayout>
 </LinearLayout>
