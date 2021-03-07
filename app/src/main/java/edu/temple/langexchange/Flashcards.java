@@ -5,16 +5,18 @@ public class Flashcards {
     int id;
     String translatedWord;
     String originalWord;
+    String definition;
 
 
     public Flashcards(){
 
     }
 
-    public Flashcards(int id, String translatedWord, String originalWord){
+    public Flashcards(int id, String translatedWord, String originalWord, String definition){
         this.id = id;
         this.translatedWord = translatedWord;
         this.originalWord = originalWord;
+        this.definition = definition;
 
 
     }
@@ -44,7 +46,11 @@ public class Flashcards {
     }
 
 
+    public String getDefinition() {
+        return definition;
+    }
 
-
-
+    public void setDefinition(String definition) {
+        this.definition = definition;
+    }
 }

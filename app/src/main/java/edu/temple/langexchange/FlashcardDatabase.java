@@ -21,6 +21,7 @@ public class FlashcardDatabase extends SQLiteOpenHelper {
     private static final String KEY_ID = "id";
     private static final String ORIGINAL_WORD = "originalWord";
     private static final String TRANSLATED_WORD = "translatedWord";
+    private static final String DEFINITION = "definition";
 
 
 
@@ -33,7 +34,7 @@ public class FlashcardDatabase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_ACCOUNTS_TABLE = "CREATE TABLE flashcardManager" + TABLE_CONTENTS + " ("
                 + KEY_ID + " INTEGER PRIMARY KEY," + ORIGINAL_WORD + " TEXT,"
-                + TRANSLATED_WORD + " TEXT" + ")";
+                + TRANSLATED_WORD + " TEXT," +  DEFINITION + " TEXT"+ " )";
 
         db.execSQL(CREATE_ACCOUNTS_TABLE);
 
@@ -53,6 +54,7 @@ public class FlashcardDatabase extends SQLiteOpenHelper {
         values.put(KEY_ID, flashcard.getId());
         values.put(ORIGINAL_WORD, flashcard.getOriginalWord());
         values.put(TRANSLATED_WORD, flashcard.getTranslatedWord());
+        values.put(DEFINITION, flashcard.getDefinition());
 
         db.insert(TABLE_CONTENTS, null, values);
         db.close();
@@ -61,7 +63,7 @@ public class FlashcardDatabase extends SQLiteOpenHelper {
     Flashcards getFlashcard(int id){
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE_CONTENTS, new String[]{KEY_ID, ORIGINAL_WORD, TRANSLATED_WORD}, KEY_ID + "=?",
+        Cursor cursor = db.query(TABLE_CONTENTS, new String[]{KEY_ID, ORIGINAL_WORD, TRANSLATED_WORD, DEFINITION}, KEY_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
         if(cursor != null){
@@ -69,7 +71,7 @@ public class FlashcardDatabase extends SQLiteOpenHelper {
 
         }
 
-        Flashcards flashcards = new Flashcards(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2));
+        Flashcards flashcards = new Flashcards(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3));
 
         return flashcards;
     }
@@ -88,6 +90,7 @@ public class FlashcardDatabase extends SQLiteOpenHelper {
                 flashcard.setId(Integer.parseInt(cursor.getString(0)));
                 flashcard.setOriginalWord(cursor.getString(1));
                 flashcard.setTranslatedWord(cursor.getString(2));
+                flashcard.setDefinition(cursor.getString(3));
 
 
                 flashcardsList.add(flashcard);
@@ -104,6 +107,7 @@ public class FlashcardDatabase extends SQLiteOpenHelper {
         values.put(KEY_ID, flashcard.getId());
         values.put(ORIGINAL_WORD, flashcard.getOriginalWord());
         values.put(TRANSLATED_WORD, flashcard.getTranslatedWord());
+        values.put(DEFINITION, flashcard.getDefinition());
 
         return db.update(TABLE_CONTENTS, values, KEY_ID + "=?",
                 new String[]{String.valueOf(flashcard.getId())});
