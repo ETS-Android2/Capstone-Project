@@ -2,6 +2,7 @@
     <string name="app_name">LangExchange</string>
     <string name="flashcard_title">Flashcards</string>
     <string name="flashcard_instructions">Select a flashcard</string>
+    <string name="go_back">Go back</string>
     <string name="input_placeholder">Write a message</string>
     <string name="todo">TODO</string>
 </resources>

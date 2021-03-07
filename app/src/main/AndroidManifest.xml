@@ -20,6 +20,7 @@
       
         <activity android:name=".ChatSystem" />
         <activity android:name=".FlashcardActivity" />
+        <activity android:name=".DisplayFlashcard" />
     </application>
 
 </manifest>
