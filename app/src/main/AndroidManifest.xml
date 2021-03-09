@@ -21,6 +21,7 @@
         <activity android:name=".ChatSystem" />
         <activity android:name=".FlashcardActivity" />
         <activity android:name=".DisplayFlashcard" />
+        <activity android:name=".QuizActivity" />
     </application>
 
 </manifest>
