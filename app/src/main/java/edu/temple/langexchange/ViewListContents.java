@@ -23,5 +23,7 @@ public class ViewListContents extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_quiz_manual);
+
+        //this is where you pull data from the database to show the quiz using the adapter in ManualQuizAdapter class
     }
 }

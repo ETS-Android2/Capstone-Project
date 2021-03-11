@@ -33,9 +33,8 @@ public class ManualQuiz extends AppCompatActivity {
         viewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ManualQuizAdapter manualQuizAdapter = new ManualQuizAdapter(this, R.layout.view_quiz_manual, manualQuiz);
-                listView = (ListView) findViewById(R.id.quizDisplay);
-                listView.setAdapter(manualQuizAdapter);
+                Intent intent = new Intent(ManualQuiz.this, ViewListContents.class);
+                startActivity(intent);
             }
         });
 
@@ -49,10 +48,10 @@ public class ManualQuiz extends AppCompatActivity {
                 if(setOriginalWord.length() != 0 && setDefinition.length() != 0 && setTranslatedWord.length() != 0)
                 {
                     manualQuiz.add(new Flashcards(0, setOriginalWord, setTranslatedWord, setDefinition));
-                    System.out.println(manualQuiz.indexOf(0));
                     originalWord.setText("");
                     translatedWord.setText("");
                     definition.setText("");
+                    //this is where you push the data to the database to be able to pull later on
                 }
                 else
                 {
