@@ -21,7 +21,9 @@ public class QuizActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Objects.requireNonNull(getSupportActionBar()).setTitle("Quiz");
+        setContentView(R.layout.display_quiz);
+        getSupportActionBar().setTitle("Quiz");
+        
         ArrayList<Flashcards> test = new ArrayList<Flashcards>();
         //test = new Flashcards[5];
         test.add(new Flashcards(1, "Hi", "Hola", "Expression with which you greet"));
