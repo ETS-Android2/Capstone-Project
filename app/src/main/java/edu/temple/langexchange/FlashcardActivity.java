@@ -20,9 +20,6 @@ public class FlashcardActivity extends AppCompatActivity {
     Button makeFlashcardBtn;
     Button makeQuizBtn;
 
-    ArrayList<String> flashcards;
-    ArrayList<String> translation;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,24 +29,25 @@ public class FlashcardActivity extends AppCompatActivity {
         text = findViewById(R.id.flashcardText);
         gridView = findViewById(R.id.flashcardGrid);
 
-        makeFlashcardBtn = findViewById(R.id.makeFlashcardBtn);
-        makeQuizBtn = findViewById(R.id.makeQuizBtn);
+        makeFlashcardBtn = findViewById(R.id.createFlashcardBtn);
+        makeQuizBtn = findViewById(R.id.createQuizBtn);
 
         text.setText(R.string.flashcard_instructions);
+        
+        ArrayList<Flashcards> flashcardArr = new ArrayList();
 
-        flashcards = new ArrayList<String>();
-        flashcards.add("Example 1");
-        flashcards.add("Example 2");
-        flashcards.add("Example 3");
-        flashcards.add("Example 4");
-        flashcards.add("Example 5");
+        flashcardArr.add(new Flashcards(1, "Hello", "Hola", "Expression with which you greet"));
+        flashcardArr.add(new Flashcards(2, "Hello", "Bonjor", "Expression with which you greet"));
 
-        translation = new ArrayList<String>();
-        translation.add("Translation 1");
-        translation.add("Translation 2");
-        translation.add("Translation 3");
-        translation.add("Translation 4");
-        translation.add("Translation 5");
+        ArrayList<String> flashcards = new ArrayList();
+        for (Flashcards card : flashcardArr) {
+            flashcards.add(card.originalWord);
+        }
+
+        ArrayList<String> translation = new ArrayList();
+        for (Flashcards card : flashcardArr) {
+            translation.add(card.translatedWord);
+        }
 
         FlashcardAdapter adapter = new FlashcardAdapter(this, flashcards);
         gridView.setAdapter(adapter);
