@@ -37,7 +37,7 @@ public class QuizActivity extends AppCompatActivity {
         ArrayList<String> questions = new ArrayList<>();
         for(Flashcards card : test)
         {
-            questions.add(card.definition);
+            questions.add(card.definition + " is?");
         }
 
         QuizAdapter adapter = new QuizAdapter(this, questions);
