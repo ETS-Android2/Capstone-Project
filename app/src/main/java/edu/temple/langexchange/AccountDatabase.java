@@ -8,13 +8,40 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AccountDatabase extends SQLiteOpenHelper {
 
+    public AccountDatabase(@Nullable Context context){
+        super(context, "account.db", null, 1);
 
+    }
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+
+
+
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+
+
+    public void addOne(Account account){
+        DatabaseReference ref;
+        ref = FirebaseDatabase.getInstance().getReference().child("Account");
+
+
+    }
+
+    /*
     public static final String ACCOUNT_TABLE = "ACCOUNT_TABLE";
     public static final String USERNAME = "USERNAME";
     public static final String PASSWORD = "PASSWORD";
@@ -31,7 +58,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableStatement = "CREATE TABLE " + ACCOUNT_TABLE + " (" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + USERNAME + " TEXT, " + PASSWORD + " TEXT, " + PREFLANG + " TEXT, " + LEARNLANG + " TEXT)";
+        String createTableStatement = "CREATE TABLE " + ACCOUNT_TABLE + " ("  + ID  +"INTEGER PRIMARY KEY AUTOINCREMENT REFERENCES FLASHCARD_DATABASE(ID), " + USERNAME + " TEXT PRIMARY KEY, " + PASSWORD + " TEXT, " + PREFLANG + " TEXT, " + LEARNLANG + " TEXT)";
 
         db.execSQL(createTableStatement);
 
@@ -95,4 +122,6 @@ public class AccountDatabase extends SQLiteOpenHelper {
 
         return  returnList;
     }
+
+     */
 }

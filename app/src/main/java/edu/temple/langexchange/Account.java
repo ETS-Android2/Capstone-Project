@@ -1,13 +1,26 @@
 package edu.temple.langexchange;
 
+import java.util.List;
+
 public class Account {
 
-    private int id;
-    private String username;
-    private String password;
-    private String prefLang;
-    private String learnLang;
+    public int id;
+    public String username;
+    public String password;
+    public String prefLang;
+    public String learnLang;
+    public List<Flashcards> flashcards;
 
+
+
+    public Account(int id, String username, String password, String prefLang, String learnLang, List<Flashcards> flashcards) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.prefLang = prefLang;
+        this.learnLang = learnLang;
+        this.flashcards = flashcards;
+    }
 
     public Account(int id, String username, String password, String prefLang, String learnLang) {
         this.id = id;
@@ -15,6 +28,11 @@ public class Account {
         this.password = password;
         this.prefLang = prefLang;
         this.learnLang = learnLang;
+    }
+
+    public Account(int id, String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
     public Account(){
@@ -29,6 +47,7 @@ public class Account {
                 ", password='" + password + '\'' +
                 ", prefLang='" + prefLang + '\'' +
                 ", learnLang='" + learnLang + '\'' +
+                ", flashcards=" + flashcards +
                 '}';
     }
 
@@ -70,5 +89,13 @@ public class Account {
 
     public void setLearnLang(String learnLang) {
         this.learnLang = learnLang;
+    }
+
+    public List<Flashcards> getFlashcards() {
+        return flashcards;
+    }
+
+    public void setFlashcards(List<Flashcards> flashcards) {
+        this.flashcards = flashcards;
     }
 }
