@@ -20,6 +20,8 @@ public class FlashcardActivity extends AppCompatActivity {
     Button makeFlashcardBtn;
     Button makeQuizBtn;
 
+    ArrayList<Flashcards> flashcardArr;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,11 +35,11 @@ public class FlashcardActivity extends AppCompatActivity {
         makeQuizBtn = findViewById(R.id.createQuizBtn);
 
         text.setText(R.string.flashcard_instructions);
-        
-        ArrayList<Flashcards> flashcardArr = new ArrayList();
+
+        flashcardArr = new ArrayList();
 
         flashcardArr.add(new Flashcards(1, "Hello", "Hola", "Expression with which you greet"));
-        flashcardArr.add(new Flashcards(2, "Hello", "Bonjor", "Expression with which you greet"));
+        flashcardArr.add(new Flashcards(2, "Hello", "Bonjour", "Expression with which you greet"));
 
         ArrayList<String> flashcards = new ArrayList();
         for (Flashcards card : flashcardArr) {
@@ -66,7 +68,7 @@ public class FlashcardActivity extends AppCompatActivity {
         makeFlashcardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                
             }
         });
 
