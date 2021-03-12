@@ -23,10 +23,21 @@
         android:layout_marginStart="160dp"
         android:layout_marginEnd="158dp"
         android:layout_marginBottom="250dp"
-        android:text="Show Quiz"
+        android:text="@string/show_quiz"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button" />
+
+    <Button
+        android:id="@+id/makeQuizBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/make_quiz"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button2"
+        app:layout_constraintVertical_bias="0.139" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
