@@ -2,29 +2,35 @@ package edu.temple.langexchange;
 
 public class Account {
 
-    int id;
-    String name;
-    String password;
-    String pref_language;
-    String learning_language;
+    private int id;
+    private String username;
+    private String password;
+    private String prefLang;
+    private String learnLang;
 
+
+    public Account(int id, String username, String password, String prefLang, String learnLang) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.prefLang = prefLang;
+        this.learnLang = learnLang;
+    }
 
     public Account(){
 
     }
 
-    public Account(String name, String password){
-        this.password = password;
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", prefLang='" + prefLang + '\'' +
+                ", learnLang='" + learnLang + '\'' +
+                '}';
     }
-
-    public Account(int id, String name, String password, String pref_language, String learning_language) {
-        this.id = id;
-        this.name = name;
-        this.password = password;
-        this.pref_language = pref_language;
-        this.learning_language = learning_language;
-    }
-
 
     public int getId() {
         return id;
@@ -34,12 +40,12 @@ public class Account {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -50,19 +56,19 @@ public class Account {
         this.password = password;
     }
 
-    public String getPref_language() {
-        return pref_language;
+    public String getPrefLang() {
+        return prefLang;
     }
 
-    public void setPref_language(String pref_language) {
-        this.pref_language = pref_language;
+    public void setPrefLang(String prefLang) {
+        this.prefLang = prefLang;
     }
 
-    public String getLearning_language() {
-        return learning_language;
+    public String getLearnLang() {
+        return learnLang;
     }
 
-    public void setLearning_language(String learning_language) {
-        this.learning_language = learning_language;
+    public void setLearnLang(String learnLang) {
+        this.learnLang = learnLang;
     }
 }
