@@ -34,12 +34,6 @@ public class AccountDatabase extends SQLiteOpenHelper {
     }
 
 
-    public void addOne(Account account){
-        DatabaseReference ref;
-        ref = FirebaseDatabase.getInstance().getReference().child("Account");
-
-
-    }
 
     /*
     public static final String ACCOUNT_TABLE = "ACCOUNT_TABLE";

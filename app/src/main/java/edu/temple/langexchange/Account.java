@@ -35,6 +35,10 @@ public class Account {
         this.password = password;
     }
 
+    public Account(List<Flashcards> flashcards) {
+        this.flashcards = flashcards;
+    }
+
     public Account(){
 
     }
