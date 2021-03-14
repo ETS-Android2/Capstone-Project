@@ -25,6 +25,7 @@
         <activity android:name=".QuizActivity" />
         <activity android:name=".ViewListContents" />
         <activity android:name=".ManualQuiz" />
+        <activity android:name=".MakeFlashcard" />
     </application>
 
 </manifest>

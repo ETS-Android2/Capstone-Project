@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class FlashcardAdapter extends BaseAdapter {
 
     Context context;
-    ArrayList<String> items;
+    ArrayList<Flashcards> items;
 
     public FlashcardAdapter(Context context, ArrayList items) {
         this.context = context;
@@ -38,6 +38,12 @@ public class FlashcardAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
+        ArrayList<String> flashcards = new ArrayList<>();
+        for (Flashcards card : items) {
+            flashcards.add(card.originalWord);
+        }
+
         View view;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -47,7 +53,7 @@ public class FlashcardAdapter extends BaseAdapter {
             TextView text = view.findViewById(R.id.gridText);
             ImageView image = view.findViewById(R.id.gridImage);
 
-            text.setText(items.get(position));
+            text.setText(flashcards.get(position));
             image.setImageResource(R.drawable.flashcard_bg);
 
             text.setGravity(Gravity.CENTER);

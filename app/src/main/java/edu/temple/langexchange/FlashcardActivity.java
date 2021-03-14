@@ -8,11 +8,14 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
 public class FlashcardActivity extends AppCompatActivity {
+
+    private static int counter = 0;
 
     TextView text;
     GridView gridView;
@@ -20,7 +23,7 @@ public class FlashcardActivity extends AppCompatActivity {
     Button makeFlashcardBtn;
     Button makeQuizBtn;
 
-    ArrayList<Flashcards> flashcardArr;
+    ArrayList<Flashcards> flashcardList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,30 +39,22 @@ public class FlashcardActivity extends AppCompatActivity {
 
         text.setText(R.string.flashcard_instructions);
 
-        flashcardArr = new ArrayList();
+        flashcardList.add(new Flashcards(1, "Hello", "Hola", "Expression with which you greet"));
+        flashcardList.add(new Flashcards(2, "Hello", "Bonjour", "Expression with which you greet"));
 
-        flashcardArr.add(new Flashcards(1, "Hello", "Hola", "Expression with which you greet"));
-        flashcardArr.add(new Flashcards(2, "Hello", "Bonjour", "Expression with which you greet"));
-
-        ArrayList<String> flashcards = new ArrayList();
-        for (Flashcards card : flashcardArr) {
-            flashcards.add(card.originalWord);
+        for (Flashcards card : flashcardList) {
+            counter++;
         }
 
-        ArrayList<String> translation = new ArrayList();
-        for (Flashcards card : flashcardArr) {
-            translation.add(card.translatedWord);
-        }
-
-        FlashcardAdapter adapter = new FlashcardAdapter(this, flashcards);
+        FlashcardAdapter adapter = new FlashcardAdapter(this, flashcardList);
         gridView.setAdapter(adapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(FlashcardActivity.this, DisplayFlashcard.class);
-                intent.putExtra("original", flashcards.get(position));
-                intent.putExtra("translation", translation.get(position));
+                intent.putExtra("original", flashcardList.get(position).originalWord);
+                intent.putExtra("translation", flashcardList.get(position).translatedWord);
                 startActivity(intent);
             }
         });
@@ -68,7 +63,8 @@ public class FlashcardActivity extends AppCompatActivity {
         makeFlashcardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+                Intent intent = new Intent(FlashcardActivity.this, MakeFlashcard.class);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -78,5 +74,26 @@ public class FlashcardActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            String original = data.getStringExtra("originalWord");
+            String translation = data.getStringExtra("translatedWord");
+            String definition = data.getStringExtra("definition");
+
+            // add the new flashcard onto the list
+            flashcardList.add(new Flashcards(counter += 1, translation, original, definition));
+
+            // reference layout from xml
+            gridView = findViewById(R.id.flashcardGrid);
+
+            // refresh the grid view
+            FlashcardAdapter adapter = new FlashcardAdapter(this, flashcardList);
+            gridView.setAdapter(adapter);
+        }
     }
 }
