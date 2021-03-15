@@ -52,7 +52,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="48dp"
         android:layout_marginBottom="64dp"
-        android:enabled="false"
+        android:enabled="true"
         android:text="Sign in"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,57 +60,30 @@
         app:layout_constraintTop_toBottomOf="@+id/password"
         app:layout_constraintVertical_bias="0.2" />
 
-    <ProgressBar
-        android:id="@+id/loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="64dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/password"
-        app:layout_constraintStart_toStartOf="@+id/password"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="60dp"
-        android:layout_height="48dp"
+        android:layout_width="186dp"
+        android:layout_height="41dp"
         android:fontFamily="sans-serif-black"
         android:shadowColor="@color/black"
-        android:text="Lang"
+        android:text="LangExchange"
         android:textSize="25dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.378"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="35dp" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="110dp"
-        android:layout_height="48dp"
-        android:fontFamily="sans-serif-black"
-        android:shadowColor="@color/black"
-        android:text="Exchange"
-        android:textColor="@color/teal_200"
-        android:textSize="25dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.657"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="34dp" />
+        tools:layout_editor_absoluteY="29dp" />
 
     <Button
         android:id="@+id/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:text="Register"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="140dp"
-        tools:layout_editor_absoluteY="380dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login"
+        app:layout_constraintVertical_bias="0.1" />
 </androidx.constraintlayout.widget.ConstraintLayout>

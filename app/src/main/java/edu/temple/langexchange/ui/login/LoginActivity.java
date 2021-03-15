@@ -5,6 +5,7 @@ import android.app.Activity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import edu.temple.langexchange.R;
+import edu.temple.langexchange.Register;
 import edu.temple.langexchange.ui.login.LoginViewModel;
 import edu.temple.langexchange.ui.login.LoginViewModelFactory;
 
@@ -41,6 +43,14 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.login);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+        Button registerButton = (Button) findViewById(R.id.register);
+
+        registerButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                startActivity(new Intent(LoginActivity.this, Register.class));
+            }
+        });
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
