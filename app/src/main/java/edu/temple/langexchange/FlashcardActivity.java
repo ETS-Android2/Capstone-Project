@@ -71,7 +71,9 @@ public class FlashcardActivity extends AppCompatActivity {
         makeQuizBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(FlashcardActivity.this, QuizActivity.class);
+                intent.putExtra("flashcardArr", flashcardList);
+                startActivity(intent);
             }
         });
     }

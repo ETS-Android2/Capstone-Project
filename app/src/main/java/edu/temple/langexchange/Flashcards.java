@@ -1,6 +1,8 @@
 package edu.temple.langexchange;
 
-public class Flashcards {
+import java.io.Serializable;
+
+public class Flashcards implements Serializable {
 
     int id;
     String translatedWord;
