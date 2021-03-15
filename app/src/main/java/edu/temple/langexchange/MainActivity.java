@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
 
         button = findViewById(R.id.button);
         buttonQuiz = findViewById(R.id.button2);
-        buttonMakeQuiz = findViewById((R.id.makeQuizBtn));
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,11 +39,5 @@ public class MainActivity extends AppCompatActivity {
           }
         });
 
-        buttonMakeQuiz.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ManualQuiz.class);
-                startActivity(intent);
-            }
-        });
     }
 }

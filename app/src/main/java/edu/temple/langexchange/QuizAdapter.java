@@ -8,13 +8,14 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class QuizAdapter extends BaseAdapter {
 
     Context context;
-    ArrayList<String> items;
+    List<Flashcards> items;
 
-    public QuizAdapter(Context context, ArrayList items) {
+    public QuizAdapter(Context context, List items) {
         this.context = context;
         this.items = items;
     }
@@ -36,6 +37,12 @@ public class QuizAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
+        ArrayList<String> flashcards = new ArrayList<>();
+        for (Flashcards card : items) {
+            flashcards.add(card.definition);
+        }
+
         TextView textView;
 
         if ((textView = (TextView) convertView) == null) {
@@ -45,7 +52,7 @@ public class QuizAdapter extends BaseAdapter {
             textView.setPadding(8, 25, 0, 25);
         }
 
-        textView.setText(items.get(position));
+        textView.setText(flashcards.get(position));
 
         return textView;
     }

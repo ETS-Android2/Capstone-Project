@@ -29,7 +29,6 @@
     <string name="translated_word_field">Translated Word</string>
     <string name="definition_field">Answer</string>
     <string name="view_quiz_button">View Quiz</string>
-    <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
@@ -37,4 +36,9 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="type_your_answer">Type Your Answer</string>
+    <string name="submit_quiz_answer">Submit</string>
+    <string name="quiz_title">Quiz</string>
+    <string name="view_quiz_result_btn">View Result</string>
+    <string name="show_flashcards_btn">Show Flashcards</string>
 </resources>
