@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.lang.reflect.Array;
+import java.nio.channels.InterruptedByTimeoutException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,12 +35,18 @@ public class QuizActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(R.string.quiz_title);
         list = findViewById(R.id.quizDisplay);
 
-        //test = new Flashcards[5];
-        test.add(new Flashcards(1, "Hi", "Hola", "A Word You Use to Greet People"));
-        test.add(new Flashcards(2, "One", "Uno", "Number One"));
-        test.add(new Flashcards(3, "Two", "Dos", "Number Two"));
-        test.add(new Flashcards(4, "Three", "Tres", "Number Three"));
-        test.add(new Flashcards(5, "Four", "Cuatro", "Number Four"));
+
+        if(getIntent().getSerializableExtra("flashcardArr") == null) {
+            //test = new Flashcards[5];
+            test.add(new Flashcards(1, "Hi", "Hola", "A Word You Use to Greet People in Spanish"));
+            test.add(new Flashcards(2, "One", "Uno", "Number One"));
+            test.add(new Flashcards(3, "Two", "Dos", "Number Two"));
+            test.add(new Flashcards(4, "Three", "Tres", "Number Three"));
+            test.add(new Flashcards(5, "Four", "Cuatro", "Number Four"));
+        }
+        else{
+            test = (ArrayList<Flashcards>) getIntent().getSerializableExtra("flashcardArr");
+        }
 
 //        FlashcardAdapter adapter = new FlashcardAdapter(this, test);
 
