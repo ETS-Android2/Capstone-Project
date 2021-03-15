@@ -1,5 +1,6 @@
 package edu.temple.langexchange;
 
+import android.app.LauncherActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -19,34 +20,39 @@ import java.util.Objects;
 
 public class QuizActivity extends AppCompatActivity {
     Button button;
-    ArrayList<String> res, correctAnswer = new ArrayList<>();
+    ArrayList<String> correctAnswer = new ArrayList<>();
     ArrayList<Flashcards> test = new ArrayList<>();
+    String res = "";
+    int indexAnswered = 0;
+    ListView list;
+    ArrayList<String> questions = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.display_quiz);
         getSupportActionBar().setTitle(R.string.quiz_title);
-        
+        list = findViewById(R.id.quizDisplay);
 
         //test = new Flashcards[5];
-        test.add(new Flashcards(1, "Hi", "Hola", "Expression with which you greet"));
+        test.add(new Flashcards(1, "Hi", "Hola", "A Word You Use to Greet People"));
         test.add(new Flashcards(2, "One", "Uno", "Number One"));
         test.add(new Flashcards(3, "Two", "Dos", "Number Two"));
         test.add(new Flashcards(4, "Three", "Tres", "Number Three"));
         test.add(new Flashcards(5, "Four", "Cuatro", "Number Four"));
 
 //        FlashcardAdapter adapter = new FlashcardAdapter(this, test);
-        ListView list = findViewById(R.id.quizDisplay);
+
         button = findViewById(R.id.quizDisplayBtn);
 
-        ArrayList<String> questions = new ArrayList<>();
+
         for(Flashcards card : test)
         {
-            questions.add(card.definition + " is?");
+            questions.add(card.definition);
             correctAnswer.add(card.originalWord.toUpperCase());
         }
 
+        System.out.println(correctAnswer);
         QuizAdapter adapter = new QuizAdapter(this, questions);
         list.setAdapter(adapter);
 
@@ -56,8 +62,8 @@ public class QuizActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(QuizActivity.this, QuizTaking.class);
                 intent.putExtra("position", position);
-                intent.putExtra("quizLength", quizLength);
                 System.out.println("size of array:" + correctAnswer.size());
+                indexAnswered = position;
                 startActivityForResult(intent, 1);
             }
         });
@@ -74,9 +80,18 @@ public class QuizActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 1 && requestCode == RESULT_OK){
-            res = data.getStringArrayListExtra("QuizAnswer");
-            res.removeAll(correctAnswer);
+        if(requestCode == 1 && resultCode == RESULT_OK){
+            res = data.getStringExtra("QuizAnswer");
+            if(res.equals(correctAnswer.get(indexAnswered)))
+            {
+                System.out.println("CORRECT");
+                list.getChildAt(indexAnswered).setBackgroundColor(getResources().getColor(R.color.correct_color));
+
+            }
+            else{
+                System.out.println("INCORRECT");
+                list.getChildAt(indexAnswered).setBackgroundColor(getResources().getColor(R.color.incorrect_color));
+            }
             System.out.println(res);
         }
     }

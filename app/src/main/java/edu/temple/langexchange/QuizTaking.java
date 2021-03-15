@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class QuizTaking extends AppCompatActivity {
@@ -31,15 +32,14 @@ public class QuizTaking extends AppCompatActivity {
         int length = intent.getIntExtra("quizLength", 0);
         System.out.println("Received size: " + length);
         System.out.println("Received index: " + i);
-        ArrayList<String> answerQuiz = new ArrayList<>(length);
+        ArrayList<String> answerQuiz = new ArrayList<>();
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                answerQuiz.add(i, answer.getText().toString().toUpperCase());
+                answerQuiz.add(answer.getText().toString().toUpperCase());
                 answer.setText("");
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("QuizAnswer", answerQuiz);
-
+                returnIntent.putExtra("QuizAnswer", answerQuiz.get(0));
                 setResult(RESULT_OK, returnIntent);
                 finish();
             }
