@@ -13,7 +13,9 @@ public class DisplayFlashcard extends AppCompatActivity {
 
     TextView original;
     TextView translation;
-    Button button;
+    Button exitActivity;
+    Button showTranslation;
+    boolean showingTranslation = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,12 +25,15 @@ public class DisplayFlashcard extends AppCompatActivity {
 
         original = findViewById(R.id.flashcardName);
         translation = findViewById(R.id.flashcardTranslation);
-        button = findViewById(R.id.flashcardDisplayBtn);
+
+        exitActivity = findViewById(R.id.exitActivity);
+        showTranslation = findViewById(R.id.showTranslation);
 
         Intent intent = getIntent();
 
         original.setText(intent.getStringExtra("original"));
         translation.setText(intent.getStringExtra("translation"));
+        translation.setVisibility(View.GONE);
 
         original.setTextSize(32);
         original.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -36,10 +41,25 @@ public class DisplayFlashcard extends AppCompatActivity {
         translation.setTextSize(22);
         translation.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        exitActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        showTranslation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (showingTranslation == false) {
+                    translation.setVisibility(View.VISIBLE);
+                    showTranslation.setText("Hide Translation");
+                    showingTranslation = true;
+                } else {
+                    translation.setVisibility(View.GONE);
+                    showTranslation.setText("Show Translation");
+                    showingTranslation = false;
+                }
             }
         });
     }
