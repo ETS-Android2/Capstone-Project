@@ -16,20 +16,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LangExchange">
 
-
         <activity
-            android:name=".Register"
-            android:label="@string/title_activity_register">
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.login.LoginActivity"
-            android:label="@string/title_activity_login" />
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,6 +39,7 @@
         <activity android:name=".ViewListContents" />
         <activity android:name=".ManualQuiz" />
         <activity android:name=".MakeFlashcard" />
+        <activity android:name=".Register" />
     </application>
 
 </manifest>
