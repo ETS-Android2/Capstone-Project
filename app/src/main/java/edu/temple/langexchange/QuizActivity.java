@@ -3,6 +3,7 @@ package edu.temple.langexchange;
 import android.app.LauncherActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,16 +30,19 @@ import java.util.List;
 import java.util.Objects;
 
 public class QuizActivity extends AppCompatActivity {
+
+    private static String correctAnswer = "";
+    private static String res = "";
+    private static int indexAnswered = 0;
+
     Button button;
-    ArrayList<String> correctAnswer = new ArrayList<>();
-    ArrayList<Flashcards> test = new ArrayList<>();
-    String res = "";
-    int indexAnswered = 0;
     ListView list;
-    ArrayList<String> questions = new ArrayList<>();
 
     DatabaseReference ref;
     List<Flashcards> flashcardList;
+
+    ArrayList<String> questions;
+    ArrayList<String> answers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +51,10 @@ public class QuizActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(R.string.quiz_title);
         list = findViewById(R.id.quizDisplay);
 
-        // initialize flashcardList
+        // initialize variables
         flashcardList = new ArrayList<Flashcards>();
+        questions = new ArrayList<String>();
+        answers = new ArrayList<String>();
 
         // connect to the database
         ref = FirebaseDatabase.getInstance().getReference().child("Flashcards");
@@ -61,6 +67,11 @@ public class QuizActivity extends AppCompatActivity {
                 for (DataSnapshot flashcardData : snapshot.getChildren()) {
                     Flashcards flashcard = flashcardData.getValue(Flashcards.class);
                     flashcardList.add(flashcard);
+                }
+
+                for (Flashcards card : flashcardList) {
+                    questions.add(card.definition);
+                    answers.add(card.originalWord.toUpperCase());
                 }
 
                 QuizAdapter adapter = new QuizAdapter(QuizActivity.this, flashcardList);
@@ -101,17 +112,16 @@ public class QuizActivity extends AppCompatActivity {
 //        QuizAdapter adapter = new QuizAdapter(this, questions);
 //        list.setAdapter(adapter);
 
-        int quizLength = correctAnswer.size();
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(QuizActivity.this, QuizTaking.class);
-                intent.putExtra("position", position);
-                System.out.println("size of array:" + correctAnswer.size());
+                correctAnswer = answers.get(position);
                 indexAnswered = position;
                 startActivityForResult(intent, 1);
             }
         });
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,7 +137,7 @@ public class QuizActivity extends AppCompatActivity {
 
         if(requestCode == 1 && resultCode == RESULT_OK){
             res = data.getStringExtra("QuizAnswer");
-            if(res.equals(correctAnswer.get(indexAnswered)))
+            if(res.equals(correctAnswer))
             {
                 System.out.println("CORRECT");
                 list.getChildAt(indexAnswered).setBackgroundColor(getResources().getColor(R.color.correct_color));
