@@ -5,8 +5,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MakeFlashcard extends AppCompatActivity {
 
@@ -15,6 +24,8 @@ public class MakeFlashcard extends AppCompatActivity {
     EditText definitionInput;
 
     Button addFlashcardBtn;
+
+    DatabaseReference ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,29 +38,28 @@ public class MakeFlashcard extends AppCompatActivity {
 
         addFlashcardBtn = findViewById(R.id.addFlashcardBtn);
 
+        // connect to the db
+        ref = FirebaseDatabase.getInstance().getReference().child("Flashcards");
+
         addFlashcardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // convert input fields to String object
-                String originalWord = originalWordInput.getText().toString();
-                String translatedWord = translatedWordInput.getText().toString();
+                int id = 0;
+                String original = originalWordInput.getText().toString();
+                String translation = translatedWordInput.getText().toString();
                 String definition = definitionInput.getText().toString();
 
-                // check that input fields are not empty
-                if (originalWord.length() != 0 && translatedWord.length() != 0 && definition.length() != 0) {
-                    Intent intent = new Intent();
+                // creates a new flashcard object with the new values
+                Flashcards flashcard = new Flashcards(id, translation, original, definition);
 
-                    // this declares data to return to the previous activity
-                    intent.putExtra("originalWord", originalWord);
-                    intent.putExtra("translatedWord", translatedWord);
-                    intent.putExtra("definition", definition);
+                // this places the flashcard onto the database
+                ref.push().setValue(flashcard);
 
-                    // return a code for previous activity to handle
-                    setResult(RESULT_OK, intent);
+                // result code for previous activity set to RESULT_OK
+                setResult(RESULT_OK);
 
-                    // finish activity
-                    finish();
-                }
+                // finish the activity
+                finish();
             }
         });
     }
