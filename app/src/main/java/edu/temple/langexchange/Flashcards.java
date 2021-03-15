@@ -21,6 +21,16 @@ public class Flashcards {
 
     }
 
+    @Override
+    public String toString() {
+        return "Flashcards{" +
+                "id=" + id +
+                ", translatedWord='" + translatedWord + '\'' +
+                ", originalWord='" + originalWord + '\'' +
+                ", definition='" + definition + '\'' +
+                '}';
+    }
+
     public int getId() {
         return id;
     }
@@ -44,7 +54,6 @@ public class Flashcards {
     public void setOriginalWord(String originalWord) {
         this.originalWord = originalWord;
     }
-
 
     public String getDefinition() {
         return definition;
