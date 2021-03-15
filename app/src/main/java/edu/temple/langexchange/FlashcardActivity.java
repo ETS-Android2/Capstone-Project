@@ -39,8 +39,8 @@ public class FlashcardActivity extends AppCompatActivity {
 
         text.setText(R.string.flashcard_instructions);
 
-        flashcardList.add(new Flashcards(1, "Hello", "Hola", "Expression with which you greet"));
-        flashcardList.add(new Flashcards(2, "Hello", "Bonjour", "Expression with which you greet"));
+        flashcardList.add(new Flashcards(1, "Hello", "Hola", "A Word to Greet People in Spanish"));
+        flashcardList.add(new Flashcards(2, "Hello", "Bonjour", "A Word to Greet People in French"));
 
         for (Flashcards card : flashcardList) {
             counter++;
