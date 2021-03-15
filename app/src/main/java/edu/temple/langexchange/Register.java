@@ -36,9 +36,9 @@ public class Register extends AppCompatActivity {
 
                     Account account;
                     try {
-                        account = new Account(0, usernameEditText.getText().toString(), passwordEditText.getText().toString(), nativeEditText.getText().toString(), targetEditText.getText().toString());
+                        account = new Account(1, usernameEditText.getText().toString(), passwordEditText.getText().toString(), nativeEditText.getText().toString(), targetEditText.getText().toString());
 
-                        Toast.makeText(Register.this, account.toString(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(Register.this, account.toString(), Toast.LENGTH_SHORT).show();
                     }
                     catch(Exception e){
                         Toast.makeText(Register.this, "Error creating customer", Toast.LENGTH_SHORT).show();
@@ -54,7 +54,7 @@ public class Register extends AppCompatActivity {
 
                     }
                     else {
-                        Toast.makeText(Register.this, "Register Failed", Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(Register.this, "Register Failed", Toast.LENGTH_SHORT).show();
 
                     }
                     startActivity(new Intent(Register.this, FlashcardActivity.class));

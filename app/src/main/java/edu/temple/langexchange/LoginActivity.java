@@ -61,6 +61,12 @@ public class LoginActivity extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                            // if(snapshot.child("password").toString().equals(passwordEditText.getText().toString())) {
                                // userID[0] = Integer.parseInt(snapshot.child("id").getValue().toString());
+                            if(snapshot.hasChildren() == false){
+                                Toast.makeText(LoginActivity.this, "Incorrect Email", Toast.LENGTH_SHORT).show();
+                                passwordEditText.setText("");
+                                usernameEditText.setText("");
+                                return;
+                            }
                             for(DataSnapshot childSnapshot: snapshot.getChildren()){
                                 int place = 0;
                                 Account account = childSnapshot.getValue(Account.class);
@@ -68,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                                     startActivity(new Intent(LoginActivity.this, FlashcardActivity.class));
                                 }
                                 else{
-                                    Toast.makeText(LoginActivity.this, "Incorrect Email/Password", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
                                     passwordEditText.setText("");
                                     usernameEditText.setText("");
                                 }
