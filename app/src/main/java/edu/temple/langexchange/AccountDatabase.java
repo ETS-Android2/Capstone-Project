@@ -2,6 +2,7 @@ package edu.temple.langexchange;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,6 +18,8 @@ import com.google.firebase.database.ValueEventListener;
 import androidx.annotation.NonNull;
 
 import edu.temple.langexchange.data.model.LoggedInUser;
+
+import static androidx.core.content.ContextCompat.startActivity;
 
 public class AccountDatabase {
 
@@ -45,7 +48,7 @@ public class AccountDatabase {
     }
 
     public void findUser(String username, String password){
-        final int[] userID = new int[1];
+       /* final int[] userID = new int[1];
         userID[0] = -1;
         ref = FirebaseDatabase.getInstance().getReference().child("Account");
         Query query = ref.orderByChild("username").equalTo(username);
@@ -54,13 +57,14 @@ public class AccountDatabase {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.child("password").toString().equals(password)) {
                     userID[0] = Integer.parseInt(snapshot.child("id").getValue().toString());
+                    startActivity(new Intent(LoginActivity.this, FlashcardActivity.class));
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
-        });
+        }); */
 
     }
 }

@@ -9,11 +9,21 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import edu.temple.langexchange.ui.login.LoginViewModel;
 import edu.temple.langexchange.ui.login.LoginViewModelFactory;
+
+import static androidx.core.content.ContextCompat.startActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -41,16 +51,35 @@ public class LoginActivity extends AppCompatActivity {
             loginButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
-                    AccountDatabase db = new AccountDatabase();
-                    db.findUser(usernameEditText.getText().toString(), passwordEditText.getText().toString());
-                    int result = db.currentUserId;
-                    if(result == -1){
-                        Toast.makeText(LoginActivity.this,"Login Failed", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        result = loggedInUserId;
-                        startActivity(new Intent(LoginActivity.this, FlashcardActivity.class));
-                    }
+                    //AccountDatabase db = new AccountDatabase();
+                   // final int[] userID = new int[1];
+                   // userID[0] = -1;
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Account");
+                    Query query = ref.orderByChild("username").equalTo(usernameEditText.getText().toString()).limitToFirst(1);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                           // if(snapshot.child("password").toString().equals(passwordEditText.getText().toString())) {
+                               // userID[0] = Integer.parseInt(snapshot.child("id").getValue().toString());
+                            for(DataSnapshot childSnapshot: snapshot.getChildren()){
+                                int place = 0;
+                                Account account = childSnapshot.getValue(Account.class);
+                                if(account.password.equals(passwordEditText.getText().toString())) {
+                                    startActivity(new Intent(LoginActivity.this, FlashcardActivity.class));
+                                }
+                                else{
+                                    Toast.makeText(LoginActivity.this, "Incorrect Email/Password", Toast.LENGTH_SHORT).show();
+                                    passwordEditText.setText("");
+                                    usernameEditText.setText("");
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             });
 

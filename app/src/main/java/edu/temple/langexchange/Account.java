@@ -22,7 +22,7 @@ public class Account {
         this.flashcards = flashcards;
     }
 
-    public Account(int id, String username, String password, String prefLang, String learnLang) {
+    public Account(int id, String learnLang, String password, String prefLang, String username) {
         this.id = id;
         this.username = username;
         this.password = password;

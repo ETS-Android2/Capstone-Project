@@ -42,7 +42,7 @@ public class Register extends AppCompatActivity {
                     }
                     catch(Exception e){
                         Toast.makeText(Register.this, "Error creating customer", Toast.LENGTH_SHORT).show();
-                        account = new Account(0, "error","error","error","error");
+                        account = new Account(1, "error","error","error","error");
                     }
 
                     AccountDatabase accountDatabase = new AccountDatabase();
