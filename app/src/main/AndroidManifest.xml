@@ -39,6 +39,7 @@
         <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/title_activity_login" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,6 +50,10 @@
         <activity android:name=".ChatSystem" />
         <activity android:name=".FlashcardActivity" />
         <activity android:name=".DisplayFlashcard" />
+        <activity android:name=".QuizActivity" />
+        <activity android:name=".ViewListContents" />
+        <activity android:name=".ManualQuiz" />
+        <activity android:name=".MakeFlashcard" />
     </application>
 
 </manifest>

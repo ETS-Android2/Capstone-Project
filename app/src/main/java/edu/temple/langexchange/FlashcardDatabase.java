@@ -14,27 +14,22 @@ import java.util.List;
 public class FlashcardDatabase extends SQLiteOpenHelper {
 
 
-    private static final int DATABASE_VERSION =1;
-    private static final String DATABASE_NAME = "flashcardManager";
-    private static final String TABLE_CONTENTS = "flashcards";
-
-    private static final String KEY_ID = "id";
-    private static final String ORIGINAL_WORD = "originalWord";
-    private static final String TRANSLATED_WORD = "translatedWord";
-    private static final String DEFINITION = "definition";
+    public static final int VERSION = 1;
+    public static final String FLASHCARD_TABLE = "FLASHCARD_TABLE";
+    public static final String ID = "ID";
+    public static final String ORIGINAL_WORD = "ORIGINAL_WORD";
+    public static final String TRANSLATED_WORD = "TRANSLATED_WORD";
+    public static final String DEFINITION = "DEFINITION";
 
 
-
-    public FlashcardDatabase(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+    public FlashcardDatabase(@Nullable Context context) {
+        super(context, "account.db", null, VERSION);
     }
 
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_ACCOUNTS_TABLE = "CREATE TABLE flashcardManager" + TABLE_CONTENTS + " ("
-                + KEY_ID + " INTEGER PRIMARY KEY," + ORIGINAL_WORD + " TEXT,"
-                + TRANSLATED_WORD + " TEXT," +  DEFINITION + " TEXT"+ " )";
+        String CREATE_ACCOUNTS_TABLE = "CREATE TABLE " + FLASHCARD_TABLE + " (" + ID + " PRIMARY KEY AUTOINCREMENT, " + ORIGINAL_WORD + " TEXT, " + TRANSLATED_WORD + " TEXT, " + DEFINITION + " TEXT)";
 
         db.execSQL(CREATE_ACCOUNTS_TABLE);
 
@@ -42,91 +37,60 @@ public class FlashcardDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTENTS);
 
-        onCreate(db);
     }
 
-    void addFlashcard(Flashcards flashcard){
+    public boolean addFlashcard(Flashcards flashcard){
         SQLiteDatabase db = this.getWritableDatabase();
-
         ContentValues values = new ContentValues();
-        values.put(KEY_ID, flashcard.getId());
+        values.put(ID, flashcard.getId());
         values.put(ORIGINAL_WORD, flashcard.getOriginalWord());
         values.put(TRANSLATED_WORD, flashcard.getTranslatedWord());
         values.put(DEFINITION, flashcard.getDefinition());
 
-        db.insert(TABLE_CONTENTS, null, values);
-        db.close();
+        long insert = db.insert(FLASHCARD_TABLE, null, values);
+        if(insert == -1){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 
-    Flashcards getFlashcard(int id){
+
+
+
+    public List<Flashcards> getAll(){
+        List<Flashcards> returnList = new ArrayList<>();
+
+        String queryString = "SELECT * FROM " + FLASHCARD_TABLE;
+
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE_CONTENTS, new String[]{KEY_ID, ORIGINAL_WORD, TRANSLATED_WORD, DEFINITION}, KEY_ID + "=?",
-                new String[]{String.valueOf(id)}, null, null, null, null);
-
-        if(cursor != null){
-            cursor.moveToFirst();
-
-        }
-
-        Flashcards flashcards = new Flashcards(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3));
-
-        return flashcards;
-    }
-
-    public List<Flashcards> getAllFlashcards(){
-        List<Flashcards> flashcardsList = new ArrayList<>();
-
-        String selectQuery = "SELECT * FROM flashcardManager" + TABLE_CONTENTS;
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = db.rawQuery(queryString, null);
 
         if(cursor.moveToFirst()){
-            do {
-                Flashcards flashcard = new Flashcards();
-                flashcard.setId(Integer.parseInt(cursor.getString(0)));
-                flashcard.setOriginalWord(cursor.getString(1));
-                flashcard.setTranslatedWord(cursor.getString(2));
-                flashcard.setDefinition(cursor.getString(3));
+            do{
+                int flashcardID = cursor.getInt(0);
+                String flashcardOriginalWord = cursor.getString(1);
+                String flashcardTranslatedWord = cursor.getString(2);
+                String flashcardDefinition = cursor.getString(3);
+
+                Flashcards flashcard= new Flashcards(flashcardID, flashcardOriginalWord, flashcardTranslatedWord, flashcardDefinition);
+                returnList.add(flashcard);
+
+            }while(cursor.moveToNext());
+        }
+        else{
 
 
-                flashcardsList.add(flashcard);
-            } while (cursor.moveToNext());
+
         }
 
-        return flashcardsList;
-    }
-
-    public int updateFlashcard(Flashcards flashcard) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(KEY_ID, flashcard.getId());
-        values.put(ORIGINAL_WORD, flashcard.getOriginalWord());
-        values.put(TRANSLATED_WORD, flashcard.getTranslatedWord());
-        values.put(DEFINITION, flashcard.getDefinition());
-
-        return db.update(TABLE_CONTENTS, values, KEY_ID + "=?",
-                new String[]{String.valueOf(flashcard.getId())});
-
-    }
-
-    public void deleteFlashcard(Flashcards flashcard){
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_CONTENTS, KEY_ID + "=?",
-                new String[]{String.valueOf(flashcard.getId())});
-        db.close();
-    }
-
-    public int getFlashcardCount(){
-        String countQuery = "SELECT * FROM flashcardManager" + TABLE_CONTENTS;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
         cursor.close();
+        db.close();
 
-        return cursor.getCount();
+
+        return  returnList;
     }
 }
