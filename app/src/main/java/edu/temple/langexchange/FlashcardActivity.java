@@ -72,7 +72,6 @@ public class FlashcardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FlashcardActivity.this, QuizActivity.class);
-                intent.putExtra("flashcardArr", flashcardList);
                 startActivity(intent);
             }
         });
