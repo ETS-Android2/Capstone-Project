@@ -33,27 +33,31 @@ public class Register extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                    Toast.makeText(Register.this, "Sucess=" , Toast.LENGTH_SHORT).show();
 
                     Account account;
                     try {
-                        account = new Account(-1, usernameEditText.getText().toString(), passwordEditText.getText().toString(), nativeEditText.getText().toString(), targetEditText.getText().toString());
+                        account = new Account(0, usernameEditText.getText().toString(), passwordEditText.getText().toString(), nativeEditText.getText().toString(), targetEditText.getText().toString());
 
                         Toast.makeText(Register.this, account.toString(), Toast.LENGTH_SHORT).show();
                     }
                     catch(Exception e){
                         Toast.makeText(Register.this, "Error creating customer", Toast.LENGTH_SHORT).show();
-                        account = new Account(-1, "error","error","error","error");
+                        account = new Account(0, "error","error","error","error");
                     }
 
-                    DatabaseHelper accountDatabase = new DatabaseHelper(Register.this, null, null, 1);
+                    AccountDatabase accountDatabase = new AccountDatabase();
 
                     boolean success = accountDatabase.addUser(account);
-                    Toast.makeText(Register.this, "Sucess=" + success , Toast.LENGTH_SHORT).show();
 
                     if(success == true){
-                        startActivity(new Intent(Register.this, FlashcardActivity.class));
+                        Toast.makeText(Register.this, "Sucess", Toast.LENGTH_SHORT).show();
+
                     }
+                    else {
+                        Toast.makeText(Register.this, "Register Failed", Toast.LENGTH_SHORT).show();
+
+                    }
+                    startActivity(new Intent(Register.this, FlashcardActivity.class));
 
 
                 }
