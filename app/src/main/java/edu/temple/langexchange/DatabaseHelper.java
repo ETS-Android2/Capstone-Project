@@ -49,7 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      onCreate(db);
     }
 
-    void addUser(Account account){
+    boolean addUser(Account account){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -58,8 +58,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(PREF_LANGUAGE, account.getPref_language());
         values.put(LEARNING_LANGUAGE, account.getLearning_language());
 
-        db.insert(TABLE_CONTENTS, null, values);
+        long insert = db.insert(TABLE_CONTENTS, null, values);
         db.close();
+        if(insert == -1){
+            return false;
+        }
+        else{
+            return true;
+        }
 
     }
 

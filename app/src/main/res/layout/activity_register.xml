@@ -13,104 +13,112 @@
     tools:deviceIds="wear">
 
 
-
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="209dp"
-            android:layout_height="52dp"
-            android:text="Register"
-            android:textSize="40dp"
-            android:textColor="@color/black"
-            tools:ignore="MissingConstraints" />
-
     <EditText
         android:id="@+id/editTextEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="564dp"
         android:ems="10"
         android:inputType="textEmailAddress"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="155dp"
-        tools:layout_editor_absoluteY="135dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/editTextNativeLang"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="384dp"
         android:ems="10"
         android:inputType="text"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="157dp"
-        tools:layout_editor_absoluteY="308dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName3"
+        android:id="@+id/editTextTargetLang"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="440dp"
         android:ems="10"
         android:inputType="text"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="154dp"
-        tools:layout_editor_absoluteY="247dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editTextTextPassword2"
+        android:id="@+id/editTextPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="504dp"
         android:ems="10"
         android:inputType="textPassword"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="156dp"
-        tools:layout_editor_absoluteY="188dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/passwordTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="520dp"
         android:text="Password"
         android:textSize="18dp"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="65dp"
-        tools:layout_editor_absoluteY="196dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.099"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/targetLangTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="456dp"
         android:text="Target Language"
         android:textSize="18dp"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="12dp"
-        tools:layout_editor_absoluteY="256dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.057"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/nativeLangTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="400dp"
         android:text="Native Language"
         android:textSize="18dp"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="317dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.057"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/emailTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="580dp"
         android:text="Email"
         android:textSize="18dp"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="100dp"
-        tools:layout_editor_absoluteY="142dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.198"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/submitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="248dp"
         android:text="Submit"
-        tools:layout_editor_absoluteX="132dp"
-        tools:layout_editor_absoluteY="397dp"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.515"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
