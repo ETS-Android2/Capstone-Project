@@ -29,4 +29,8 @@
     <string name="translated_word_field">Translated Word</string>
     <string name="definition_field">Answer</string>
     <string name="view_quiz_button">View Quiz</string>
+    <string name="type_your_answer">Type Your Answer</string>
+    <string name="submit_quiz_answer">Submit</string>
+    <string name="quiz_title">Quiz</string>
+    <string name="view_quiz_result_btn">View Result</string>
 </resources>
