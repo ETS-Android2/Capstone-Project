@@ -7,15 +7,24 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class FlashcardActivity extends AppCompatActivity {
-
-    private static int counter = 0;
 
     TextView text;
     GridView gridView;
@@ -23,7 +32,9 @@ public class FlashcardActivity extends AppCompatActivity {
     Button makeFlashcardBtn;
     Button makeQuizBtn;
 
-    ArrayList<Flashcards> flashcardList = new ArrayList<>();
+    List<Flashcards> flashcardList;
+
+    DatabaseReference ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +50,34 @@ public class FlashcardActivity extends AppCompatActivity {
 
         text.setText(R.string.flashcard_instructions);
 
-        flashcardList.add(new Flashcards(1, "Hello", "Hola", "A Word to Greet People in Spanish"));
-        flashcardList.add(new Flashcards(2, "Hello", "Bonjour", "A Word to Greet People in French"));
+        flashcardList = new ArrayList<>();
 
-        for (Flashcards card : flashcardList) {
-            counter++;
-        }
+        // access the database
+        ref = FirebaseDatabase.getInstance().getReference().child("Flashcards");
 
-        FlashcardAdapter adapter = new FlashcardAdapter(this, flashcardList);
-        gridView.setAdapter(adapter);
+        // listen for changes on db
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                flashcardList.clear();
+
+                // this is used to populate our array of flashcards
+                for (DataSnapshot flashcardData : snapshot.getChildren()) {
+                    Flashcards flashcard = flashcardData.getValue(Flashcards.class);
+
+                    flashcardList.add(flashcard);
+                }
+
+                // custom adapter used to show our data to users
+                FlashcardAdapter adapter = new FlashcardAdapter(FlashcardActivity.this, flashcardList);
+                gridView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -58,7 +88,6 @@ public class FlashcardActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
         makeFlashcardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,19 +111,7 @@ public class FlashcardActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            String original = data.getStringExtra("originalWord");
-            String translation = data.getStringExtra("translatedWord");
-            String definition = data.getStringExtra("definition");
-
-            // add the new flashcard onto the list
-            flashcardList.add(new Flashcards(counter += 1, translation, original, definition));
-
-            // reference layout from xml
-            gridView = findViewById(R.id.flashcardGrid);
-
-            // refresh the grid view
-            FlashcardAdapter adapter = new FlashcardAdapter(this, flashcardList);
-            gridView.setAdapter(adapter);
+            Toast.makeText(FlashcardActivity.this, "Added flashcard to database", Toast.LENGTH_SHORT).show();
         }
     }
 }

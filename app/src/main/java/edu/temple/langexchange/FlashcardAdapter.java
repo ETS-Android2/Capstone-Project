@@ -10,13 +10,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FlashcardAdapter extends BaseAdapter {
 
     Context context;
-    ArrayList<Flashcards> items;
+    List<Flashcards> items;
 
-    public FlashcardAdapter(Context context, ArrayList items) {
+    public FlashcardAdapter(Context context, List items) {
         this.context = context;
         this.items = items;
     }
