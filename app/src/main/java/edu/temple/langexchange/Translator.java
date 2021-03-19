@@ -12,6 +12,8 @@ import com.google.cloud.translate.Translation;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +22,7 @@ public class Translator {
     private static String translatedText;
     private static boolean connected;
     private static Translate translate;
-    final static Map<String, String> languageCodes= new HashMap<String, String>(){{
+    final static Map<String, String> languageCodes = new HashMap<String, String>(){{
         put("Arabic", "ar");
         put("Armenian", "hy");
         put("Azerbaijani", "az");
@@ -62,7 +64,16 @@ public class Translator {
 
     }};
 
+    public static ArrayList<String> getLanguages(){
+        ArrayList<String>languages = new ArrayList<>();
+        for(String key : languageCodes.keySet()){
+            languages.add(key);
 
+        }
+        languages.remove("Chinese");
+        Collections.sort(languages);
+        return languages;
+    }
     public static String translate(String text, String prefLang, Context context) {
         if(!languageCodes.containsKey(prefLang)){
             return "Language not supported.";
@@ -82,7 +93,7 @@ public class Translator {
 
     }
 
-    public static void getTranslateService(Context context) {
+    private static void getTranslateService(Context context) {
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
