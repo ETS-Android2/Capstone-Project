@@ -2,6 +2,7 @@ package edu.temple.langexchange;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -33,7 +34,6 @@ public class FlashcardActivity extends AppCompatActivity {
     Button makeQuizBtn;
 
     List<Flashcards> flashcardList;
-
     DatabaseReference ref;
 
     @Override
@@ -55,6 +55,10 @@ public class FlashcardActivity extends AppCompatActivity {
         // access the database
         ref = FirebaseDatabase.getInstance().getReference().child("Flashcards");
 
+        // get data
+        Intent intent = getIntent();
+        int userId = intent.getIntExtra("userId", 0);
+
         // listen for changes on db
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -65,7 +69,9 @@ public class FlashcardActivity extends AppCompatActivity {
                 for (DataSnapshot flashcardData : snapshot.getChildren()) {
                     Flashcards flashcard = flashcardData.getValue(Flashcards.class);
 
-                    flashcardList.add(flashcard);
+                    if (flashcard.id == userId) {
+                        flashcardList.add(flashcard);
+                    }
                 }
 
                 // custom adapter used to show our data to users
@@ -93,6 +99,7 @@ public class FlashcardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FlashcardActivity.this, MakeFlashcard.class);
+                intent.putExtra("userId", userId);
                 startActivityForResult(intent, 1);
             }
         });
@@ -101,6 +108,7 @@ public class FlashcardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FlashcardActivity.this, QuizActivity.class);
+                intent.putExtra("userId", userId);
                 startActivity(intent);
             }
         });
