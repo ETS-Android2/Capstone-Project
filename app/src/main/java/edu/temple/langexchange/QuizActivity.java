@@ -56,6 +56,12 @@ public class QuizActivity extends AppCompatActivity {
         questions = new ArrayList<String>();
         answers = new ArrayList<String>();
 
+        // retrieve intent
+        Intent intent = getIntent();
+
+        // retrieve passed in data
+        int userId = intent.getIntExtra("userId", 0);
+
         // connect to the database
         ref = FirebaseDatabase.getInstance().getReference().child("Flashcards");
 
@@ -66,7 +72,10 @@ public class QuizActivity extends AppCompatActivity {
 
                 for (DataSnapshot flashcardData : snapshot.getChildren()) {
                     Flashcards flashcard = flashcardData.getValue(Flashcards.class);
-                    flashcardList.add(flashcard);
+
+                    if (flashcard.id == userId) {
+                        flashcardList.add(flashcard);
+                    }
                 }
 
                 for (Flashcards card : flashcardList) {
