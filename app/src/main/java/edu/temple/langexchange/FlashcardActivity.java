@@ -55,11 +55,16 @@ public class FlashcardActivity extends AppCompatActivity {
         // access the database
         ref = FirebaseDatabase.getInstance().getReference().child("Flashcards");
 
-        // get data
+        // get data from intent
         Intent intent = getIntent();
-        int userId = intent.getIntExtra("userId", 0);
-        Log.i("userId", String.valueOf(userId));
 
+        // assign data from intent to a variable
+        int userId = intent.getIntExtra("userId", 0);
+        String username = intent.getStringExtra("username");
+
+        // check Logcat to see if it assigned correctly
+        Log.i("username - Flashcard", username);
+        Log.i("userid - Flashcard", String.valueOf(userId));
 
         // listen for changes on db
         ref.addValueEventListener(new ValueEventListener() {
