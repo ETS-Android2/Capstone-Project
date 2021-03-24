@@ -58,6 +58,8 @@ public class FlashcardActivity extends AppCompatActivity {
         // get data
         Intent intent = getIntent();
         int userId = intent.getIntExtra("userId", 0);
+        Log.i("userId", String.valueOf(userId));
+
 
         // listen for changes on db
         ref.addValueEventListener(new ValueEventListener() {
