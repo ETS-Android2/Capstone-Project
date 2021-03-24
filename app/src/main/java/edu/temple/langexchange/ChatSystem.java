@@ -4,12 +4,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.scaledrone.lib.Listener;
 import com.scaledrone.lib.Member;
 import com.scaledrone.lib.Room;
@@ -22,17 +29,53 @@ import java.util.Random;
 public class ChatSystem extends AppCompatActivity implements RoomListener {
 
     // replace this with a real channelID from Scaledrone dashboard
-    private String channelID = "Pbf9jcw2NrgUxB2B";
+    private String channelID = "";
     private String roomName = "observable-room";
     private EditText editText;
     private Scaledrone scaledrone;
     private MessageAdapter messageAdapter;
     private ListView messagesView;
+    private String userName, targetLang = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.messagingtabgui);
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Account");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Account account = snapshot.getValue(Account.class);
+                userName = account.username;
+                targetLang = account.learnLang.toUpperCase();
+                if(targetLang == "FRENCH")
+                {
+                    channelID = "Pbf9jcw2NrgUxB2B";
+                    Toast.makeText(ChatSystem.this, "Connected to French Channel",Toast.LENGTH_LONG).show();
+                }
+                else if(targetLang == "SPANISH")
+                {
+                    channelID = "K37YpRtGTMBC9JAZ";
+                    Toast.makeText(ChatSystem.this, "Connected to Spanish Channel",Toast.LENGTH_LONG).show();
+                }
+                else if(targetLang == "GERMAN")
+                {
+                    channelID = "iTzl5dVNhZweOFTo";
+                    Toast.makeText(ChatSystem.this, "Connected to German Channel",Toast.LENGTH_LONG).show();
+                }
+                else if(targetLang == "ENGLISH")
+                {
+                    channelID = "";
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println("The read failed: " + error.getCode());
+            }
+        });
+
 
         editText = (EditText) findViewById(R.id.editText);
 
@@ -40,7 +83,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         messagesView = (ListView) findViewById(R.id.messages_view);
         messagesView.setAdapter(messageAdapter);
 
-        MemberData data = new MemberData(getRandomName(), getRandomColor());
+        MemberData data = new MemberData(userName, getRandomColor());
 
         scaledrone = new Scaledrone(channelID, data);
         scaledrone.connect(new Listener() {
