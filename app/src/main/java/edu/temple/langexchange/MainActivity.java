@@ -23,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
         button = findViewById(R.id.button);
         buttonQuiz = findViewById(R.id.button2);
         buttonStartChat = findViewById(R.id.button3);
+        Intent intentPrev = getIntent();
+        String userName = intentPrev.getStringExtra("username");
+        System.out.println("username received from login: " + userName);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         buttonStartChat.setOnClickListener(new View.OnClickListener() {
           public void onClick(View v) {
               Intent intent = new Intent(MainActivity.this, ChatSystem.class);
-              intent.putExtra("username", getIntent().getStringExtra("username"));
+              intent.putExtra("username", userName);
               startActivity(intent);
           }
         });

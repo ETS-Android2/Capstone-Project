@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 intent.putExtra("username", userName);
                                 if(account.password.equals(passwordEditText.getText().toString())) {
-                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                    startActivity(intent);
                                 }
                                 else{
                                     Toast.makeText(LoginActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();

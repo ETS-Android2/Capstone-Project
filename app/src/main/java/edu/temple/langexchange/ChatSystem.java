@@ -1,7 +1,9 @@
 package edu.temple.langexchange;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -39,6 +41,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
     private ListView messagesView;
     private String userName, targetLang = "";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,69 +50,79 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         Intent intent = getIntent();
         userName = intent.getStringExtra("username");
         System.out.println("username received: " + userName);
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Account");
-        Query query = ref.orderByChild("username").equalTo(userName).limitToFirst(1);
-        query.addValueEventListener(new ValueEventListener() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Account");
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                    Account account = childSnapshot.getValue(Account.class);
-                    targetLang = account.learnLang.toUpperCase();
+                    targetLang = childSnapshot.child("learnLang").getValue().toString().toUpperCase();
                     System.out.println("target lang is: " + targetLang);
-                    switch (targetLang) {
-                        case "FRENCH":
-                            channelID = "Pbf9jcw2NrgUxB2B";
-                            break;
-                        case "SPANISH":
-                            channelID = "K37YpRtGTMBC9JAZ";
-                            break;
-                        case "GERMAN":
-                            channelID = "iTzl5dVNhZweOFTo";
-                            break;
-                        case "ENGLISH":
-                            channelID = "";
-                            break;
-                    }
                 }
+                if(targetLang.equals("SPANISH"))
+                {
+                    channelID = "K37YpRtGTMBC9JAZ";
+                }
+                else if(targetLang.equals("GERMAN"))
+                {
+                    channelID = "iTzl5dVNhZweOFTo";
+                }
+                else if(targetLang.equals("FRENCH"))
+                {
+                    channelID = "Pbf9jcw2NrgUxB2B";
+                }
+                else if(channelID == "")
+                {
+                    Toast.makeText(ChatSystem.this, "Unable to Connect to Chat", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+//        else{
+//            channelID = "Pbf9jcw2NrgUxB2B";
+//        }
+                if(!isFinishing() && targetLang != "")
+                {
+                    editText = (EditText) findViewById(R.id.editText);
+
+                    messageAdapter = new MessageAdapter(ChatSystem.this);
+                    messagesView = (ListView) findViewById(R.id.messages_view);
+                    messagesView.setAdapter(messageAdapter);
+
+                    MemberData data = new MemberData(userName, getRandomColor());
+
+                    String welcomeString = "Welcome to " + targetLang + " Channel";
+                    System.out.println(welcomeString);
+                    System.out.println("channelID received: " + channelID);
+                    System.out.println("targetLang received: " + targetLang);
+                    scaledrone = new Scaledrone(channelID, data);
+                    Toast.makeText(ChatSystem.this, welcomeString, Toast.LENGTH_LONG).show();
+                    scaledrone.connect(new Listener() {
+                        @Override
+                        public void onOpen() {
+                            System.out.println("Scaledrone connection open");
+                            scaledrone.subscribe(roomName, ChatSystem.this);
+                        }
+
+                        @Override
+                        public void onOpenFailure(Exception ex) {
+                            System.err.println(ex);
+                        }
+
+                        @Override
+                        public void onFailure(Exception ex) {
+                            System.err.println(ex);
+                        }
+
+                        @Override
+                        public void onClosed(String reason) {
+                            System.err.println(reason);
+                        }
+                    });
+                }
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 System.out.println("The read failed: " + error.getCode());
-            }
-        });
-
-
-        editText = (EditText) findViewById(R.id.editText);
-
-        messageAdapter = new MessageAdapter(this);
-        messagesView = (ListView) findViewById(R.id.messages_view);
-        messagesView.setAdapter(messageAdapter);
-
-        MemberData data = new MemberData(userName, getRandomColor());
-
-        scaledrone = new Scaledrone(channelID, data);
-        Toast.makeText(ChatSystem.this, "Connected to " + targetLang + " Channel!", Toast.LENGTH_LONG).show();
-        scaledrone.connect(new Listener() {
-            @Override
-            public void onOpen() {
-                System.out.println("Scaledrone connection open");
-                scaledrone.subscribe(roomName, ChatSystem.this);
-            }
-
-            @Override
-            public void onOpenFailure(Exception ex) {
-                System.err.println(ex);
-            }
-
-            @Override
-            public void onFailure(Exception ex) {
-                System.err.println(ex);
-            }
-
-            @Override
-            public void onClosed(String reason) {
-                System.err.println(reason);
             }
         });
     }
@@ -149,16 +162,6 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-    }
-
-    private String getRandomName() {
-        String[] adjs = {"autumn", "hidden", "bitter", "misty", "silent", "empty", "dry", "dark", "summer", "icy", "delicate", "quiet", "white", "cool", "spring", "winter", "patient", "twilight", "dawn", "crimson", "wispy", "weathered", "blue", "billowing", "broken", "cold", "damp", "falling", "frosty", "green", "long", "late", "lingering", "bold", "little", "morning", "muddy", "old", "red", "rough", "still", "small", "sparkling", "throbbing", "shy", "wandering", "withered", "wild", "black", "young", "holy", "solitary", "fragrant", "aged", "snowy", "proud", "floral", "restless", "divine", "polished", "ancient", "purple", "lively", "nameless"};
-        String[] nouns = {"waterfall", "river", "breeze", "moon", "rain", "wind", "sea", "morning", "snow", "lake", "sunset", "pine", "shadow", "leaf", "dawn", "glitter", "forest", "hill", "cloud", "meadow", "sun", "glade", "bird", "brook", "butterfly", "bush", "dew", "dust", "field", "fire", "flower", "firefly", "feather", "grass", "haze", "mountain", "night", "pond", "darkness", "snowflake", "silence", "sound", "sky", "shape", "surf", "thunder", "violet", "water", "wildflower", "wave", "water", "resonance", "sun", "wood", "dream", "cherry", "tree", "fog", "frost", "voice", "paper", "frog", "smoke", "star"};
-        return (
-                adjs[(int) Math.floor(Math.random() * adjs.length)] +
-                        "_" +
-                        nouns[(int) Math.floor(Math.random() * nouns.length)]
-        );
     }
 
     private String getRandomColor() {
