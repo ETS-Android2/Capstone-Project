@@ -1,5 +1,6 @@
 package edu.temple.langexchange;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.scaledrone.lib.Listener;
 import com.scaledrone.lib.Member;
@@ -30,7 +32,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
 
     // replace this with a real channelID from Scaledrone dashboard
     private String channelID = "";
-    private String roomName = "observable-room";
+    private final String roomName = "observable-room";
     private EditText editText;
     private Scaledrone scaledrone;
     private MessageAdapter messageAdapter;
@@ -42,31 +44,35 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.messagingtabgui);
 
+        Intent intent = getIntent();
+        userName = intent.getStringExtra("username");
+        System.out.println("username received: " + userName);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Account");
-        ref.addValueEventListener(new ValueEventListener() {
+        Query query = ref.orderByChild("username").equalTo(userName).limitToFirst(1);
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Account account = snapshot.getValue(Account.class);
-                userName = account.username;
-                targetLang = account.learnLang.toUpperCase();
-                if(targetLang == "FRENCH")
-                {
-                    channelID = "Pbf9jcw2NrgUxB2B";
-                    Toast.makeText(ChatSystem.this, "Connected to French Channel",Toast.LENGTH_LONG).show();
-                }
-                else if(targetLang == "SPANISH")
-                {
-                    channelID = "K37YpRtGTMBC9JAZ";
-                    Toast.makeText(ChatSystem.this, "Connected to Spanish Channel",Toast.LENGTH_LONG).show();
-                }
-                else if(targetLang == "GERMAN")
-                {
-                    channelID = "iTzl5dVNhZweOFTo";
-                    Toast.makeText(ChatSystem.this, "Connected to German Channel",Toast.LENGTH_LONG).show();
-                }
-                else if(targetLang == "ENGLISH")
-                {
-                    channelID = "";
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                    Account account = childSnapshot.getValue(Account.class);
+                    targetLang = account.learnLang.toUpperCase();
+                    System.out.println("target lang is: " + targetLang);
+                    switch (targetLang) {
+                        case "FRENCH":
+                            channelID = "Pbf9jcw2NrgUxB2B";
+//                            Toast.makeText(ChatSystem.this, "Connected to French Channel", Toast.LENGTH_LONG).show();
+                            break;
+                        case "SPANISH":
+                            channelID = "K37YpRtGTMBC9JAZ";
+//                            Toast.makeText(ChatSystem.this, "Connected to Spanish Channel", Toast.LENGTH_LONG).show();
+                            break;
+                        case "GERMAN":
+                            channelID = "iTzl5dVNhZweOFTo";
+//                            Toast.makeText(ChatSystem.this, "Connected to German Channel", Toast.LENGTH_LONG).show();
+                            break;
+                        case "ENGLISH":
+                            channelID = "";
+                            break;
+                    }
                 }
             }
 

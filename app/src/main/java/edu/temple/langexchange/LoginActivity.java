@@ -2,6 +2,7 @@ package edu.temple.langexchange;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -70,8 +71,12 @@ public class LoginActivity extends AppCompatActivity {
                             for(DataSnapshot childSnapshot: snapshot.getChildren()){
                                 int place = 0;
                                 Account account = childSnapshot.getValue(Account.class);
+                                String userName = account.username;
+                                System.out.println("username sent: " + userName);
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent.putExtra("username", userName);
                                 if(account.password.equals(passwordEditText.getText().toString())) {
-                                    startActivity(new Intent(LoginActivity.this, FlashcardActivity.class));
+                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 }
                                 else{
                                     Toast.makeText(LoginActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
