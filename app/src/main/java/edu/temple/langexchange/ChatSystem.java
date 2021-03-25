@@ -59,15 +59,12 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                     switch (targetLang) {
                         case "FRENCH":
                             channelID = "Pbf9jcw2NrgUxB2B";
-//                            Toast.makeText(ChatSystem.this, "Connected to French Channel", Toast.LENGTH_LONG).show();
                             break;
                         case "SPANISH":
                             channelID = "K37YpRtGTMBC9JAZ";
-//                            Toast.makeText(ChatSystem.this, "Connected to Spanish Channel", Toast.LENGTH_LONG).show();
                             break;
                         case "GERMAN":
                             channelID = "iTzl5dVNhZweOFTo";
-//                            Toast.makeText(ChatSystem.this, "Connected to German Channel", Toast.LENGTH_LONG).show();
                             break;
                         case "ENGLISH":
                             channelID = "";
@@ -92,6 +89,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         MemberData data = new MemberData(userName, getRandomColor());
 
         scaledrone = new Scaledrone(channelID, data);
+        Toast.makeText(ChatSystem.this, "Connected to " + targetLang + " Channel!", Toast.LENGTH_LONG).show();
         scaledrone.connect(new Listener() {
             @Override
             public void onOpen() {
