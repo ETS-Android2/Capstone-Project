@@ -39,7 +39,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
     private Scaledrone scaledrone;
     private MessageAdapter messageAdapter;
     private ListView messagesView;
-    private String userName, targetLang = "";
+    private String userName, targetLang, prefLang, receivedLang = "";
 
 
     @Override
@@ -49,6 +49,10 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
 
         Intent intent = getIntent();
         userName = intent.getStringExtra("username");
+        receivedLang = intent.getStringExtra("langSelected");
+        System.out.println(receivedLang);
+        channelID = intent.getStringExtra("channelID");
+        int userNameController = userName.indexOf("@");
         System.out.println("username received: " + userName);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Account");
         ref.addValueEventListener(new ValueEventListener() {
@@ -56,29 +60,25 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                     targetLang = childSnapshot.child("learnLang").getValue().toString().toUpperCase();
+                    prefLang = childSnapshot.child("prefLang").getValue().toString().toUpperCase();
                     System.out.println("target lang is: " + targetLang);
+                    System.out.println("target lang is: " + prefLang);
                 }
-                if(targetLang.equals("SPANISH"))
+                if(targetLang.equals(receivedLang))
                 {
-                    channelID = "K37YpRtGTMBC9JAZ";
+                    userName = userName.substring(0, userNameController) + " - Learner";
                 }
-                else if(targetLang.equals("GERMAN"))
-                {
-                    channelID = "iTzl5dVNhZweOFTo";
+                else if(prefLang.equals(receivedLang)){
+                    userName = userName.substring(0, userNameController) + " - Native";
                 }
-                else if(targetLang.equals("FRENCH"))
-                {
-                    channelID = "Pbf9jcw2NrgUxB2B";
-                }
-                else if(channelID == "")
+
+                if(channelID == "")
                 {
                     Toast.makeText(ChatSystem.this, "Unable to Connect to Chat", Toast.LENGTH_LONG).show();
                     finish();
                 }
-//        else{
-//            channelID = "Pbf9jcw2NrgUxB2B";
-//        }
-                if(!isFinishing() && targetLang != "")
+
+                if(!isFinishing())
                 {
                     editText = (EditText) findViewById(R.id.editText);
 

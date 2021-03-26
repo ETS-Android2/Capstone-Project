@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         });
         buttonStartChat.setOnClickListener(new View.OnClickListener() {
           public void onClick(View v) {
-              Intent intent = new Intent(MainActivity.this, ChatSystem.class);
+              Intent intent = new Intent(MainActivity.this, ChatRoomChoice.class);
               intent.putExtra("username", userName);
               startActivity(intent);
           }

@@ -66,6 +66,7 @@
         <activity android:name=".QuizTaking" />
         <activity android:name=".MakeFlashcard" />
         <activity android:name=".Register" />
+        <activity android:name=".ChatRoomChoice"/>
     </application>
 
 </manifest>
