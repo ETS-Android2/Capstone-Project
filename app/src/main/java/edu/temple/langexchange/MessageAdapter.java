@@ -57,8 +57,7 @@ public class MessageAdapter extends BaseAdapter {
             convertView.setTag(holder);
             holder.messageBody.setText(message.getText());
             holder.translation = (TextView) convertView.findViewById(R.id.translation);
-            String tranlsatedView = message.getText() + "\n\nTranslation: " + Translator.translate(message.getText(), "Spanish", context);
-            holder.translation.setText(tranlsatedView);
+
 
         } else { // this message was sent by someone else so let's create an advanced chat bubble on the left
             convertView = messageInflater.inflate(R.layout.incoming_message, null);
@@ -72,7 +71,6 @@ public class MessageAdapter extends BaseAdapter {
             holder.messageBody.setText(message.getText());
             GradientDrawable drawable = (GradientDrawable) holder.avatar.getBackground();
             drawable.setColor(Color.parseColor(message.getMemberData().getColor()));
-            holder.translation.setText(Translator.translate(message.getText(), "Spanish", context));
         }
 
         return convertView;

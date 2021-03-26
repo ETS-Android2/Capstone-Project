@@ -52,6 +52,6 @@
         android:paddingHorizontal="16dp"
         android:paddingVertical="12dp"
         android:visibility="invisible"
-        android:text="How are you doing? This is a long message that should probably wrap."
+        android:text=""
         android:textSize="18dp" />
 </RelativeLayout>

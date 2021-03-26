@@ -1,5 +1,6 @@
 package edu.temple.langexchange;
 
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,12 +25,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.scaledrone.lib.Listener;
+import com.scaledrone.lib.Member;
 import com.scaledrone.lib.Room;
 import com.scaledrone.lib.RoomListener;
 import com.scaledrone.lib.Scaledrone;
 
-import org.w3c.dom.Text;
-
+import java.util.List;
 import java.util.Random;
 
 public class ChatSystem extends AppCompatActivity implements RoomListener {
@@ -48,36 +50,6 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.messagingtabgui);
 
-
-        editText = (EditText) findViewById(R.id.editText);
-
-        messageAdapter = new MessageAdapter(this);
-
-        messagesView = (ListView) findViewById(R.id.messages_view);
-        messagesView.setAdapter(messageAdapter);
-
-        MemberData data = new MemberData(getRandomName(), getRandomColor());
-        messagesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                //View myView = parent.getAdapter().getView(position,null, parent);
-                TextView myTranslation = (TextView) view.findViewById(R.id.translation);
-                TextView original = (TextView) view.findViewById(R.id.message_body);
-                if(myTranslation.getVisibility() == View.INVISIBLE){
-                   myTranslation.setVisibility(View.VISIBLE);
-                   original.setVisibility(View.INVISIBLE);
-                }
-                else{
-                    myTranslation.setVisibility(View.INVISIBLE);
-                    original.setVisibility(View.VISIBLE);
-                }
-                return true;
-            }
-        });
-
-        scaledrone = new Scaledrone(channelID, data);
-        scaledrone.connect(new Listener() {
-
         Intent intent = getIntent();
         userName = intent.getStringExtra("username");
         receivedLang = intent.getStringExtra("langSelected");
@@ -88,16 +60,15 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Account");
         Query query = ref.orderByChild("username").equalTo(userName).limitToFirst(1);
         query.addValueEventListener(new ValueEventListener() {
-
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                     targetLang = childSnapshot.child("learnLang").getValue().toString().toUpperCase();
-                    prefLang = childSnapshot.child("prefLang").getValue().toString().toUpperCase();
+                    prefLang = childSnapshot.child("prefLang").getValue().toString();
                     System.out.println("target lang is: " + targetLang);
                     System.out.println("pref lang is: " + prefLang);
                 }
-                if(prefLang.equals(receivedLang))
+                if(prefLang.toUpperCase().equals(receivedLang))
                 {
                     userName = userName.substring(0, userNameController) + " - Native";
                 }
@@ -121,6 +92,28 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                     messagesView.setAdapter(messageAdapter);
 
                     MemberData data = new MemberData(userName, getRandomColor());
+                    messagesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                            //View myView = parent.getAdapter().getView(position,null, parent);
+                            TextView myTranslation = (TextView) view.findViewById(R.id.translation);
+                            TextView original = (TextView) view.findViewById(R.id.message_body);
+                            if (myTranslation.getText().toString().isEmpty()){
+                                String translateView = original.getText().toString() + "\n\n Translation: " + Translator.translate(original.getText().toString(), prefLang, ChatSystem.this);
+                                myTranslation.setText(translateView);
+                            }
+                            if(myTranslation.getVisibility() == View.INVISIBLE){
+                                myTranslation.setVisibility(View.VISIBLE);
+                                original.setVisibility(View.INVISIBLE);
+                            }
+                            else{
+                                myTranslation.setVisibility(View.INVISIBLE);
+                                original.setVisibility(View.VISIBLE);
+                            }
+                            return true;
+                        }
+                    });
+
 
                     String welcomeString = "Welcome to " + receivedLang + " Channel";
                     System.out.println(welcomeString);

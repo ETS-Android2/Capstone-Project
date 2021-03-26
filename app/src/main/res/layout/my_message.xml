@@ -30,7 +30,7 @@
         android:textSize="18sp"
         android:visibility="invisible"
         android:layout_alignParentEnd="true"
-        android:text="@string/placeholder_message"
+        android:text=""
         />
 
 </RelativeLayout>
