@@ -2,21 +2,23 @@ package edu.temple.langexchange;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scaledrone.lib.Listener;
-import com.scaledrone.lib.Member;
 import com.scaledrone.lib.Room;
 import com.scaledrone.lib.RoomListener;
 import com.scaledrone.lib.Scaledrone;
 
-import java.util.List;
+import org.w3c.dom.Text;
+
 import java.util.Random;
 
 public class ChatSystem extends AppCompatActivity implements RoomListener {
@@ -37,10 +39,28 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         editText = (EditText) findViewById(R.id.editText);
 
         messageAdapter = new MessageAdapter(this);
+
         messagesView = (ListView) findViewById(R.id.messages_view);
         messagesView.setAdapter(messageAdapter);
 
         MemberData data = new MemberData(getRandomName(), getRandomColor());
+        messagesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                //View myView = parent.getAdapter().getView(position,null, parent);
+                TextView myTranslation = (TextView) view.findViewById(R.id.translation);
+                TextView original = (TextView) view.findViewById(R.id.message_body);
+                if(myTranslation.getVisibility() == View.INVISIBLE){
+                   myTranslation.setVisibility(View.VISIBLE);
+                   original.setVisibility(View.INVISIBLE);
+                }
+                else{
+                    myTranslation.setVisibility(View.INVISIBLE);
+                    original.setVisibility(View.VISIBLE);
+                }
+                return true;
+            }
+        });
 
         scaledrone = new Scaledrone(channelID, data);
         scaledrone.connect(new Listener() {
