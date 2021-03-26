@@ -41,6 +41,8 @@
     <string name="quiz_title">Quiz</string>
     <string name="view_quiz_result_btn">View Result</string>
     <string name="show_flashcards_btn">Show Flashcards</string>
+    <string name="no_connection">No internet connection! Cannot be translated!</string>
+    <string name="title_activity_translation_testing">TranslationTesting</string>
     <string name="start_chat_button">Chat</string>
     <string name="placeholder_message">Placeholder message</string>
 </resources>
