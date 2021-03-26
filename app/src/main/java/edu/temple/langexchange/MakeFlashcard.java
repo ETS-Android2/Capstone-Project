@@ -2,6 +2,7 @@ package edu.temple.langexchange;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,13 +45,15 @@ public class MakeFlashcard extends AppCompatActivity {
         addFlashcardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int id = 0;
+                Intent intent = getIntent();
+                int userId = intent.getIntExtra("userId", 0);
+
                 String original = originalWordInput.getText().toString();
                 String translation = translatedWordInput.getText().toString();
                 String definition = definitionInput.getText().toString();
 
                 // creates a new flashcard object with the new values
-                Flashcards flashcard = new Flashcards(id, translation, original, definition);
+                Flashcards flashcard = new Flashcards(userId, translation, original, definition);
 
                 // this places the flashcard onto the database
                 ref.push().setValue(flashcard);
