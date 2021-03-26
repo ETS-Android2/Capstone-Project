@@ -45,4 +45,8 @@
     <string name="title_activity_translation_testing">TranslationTesting</string>
     <string name="start_chat_button">Chat</string>
     <string name="placeholder_message">Placeholder message</string>
+    <string name="spanish_room_btn">SPANISH</string>
+    <string name="german_room_btn">GERMAN</string>
+    <string name="french_room_btn">FRENCH</string>
+    <string name="english_room_btn">ENGLISH</string>
 </resources>

@@ -13,7 +13,7 @@ import edu.temple.langexchange.ui.login.LoginActivity;
 public class MainActivity extends AppCompatActivity {
 
     Button button, buttonQuiz, buttonStartChat;
-  
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -23,19 +23,30 @@ public class MainActivity extends AppCompatActivity {
         button = findViewById(R.id.button);
         buttonQuiz = findViewById(R.id.button2);
         buttonStartChat = findViewById(R.id.button3);
+        Intent intentPrev = getIntent();
+        String userName = intentPrev.getStringExtra("username");
+        System.out.println("username received from login: " + userName);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, QuizActivity.class);
+                Intent intent = new Intent(MainActivity.this, FlashcardActivity.class);
 
                 startActivity(intent);
             }
         });
 
+        buttonQuiz.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, QuizActivity.class);
+                startActivity(intent);
+            }
+        });
         buttonStartChat.setOnClickListener(new View.OnClickListener() {
           public void onClick(View v) {
-              Intent intent = new Intent(MainActivity.this, ChatSystem.class);
+              Intent intent = new Intent(MainActivity.this, ChatRoomChoice.class);
+              intent.putExtra("username", userName);
               startActivity(intent);
           }
         });
