@@ -3,28 +3,43 @@ package edu.temple.langexchange;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scaledrone.lib.Listener;
+import com.scaledrone.lib.Member;
 import com.scaledrone.lib.Room;
 import com.scaledrone.lib.RoomListener;
 import com.scaledrone.lib.Scaledrone;
 
+import java.util.List;
 import java.util.Random;
 
 public class ChatSystem extends AppCompatActivity implements RoomListener {
 
-    private String channelID = "Pbf9jcw2NrgUxB2B"; //this is currently our French channel
-    private String roomName= "French";
+    // replace this with a real channelID from Scaledrone dashboard
+    private String channelID = "Pbf9jcw2NrgUxB2B";
+    private String roomName = "observable-room";
     private EditText editText;
     private Scaledrone scaledrone;
+    private MessageAdapter messageAdapter;
+    private ListView messagesView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.messagingtabgui);
+
         editText = (EditText) findViewById(R.id.editText);
+
+        messageAdapter = new MessageAdapter(this);
+        messagesView = (ListView) findViewById(R.id.messages_view);
+        messagesView.setAdapter(messageAdapter);
+
         MemberData data = new MemberData(getRandomName(), getRandomColor());
 
         scaledrone = new Scaledrone(channelID, data);
@@ -32,7 +47,6 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
             @Override
             public void onOpen() {
                 System.out.println("Scaledrone connection open");
-                // Since the MainActivity itself already implement RoomListener we can pass it as a target
                 scaledrone.subscribe(roomName, ChatSystem.this);
             }
 
@@ -53,30 +67,43 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         });
     }
 
+    public void sendMessage(View view) {
+        String message = editText.getText().toString();
+        if (message.length() > 0) {
+            scaledrone.publish(roomName, message);
+            editText.getText().clear();
+        }
+    }
+
     @Override
     public void onOpen(Room room) {
-        System.out.println("Connected to " + roomName);
+        System.out.println("Conneted to room");
     }
 
     @Override
     public void onOpenFailure(Room room, Exception ex) {
-        System.out.println(ex);
+        System.err.println(ex);
     }
 
     @Override
     public void onMessage(Room room, com.scaledrone.lib.Message receivedMessage) {
-
-    }
-
-    public void sendMessage(View view) {
-        String message = editText.getText().toString();
-        if (message.length() > 0) {
-            scaledrone.publish("French", message);
-            System.out.println("input: " + message);
-            editText.getText().clear();
+        final ObjectMapper mapper = new ObjectMapper();
+        try {
+            final MemberData data = mapper.treeToValue(receivedMessage.getMember().getClientData(), MemberData.class);
+            boolean belongsToCurrentUser = receivedMessage.getClientID().equals(scaledrone.getClientID());
+            final Message message = new Message(receivedMessage.getData().asText(), data, belongsToCurrentUser);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    messageAdapter.add(message);
+                    messagesView.setSelection(messagesView.getCount() - 1);
+                }
+            });
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
         }
     }
-    //these 2 following functions will be replaced with member login, just use them for now
+
     private String getRandomName() {
         String[] adjs = {"autumn", "hidden", "bitter", "misty", "silent", "empty", "dry", "dark", "summer", "icy", "delicate", "quiet", "white", "cool", "spring", "winter", "patient", "twilight", "dawn", "crimson", "wispy", "weathered", "blue", "billowing", "broken", "cold", "damp", "falling", "frosty", "green", "long", "late", "lingering", "bold", "little", "morning", "muddy", "old", "red", "rough", "still", "small", "sparkling", "throbbing", "shy", "wandering", "withered", "wild", "black", "young", "holy", "solitary", "fragrant", "aged", "snowy", "proud", "floral", "restless", "divine", "polished", "ancient", "purple", "lively", "nameless"};
         String[] nouns = {"waterfall", "river", "breeze", "moon", "rain", "wind", "sea", "morning", "snow", "lake", "sunset", "pine", "shadow", "leaf", "dawn", "glitter", "forest", "hill", "cloud", "meadow", "sun", "glade", "bird", "brook", "butterfly", "bush", "dew", "dust", "field", "fire", "flower", "firefly", "feather", "grass", "haze", "mountain", "night", "pond", "darkness", "snowflake", "silence", "sound", "sky", "shape", "surf", "thunder", "violet", "water", "wildflower", "wave", "water", "resonance", "sun", "wood", "dream", "cherry", "tree", "fog", "frost", "voice", "paper", "frog", "smoke", "star"};

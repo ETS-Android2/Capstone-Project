@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 
 public class QuizTaking extends AppCompatActivity {
 
-    TextView answer;
+    EditText answer;
     Button submit;
 
     @Override
@@ -26,21 +27,21 @@ public class QuizTaking extends AppCompatActivity {
         answer = findViewById(R.id.editAnswer);
         submit = findViewById(R.id.quizAnswerSubmitBtn);
 
-        Intent intent = getIntent();
-
-        int i = intent.getIntExtra("position", 0);
-        int length = intent.getIntExtra("quizLength", 0);
-        System.out.println("Received size: " + length);
-        System.out.println("Received index: " + i);
-        ArrayList<String> answerQuiz = new ArrayList<>();
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                answerQuiz.add(answer.getText().toString().toUpperCase());
-                answer.setText("");
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("QuizAnswer", answerQuiz.get(0));
-                setResult(RESULT_OK, returnIntent);
+                String myAnswer = answer.getText().toString().toUpperCase();
+
+                // start a new intent to return data
+                Intent intent = new Intent();
+
+                // place my answer into the intent
+                intent.putExtra("QuizAnswer", myAnswer);
+
+                // send data back
+                setResult(RESULT_OK, intent);
+
+                // finish activity
                 finish();
             }
         });
