@@ -75,21 +75,11 @@ public class LoginActivity extends AppCompatActivity {
                             for(DataSnapshot childSnapshot: snapshot.getChildren()){
                                 int place = 0;
                                 Account account = childSnapshot.getValue(Account.class);
+                                String userName = account.username;
+                                System.out.println("username sent: " + userName);
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent.putExtra("username", userName);
                                 if(account.password.equals(passwordEditText.getText().toString())) {
-                                    Intent intent = new Intent(LoginActivity.this, FlashcardActivity.class);
-
-                                    // assign values to userId and username
-                                    userId = account.getId();
-                                    username = account.getUsername();
-
-                                    // check Logcat to see if it assigned correctly
-                                    Log.i("username", username);
-                                    Log.i("userid", String.valueOf(userId));
-
-                                    // place user info into intent to pass between activities
-                                    intent.putExtra("userId", userId);
-                                    intent.putExtra("username", username);
-
                                     startActivity(intent);
                                 }
                                 else{
