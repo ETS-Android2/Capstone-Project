@@ -65,12 +65,13 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                     System.out.println("target lang is: " + targetLang);
                     System.out.println("pref lang is: " + prefLang);
                 }
-                if(targetLang.equals(receivedLang))
+                if(prefLang.equals(receivedLang))
+                {
+                    userName = userName.substring(0, userNameController) + " - Native";
+                }
+                else
                 {
                     userName = userName.substring(0, userNameController) + " - Learner";
-                }
-                if(prefLang.equals(receivedLang)){
-                    userName = userName.substring(0, userNameController) + " - Native";
                 }
 
                 if(channelID == "")
