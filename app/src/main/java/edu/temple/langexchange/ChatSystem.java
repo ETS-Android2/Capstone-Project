@@ -1,12 +1,15 @@
 package edu.temple.langexchange;
 
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -61,11 +64,11 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                     targetLang = childSnapshot.child("learnLang").getValue().toString().toUpperCase();
-                    prefLang = childSnapshot.child("prefLang").getValue().toString().toUpperCase();
+                    prefLang = childSnapshot.child("prefLang").getValue().toString();
                     System.out.println("target lang is: " + targetLang);
                     System.out.println("pref lang is: " + prefLang);
                 }
-                if(prefLang.equals(receivedLang))
+                if(prefLang.toUpperCase().equals(receivedLang))
                 {
                     userName = userName.substring(0, userNameController) + " - Native";
                 }
@@ -89,6 +92,28 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                     messagesView.setAdapter(messageAdapter);
 
                     MemberData data = new MemberData(userName, getRandomColor());
+                    messagesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                            //View myView = parent.getAdapter().getView(position,null, parent);
+                            TextView myTranslation = (TextView) view.findViewById(R.id.translation);
+                            TextView original = (TextView) view.findViewById(R.id.message_body);
+                            if (myTranslation.getText().toString().isEmpty()){
+                                String translateView = original.getText().toString() + "\n\n Translation: " + Translator.translate(original.getText().toString(), prefLang, ChatSystem.this);
+                                myTranslation.setText(translateView);
+                            }
+                            if(myTranslation.getVisibility() == View.INVISIBLE){
+                                myTranslation.setVisibility(View.VISIBLE);
+                                original.setVisibility(View.INVISIBLE);
+                            }
+                            else{
+                                myTranslation.setVisibility(View.INVISIBLE);
+                                original.setVisibility(View.VISIBLE);
+                            }
+                            return true;
+                        }
+                    });
+
 
                     String welcomeString = "Welcome to " + receivedLang + " Channel";
                     System.out.println(welcomeString);
