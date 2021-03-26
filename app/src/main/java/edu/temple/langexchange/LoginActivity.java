@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -31,6 +32,9 @@ public class LoginActivity extends AppCompatActivity {
     private TextView mTextView;
     private int loggedInUserId;
 
+    private static int userId = 0;
+    private static String username = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
             registerButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
-                    startActivity(new Intent(LoginActivity.this, Register.class));
+                    startActivityForResult(new Intent(LoginActivity.this, Register.class), 1);
                 }
             });
 
@@ -96,5 +100,17 @@ public class LoginActivity extends AppCompatActivity {
 
         // Enables Always-on
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            Intent intent = new Intent(LoginActivity.this, FlashcardActivity.class);
+            userId = data.getIntExtra("newId", 0);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+        }
     }
 }
