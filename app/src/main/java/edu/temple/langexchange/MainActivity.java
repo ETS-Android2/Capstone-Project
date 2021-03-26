@@ -25,13 +25,15 @@ public class MainActivity extends AppCompatActivity {
         buttonStartChat = findViewById(R.id.button3);
         Intent intentPrev = getIntent();
         String userName = intentPrev.getStringExtra("username");
+        int userId = intentPrev.getIntExtra("userID", 0);
         System.out.println("username received from login: " + userName);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, FlashcardActivity.class);
-
+                intent.putExtra("userId", userId);
+                intent.putExtra("username", userName);
                 startActivity(intent);
             }
         });
