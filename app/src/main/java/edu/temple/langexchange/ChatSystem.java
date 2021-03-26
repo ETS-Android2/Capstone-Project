@@ -55,20 +55,21 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         int userNameController = userName.indexOf("@");
         System.out.println("username received: " + userName);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Account");
-        ref.addValueEventListener(new ValueEventListener() {
+        Query query = ref.orderByChild("username").equalTo(userName).limitToFirst(1);
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                     targetLang = childSnapshot.child("learnLang").getValue().toString().toUpperCase();
                     prefLang = childSnapshot.child("prefLang").getValue().toString().toUpperCase();
                     System.out.println("target lang is: " + targetLang);
-                    System.out.println("target lang is: " + prefLang);
+                    System.out.println("pref lang is: " + prefLang);
                 }
                 if(targetLang.equals(receivedLang))
                 {
                     userName = userName.substring(0, userNameController) + " - Learner";
                 }
-                else if(prefLang.equals(receivedLang)){
+                if(prefLang.equals(receivedLang)){
                     userName = userName.substring(0, userNameController) + " - Native";
                 }
 
@@ -88,7 +89,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
 
                     MemberData data = new MemberData(userName, getRandomColor());
 
-                    String welcomeString = "Welcome to " + targetLang + " Channel";
+                    String welcomeString = "Welcome to " + receivedLang + " Channel";
                     System.out.println(welcomeString);
                     System.out.println("channelID received: " + channelID);
                     System.out.println("targetLang received: " + targetLang);
