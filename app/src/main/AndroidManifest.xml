@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LangExchange">
 
- <!--       <activity
+        <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login">
             <intent-filter>
@@ -24,7 +24,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> -->
+        </activity>
 <!--        <uses-library-->
 <!--            android:name="com.google.android.wearable"-->
 <!--            android:required="true" />-->
@@ -51,11 +51,11 @@
             android:label="@string/title_activity_login" />
 
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-               <category android:name="android.intent.category.LAUNCHER" />
-               </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity android:name=".ChatSystem" />
         <activity android:name=".FlashcardActivity" />
