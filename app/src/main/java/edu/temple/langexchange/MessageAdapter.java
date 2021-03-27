@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -18,13 +19,15 @@ import java.util.List;
 public class MessageAdapter extends BaseAdapter {
     List<Message> messages = new ArrayList<Message>();
     Context context;
+    boolean isAudioMessage;
 
     public MessageAdapter(Context context) {
         this.context = context;
     }
 
-    public void add(Message message) {
+    public void add(Message message, boolean audioMessage) {
         this.messages.add(message);
+        isAudioMessage = audioMessage;
         notifyDataSetChanged(); // to render the list we need to notify
     }
 
@@ -50,13 +53,13 @@ public class MessageAdapter extends BaseAdapter {
         LayoutInflater messageInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         Message message = messages.get(i);
 
-
         if (message.isBelongsToCurrentUser()) { // this message was sent by us so let's create a basic chat bubble on the right
             convertView = messageInflater.inflate(R.layout.my_message, null);
             holder.messageBody = (TextView) convertView.findViewById(R.id.message_body);
             convertView.setTag(holder);
             holder.messageBody.setText(message.getText());
             holder.translation = (TextView) convertView.findViewById(R.id.translation);
+            holder.playButton = convertView.findViewById(R.id.playButton);
 
 
         } else { // this message was sent by someone else so let's create an advanced chat bubble on the left
@@ -66,11 +69,17 @@ public class MessageAdapter extends BaseAdapter {
             holder.messageBody = (TextView) convertView.findViewById(R.id.message_body);
             convertView.setTag(holder);
             holder.translation = (TextView) convertView.findViewById(R.id.translation);
+            holder.playButton = convertView.findViewById(R.id.playButton);
+
 
             holder.name.setText(message.getMemberData().getName());
             holder.messageBody.setText(message.getText());
             GradientDrawable drawable = (GradientDrawable) holder.avatar.getBackground();
             drawable.setColor(Color.parseColor(message.getMemberData().getColor()));
+        }
+        if(isAudioMessage){
+            holder.messageBody.setVisibility(View.INVISIBLE);
+            holder.playButton.setVisibility(View.VISIBLE);
         }
 
         return convertView;
@@ -85,4 +94,5 @@ class MessageViewHolder {
     public TextView name;
     public TextView messageBody;
     public TextView translation;
+    public ImageView playButton;
 }
