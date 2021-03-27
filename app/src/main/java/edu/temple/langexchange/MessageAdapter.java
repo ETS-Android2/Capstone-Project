@@ -25,9 +25,9 @@ public class MessageAdapter extends BaseAdapter {
         this.context = context;
     }
 
-    public void add(Message message, boolean audioMessage) {
+    public void add(Message message) {
         this.messages.add(message);
-        isAudioMessage = audioMessage;
+       // isAudioMessage = audioMessage;
         notifyDataSetChanged(); // to render the list we need to notify
     }
 
@@ -77,7 +77,7 @@ public class MessageAdapter extends BaseAdapter {
             GradientDrawable drawable = (GradientDrawable) holder.avatar.getBackground();
             drawable.setColor(Color.parseColor(message.getMemberData().getColor()));
         }
-        if(isAudioMessage){
+        if(holder.messageBody.getText().toString().contains("//audio//")){
             holder.messageBody.setVisibility(View.INVISIBLE);
             holder.playButton.setVisibility(View.VISIBLE);
         }

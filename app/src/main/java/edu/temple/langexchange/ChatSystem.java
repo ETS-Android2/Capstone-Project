@@ -19,6 +19,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -236,10 +237,27 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                         @Override
                         public boolean onTouch(View view, MotionEvent motionEvent) {
                             if (motionEvent.getAction() == MotionEvent.ACTION_UP){
-                                sr.stopListening();
+                               // sr.stopListening();
                                 micButton.setBackground(getDrawable(R.drawable.baseline_mic_none_24));
                             }
                             if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                               // micButton.setBackground(getDrawable(R.drawable.baseline_mic_24));
+                                String voiceMessage;
+                                switch (receivedLang){
+                                    case "ENGLISH":
+                                        voiceMessage = "Hello, what's up?";
+                                        break;
+                                    case "SPANISH":
+                                        voiceMessage = "Hola, que tal?";
+                                        break;
+                                    case "FRENCH":
+                                        voiceMessage = "Bonjour, comment vas-tu?";
+                                        break;
+                                    default:
+                                        voiceMessage = "Hallo, wie geht's dir?";
+                                        break;
+                                }
+                                //sendVoiceMessage(voiceMessage);
                                 micButton.setBackground(getDrawable(R.drawable.baseline_mic_24));
                                 sr.startListening(speechRecognizerIntent);
                             }
@@ -253,8 +271,12 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             if(view.findViewById(R.id.playButton).getVisibility() == View.VISIBLE){
+                                ImageView playButton = (ImageView) view.findViewById(R.id.playButton);
+                                playButton.setImageResource(R.drawable.baseline_play_circle_filled_24);
                                 TextView message = (TextView) view.findViewById(R.id.message_body);
-                                tts.speak(message.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+                                String toSpeak = message.getText().toString().replace("//audio//","");
+                                tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                                playButton.setImageResource(R.drawable.baseline_play_circle_outline_24);
                             }
                         }
                     });
@@ -267,7 +289,8 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                     if (myTranslation.getText().toString().isEmpty()) {
                                         String translateView;
                                         if (view.findViewById(R.id.playButton).getVisibility() == View.VISIBLE) {
-                                            translateView = "\n\n Translation: " + Translator.translate(original.getText().toString(), prefLang, ChatSystem.this);
+                                            String textToTranslate = original.getText().toString().replace("//audio//","");
+                                            translateView = "\n\n Translation: " + Translator.translate(textToTranslate, prefLang, ChatSystem.this);
                                         } else {
                                             translateView = original.getText().toString() + "\n\n Translation: " + Translator.translate(original.getText().toString(), prefLang, ChatSystem.this);
                                         }
@@ -326,17 +349,17 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
 
     public void sendMessage(View view) {
         String message = editText.getText().toString();
-        isAudioMessage = false;
         if (message.length() > 0) {
             scaledrone.publish(roomName, message);
             editText.getText().clear();
         }
     }
 
-    public void sendVoiceMessage(String audioMessage){
-        if(!audioMessage.isEmpty()){
+    public void sendVoiceMessage(String message){
+        if(!message.isEmpty()){
+            String audioMessage = message + "//audio//";
             scaledrone.publish(roomName, audioMessage);
-            isAudioMessage = true;
+          //  isAudioMessage = true;
         }
     }
 
@@ -360,7 +383,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    messageAdapter.add(message, isAudioMessage);
+                    messageAdapter.add(message);
 
                     messagesView.setSelection(messagesView.getCount() - 1);
 
