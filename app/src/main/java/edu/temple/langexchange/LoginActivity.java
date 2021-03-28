@@ -75,12 +75,14 @@ public class LoginActivity extends AppCompatActivity {
                             for(DataSnapshot childSnapshot: snapshot.getChildren()){
                                 int place = 0;
                                 Account account = childSnapshot.getValue(Account.class);
-                                String userName = account.username;
-                                System.out.println("username sent: " + userName);
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                intent.putExtra("username", userName);
-                                intent.putExtra("userId", account.id);
+
                                 if(account.password.equals(passwordEditText.getText().toString())) {
+                                    String userName = account.username;
+                                    userId = account.getId();
+                                    System.out.println("username sent: " + userName);
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    intent.putExtra("username", userName);
+                                    intent.putExtra("userID", userId);
                                     startActivity(intent);
                                 }
                                 else{

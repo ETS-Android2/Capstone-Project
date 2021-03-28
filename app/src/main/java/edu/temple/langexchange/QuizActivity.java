@@ -79,8 +79,8 @@ public class QuizActivity extends AppCompatActivity {
                 }
 
                 for (Flashcards card : flashcardList) {
-                    questions.add(card.definition);
-                    answers.add(card.originalWord.toUpperCase());
+                    questions.add(card.getTranslatedWord());
+                    answers.add(card.getOriginalWord().toUpperCase());
                 }
 
                 QuizAdapter adapter = new QuizAdapter(QuizActivity.this, flashcardList);

@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         buttonStartChat = findViewById(R.id.button3);
         Intent intentPrev = getIntent();
         String userName = intentPrev.getStringExtra("username");
-        int userId = intentPrev.getIntExtra("userId", 0);
+        int userId = intentPrev.getIntExtra("userID", 0);
         System.out.println("username received from login: " + userName);
         System.out.println("userId received from login: " + userId);
 
