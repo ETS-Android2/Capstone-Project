@@ -293,7 +293,9 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                         original.setVisibility(View.INVISIBLE);
                                     } else {
                                         myTranslation.setVisibility(View.INVISIBLE);
-                                        original.setVisibility(View.VISIBLE);
+                                        if(view.findViewById(R.id.playButton).getVisibility() == View.INVISIBLE) {
+                                            original.setVisibility(View.VISIBLE);
+                                        }
                                     }
                                     return true;
                                 }
