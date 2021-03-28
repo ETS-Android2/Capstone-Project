@@ -81,6 +81,10 @@ public class MessageAdapter extends BaseAdapter {
             holder.messageBody.setVisibility(View.INVISIBLE);
             holder.playButton.setVisibility(View.VISIBLE);
         }
+        if(holder.messageBody.getText().toString().contains("//autotranslate//")){
+            holder.messageBody.setVisibility(View.INVISIBLE);
+            holder.translation.setVisibility(View.VISIBLE);
+        }
 
         return convertView;
     }
