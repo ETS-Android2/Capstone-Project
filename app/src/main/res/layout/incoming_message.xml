@@ -69,4 +69,15 @@
         android:paddingHorizontal="16dp"
         android:paddingVertical="12dp"
         android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/makeFlashcard"
+        android:layout_width="129dp"
+        android:layout_height="35dp"
+        android:layout_alignTop="@+id/message_body"
+        android:layout_marginStart="-100dp"
+        android:layout_marginTop="27dp"
+        android:layout_toEndOf="@+id/message_body"
+        android:text="Button"
+        android:visibility="invisible" />
 </RelativeLayout>

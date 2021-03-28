@@ -46,5 +46,16 @@
         android:layout_alignParentEnd="true"
         />
 
+    <Button
+        android:id="@+id/makeFlashcard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/message_body"
+        android:layout_marginTop="-48dp"
+        android:layout_marginEnd="68dp"
+        android:layout_toStartOf="@+id/message_body"
+        android:text="Button"
+        android:visibility="invisible" />
+
 
 </RelativeLayout>
