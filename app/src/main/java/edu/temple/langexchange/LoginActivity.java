@@ -75,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
                             for(DataSnapshot childSnapshot: snapshot.getChildren()){
                                 int place = 0;
                                 Account account = childSnapshot.getValue(Account.class);
+
                                 if(account.password.equals(passwordEditText.getText().toString())) {
                                     String userName = account.username;
                                     userId = account.getId();
