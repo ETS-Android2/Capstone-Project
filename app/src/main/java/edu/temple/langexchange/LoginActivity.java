@@ -79,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
                                 System.out.println("username sent: " + userName);
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 intent.putExtra("username", userName);
+                                intent.putExtra("userId", account.id);
                                 if(account.password.equals(passwordEditText.getText().toString())) {
                                     startActivity(intent);
                                 }
