@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
         String userName = intentPrev.getStringExtra("username");
         userId = intentPrev.getIntExtra("userID", 0);
         System.out.println("username received from login: " + userName);
+        System.out.println("userId received from login: " + userId);
+
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, QuizActivity.class);
+                intent.putExtra("userId", userId);
                 startActivity(intent);
             }
         });
