@@ -73,7 +73,6 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
     public static final Integer RecordAudioRequestCode = 1;
     private Button flashcardMaker;
     private String phrase;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -330,7 +329,9 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                     if (myTranslation.getText().toString().isEmpty()) {
                                         String translateView;
                                         if (view.findViewById(R.id.playButton).getVisibility() == View.VISIBLE) {
+
                                             String textToTranslate = original.getText().toString().replace("//audio//","");
+                                            phrase = textToTranslate;
                                             translateView = "\n\n Translation: " + Translator.translate(textToTranslate, prefLang, ChatSystem.this);
                                         } else {
                                             translateView = original.getText().toString() + "\n\n Translation: " + Translator.translate(original.getText().toString(), prefLang, ChatSystem.this);

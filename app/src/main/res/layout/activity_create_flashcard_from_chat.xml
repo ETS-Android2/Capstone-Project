@@ -9,7 +9,16 @@
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="614dp"
+        android:layout_height="648dp"
+        android:layout_below="@+id/textView4"
+        android:layout_marginTop="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="57dp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:text="Please Select A Word You Would Like to Make Into A Flashcard"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 </RelativeLayout>

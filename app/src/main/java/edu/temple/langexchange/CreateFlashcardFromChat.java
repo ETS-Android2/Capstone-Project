@@ -36,15 +36,20 @@ public class CreateFlashcardFromChat extends AppCompatActivity {
         String prefLang = intent.getExtras().getString("prefLang");
 
 
+
         ArrayList<String> arrayList = new ArrayList<>();
         String[] result = phrase.split("\\s+");
         String firstWord = result[0];
        //arrayList.add(result[0]);
        // result = phrase.split("\\s+");
-       for(int count = 0; count<result.length; count++){
-           arrayList.add(result[count]);
 
-        }
+
+
+
+            for (int count = 0; count < result.length; count++) {
+                arrayList.add(result[count]);
+            }
+
 
         ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1,arrayList);
 
