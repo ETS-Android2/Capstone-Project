@@ -300,8 +300,10 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                     TextView original = (TextView) view.findViewById(R.id.message_body);
                                     TextView flashcardMaker = view.findViewById(R.id.makeFlashcard);
 
-                                    if(flashcardMaker.getVisibility() == View.INVISIBLE){
+                                    if(flashcardMaker.getVisibility() == View.GONE){
                                         flashcardMaker.setVisibility(View.VISIBLE);
+                                    } else{
+                                        flashcardMaker.setVisibility(View.GONE);
                                     }
 
                                     if(flashcardMaker.getVisibility() == View.VISIBLE){
