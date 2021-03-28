@@ -64,6 +64,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
     private MessageAdapter messageAdapter;
     private ListView messagesView;
     private String userName, targetLang, prefLang, receivedLang = "";
+    private int userId;
     private CheckBox autoTranslate;
     private ImageButton micButton;
     private boolean isAudioMessage = false;
@@ -173,6 +174,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                    userId = Integer.parseInt(childSnapshot.child("id").getValue().toString());
                     targetLang = childSnapshot.child("learnLang").getValue().toString().toUpperCase();
                     prefLang = childSnapshot.child("prefLang").getValue().toString();
                     System.out.println("target lang is: " + targetLang);
@@ -296,6 +298,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                 @Override
                                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                                     //View myView = parent.getAdapter().getView(position,null, parent);
+                                   // Toast.makeText(ChatSystem.this, userId, Toast.LENGTH_LONG).show();
                                     TextView myTranslation = (TextView) view.findViewById(R.id.translation);
                                     TextView original = (TextView) view.findViewById(R.id.message_body);
                                     TextView flashcardMaker = view.findViewById(R.id.makeFlashcard);
@@ -312,9 +315,11 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                         public void onClick(View v) {
                                             Intent intent = new Intent(ChatSystem.this, CreateFlashcardFromChat.class);
                                             intent.putExtra("phrase", phrase);
-                                            intent.putExtra("userId", userName);
+                                            intent.putExtra("userId", userId);
                                             intent.putExtra("prefLang",prefLang);
+
                                             startActivity(intent);
+
                                         }
                                     });
 
