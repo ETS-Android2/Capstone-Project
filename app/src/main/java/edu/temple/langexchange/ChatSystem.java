@@ -15,6 +15,7 @@ import android.speech.tts.TextToSpeech;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -63,6 +64,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
     private MessageAdapter messageAdapter;
     private ListView messagesView;
     private String userName, targetLang, prefLang, receivedLang = "";
+    private int userId;
     private CheckBox autoTranslate;
     private ImageButton micButton;
    // private boolean isAudioMessage = false;
@@ -70,7 +72,8 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
     private SpeechRecognizer sr;
     private boolean isAutoTranslate=false;
     public static final Integer RecordAudioRequestCode = 1;
-
+    private Button flashcardMaker;
+    private String phrase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,6 +172,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                    userId = Integer.parseInt(childSnapshot.child("id").getValue().toString());
                     targetLang = childSnapshot.child("learnLang").getValue().toString().toUpperCase();
                     prefLang = childSnapshot.child("prefLang").getValue().toString();
                     speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.getAudioCode(prefLang.toUpperCase()));
@@ -211,12 +215,14 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                     View currentView = messagesView.getChildAt(i);
                                     TextView original = currentView.findViewById(R.id.message_body);
                                     TextView translation = currentView.findViewById(R.id.translation);
+                                    Button flashcardMaker = currentView.findViewById(R.id.makeFlashcard);
                                     if(translation.getText().toString().isEmpty()) {
                                         translation.setText(Translator.translate(original.getText().toString(), prefLang, ChatSystem.this));
                                     }
                                     original.setText(original.getText().toString() + "//autotranslate//");
                                     original.setVisibility(View.INVISIBLE);
                                     translation.setVisibility(View.VISIBLE);
+                                    flashcardMaker.setVisibility(View.INVISIBLE);
                                 }
 
 
@@ -228,8 +234,10 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                     String removeTag = original.getText().toString();
                                     removeTag.replace("//autotranslate//","");
                                     TextView translation = currentView.findViewById(R.id.translation);
+                                    Button flashcardMaker = currentView.findViewById(R.id.makeFlashcard);
                                     original.setVisibility(View.VISIBLE);
                                     translation.setVisibility(View.INVISIBLE);
+                                    flashcardMaker.setVisibility(View.VISIBLE);
                                 }
 
                             }
@@ -272,17 +280,52 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                             }
                         }
                     });
+
+
+
+
+
                             messagesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                                 @Override
                                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                                     //View myView = parent.getAdapter().getView(position,null, parent);
+                                   // Toast.makeText(ChatSystem.this, userId, Toast.LENGTH_LONG).show();
                                     TextView myTranslation = (TextView) view.findViewById(R.id.translation);
                                     TextView original = (TextView) view.findViewById(R.id.message_body);
+                                    TextView flashcardMaker = view.findViewById(R.id.makeFlashcard);
+
+                                    if(flashcardMaker.getVisibility() == View.GONE){
+                                        flashcardMaker.setVisibility(View.VISIBLE);
+                                    } else{
+                                        flashcardMaker.setVisibility(View.GONE);
+                                    }
+
+                                    if(flashcardMaker.getVisibility() == View.VISIBLE){
+                                       phrase = original.getText().toString();
+                                    }
+                                    flashcardMaker.setOnClickListener(new View.OnClickListener(){
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent intent = new Intent(ChatSystem.this, CreateFlashcardFromChat.class);
+                                            intent.putExtra("phrase", phrase);
+                                            intent.putExtra("userId", userId);
+                                            intent.putExtra("prefLang",prefLang);
+
+                                            startActivity(intent);
+
+                                        }
+                                    });
+
+
+
                                     if (myTranslation.getText().toString().isEmpty()) {
                                         String translateView;
                                         if (view.findViewById(R.id.playButton).getVisibility() == View.VISIBLE) {
+
                                             String textToTranslate = original.getText().toString().replace("//audio//","");
-                                            translateView = "\n\nTranslation: " + Translator.translate(textToTranslate, prefLang, ChatSystem.this);
+                                            phrase = textToTranslate;
+                                            translateView = "\n\n Translation: " + Translator.translate(textToTranslate, prefLang, ChatSystem.this);
+
                                         } else {
                                             translateView = original.getText().toString() + "\n\nTranslation: " + Translator.translate(original.getText().toString(), prefLang, ChatSystem.this);
                                         }
