@@ -312,6 +312,8 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                         public void onClick(View v) {
                                             Intent intent = new Intent(ChatSystem.this, CreateFlashcardFromChat.class);
                                             intent.putExtra("phrase", phrase);
+                                            intent.putExtra("userId", userName);
+                                            intent.putExtra("prefLang",prefLang);
                                             startActivity(intent);
                                         }
                                     });
