@@ -11,22 +11,31 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 public class CreateFlashcardFromChat extends AppCompatActivity {
 
-
+    DatabaseReference ref;
     ListView listView;
-    String word;
+    String word, translate, prefLang, definiton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_flashcard_from_chat);
 
-
+        ref = FirebaseDatabase.getInstance().getReference().child("Flashcards");
         listView = findViewById(R.id.listView);
+
+
         Intent intent = getIntent();
         String phrase = intent.getExtras().getString("phrase");
+        int userID = intent.getExtras().getInt("userId");
+        String prefLang = intent.getExtras().getString("prefLang");
+
+
         ArrayList<String> arrayList = new ArrayList<>();
         String[] result = phrase.split("\\s+");
         String firstWord = result[0];
@@ -48,6 +57,20 @@ public class CreateFlashcardFromChat extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 word = (String) listView.getItemAtPosition(position);
 
+                translate = Translator.translate(word, prefLang, CreateFlashcardFromChat.this);
+
+
+
+                Flashcards flashcard = new Flashcards(userID, translate, word, phrase);
+
+                // this places the flashcard onto the database
+                ref.push().setValue(flashcard);
+
+                // result code for previous activity set to RESULT_OK
+                setResult(RESULT_OK);
+
+                // finish the activity
+                finish();
             }
         });
     }

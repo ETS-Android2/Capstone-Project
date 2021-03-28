@@ -14,7 +14,6 @@ import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -24,7 +23,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -302,6 +300,26 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                     TextView original = (TextView) view.findViewById(R.id.message_body);
                                     TextView flashcardMaker = view.findViewById(R.id.makeFlashcard);
 
+                                    if(flashcardMaker.getVisibility() == View.INVISIBLE){
+                                        flashcardMaker.setVisibility(View.VISIBLE);
+                                    }
+
+                                    if(flashcardMaker.getVisibility() == View.VISIBLE){
+                                       phrase = original.getText().toString();
+                                    }
+                                    flashcardMaker.setOnClickListener(new View.OnClickListener(){
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent intent = new Intent(ChatSystem.this, CreateFlashcardFromChat.class);
+                                            intent.putExtra("phrase", phrase);
+                                            intent.putExtra("userId", userName);
+                                            intent.putExtra("prefLang",prefLang);
+                                            startActivity(intent);
+                                        }
+                                    });
+
+
+
                                     if (myTranslation.getText().toString().isEmpty()) {
                                         String translateView;
                                         if (view.findViewById(R.id.playButton).getVisibility() == View.VISIBLE) {
@@ -319,27 +337,6 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                         myTranslation.setVisibility(View.INVISIBLE);
                                         original.setVisibility(View.VISIBLE);
                                     }
-
-                                    if(flashcardMaker.getVisibility() == View.GONE){
-                                        flashcardMaker.setVisibility(View.VISIBLE);
-                                        ViewGroup.LayoutParams layout = flashcardMaker.getLayoutParams();
-                                        flashcardMaker.setLayoutParams(layout);
-                                    }else{
-                                        flashcardMaker.setVisibility(View.GONE);
-                                    }
-
-                                    if(flashcardMaker.getVisibility() == View.VISIBLE){
-                                        phrase = original.getText().toString();
-                                    }
-                                    flashcardMaker.setOnClickListener(new View.OnClickListener(){
-                                        @Override
-                                        public void onClick(View v) {
-                                            Intent intent = new Intent(ChatSystem.this, CreateFlashcardFromChat.class);
-                                            intent.putExtra("phrase", phrase);
-                                            startActivity(intent);
-                                        }
-                                    });
-
                                     return true;
                                 }
                             });
