@@ -72,12 +72,11 @@
 
     <Button
         android:id="@+id/makeFlashcard"
-        android:layout_width="129dp"
-        android:layout_height="35dp"
-        android:layout_alignTop="@+id/message_body"
-        android:layout_marginStart="-100dp"
-        android:layout_marginTop="27dp"
-        android:layout_toEndOf="@+id/message_body"
-        android:text="Button"
-        android:visibility="invisible" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/message_body"
+        android:layout_below="@+id/translation"
+        android:text="Make Flashcard"
+        android:textSize="10dp"
+        android:visibility="visible" />
 </RelativeLayout>
