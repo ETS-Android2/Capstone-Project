@@ -64,6 +64,13 @@ public class Translator {
 
     }};
 
+    final static Map<String, String> audioLanguageCodes = new HashMap<String, String>(){{
+        put("ENGLISH", "en-US");
+        put("FRENCH", "fr-FR");
+        put("SPANISH", "es-US");
+        put("GERMAN", "de-DE");
+    }};
+
     public static ArrayList<String> getLanguages(){
         ArrayList<String>languages = new ArrayList<>();
         for(String key : languageCodes.keySet()){
@@ -74,6 +81,14 @@ public class Translator {
         Collections.sort(languages);
         return languages;
     }
+
+    public static String getAudioCode(String language){
+        if(!audioLanguageCodes.containsKey(language)){
+            return "Audio messages not supported.";
+        }
+        return audioLanguageCodes.get(language);
+    }
+
     public static String translate(String text, String prefLang, Context context) {
         if(!languageCodes.containsKey(prefLang)){
             return "Language not supported.";
@@ -126,5 +141,6 @@ public class Translator {
 
         return connected;
     }
+
 
 }

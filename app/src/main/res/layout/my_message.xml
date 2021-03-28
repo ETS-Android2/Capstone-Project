@@ -32,5 +32,19 @@
         android:layout_alignParentEnd="true"
         android:text=""
         />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/playButton"
+        android:src="@drawable/baseline_play_circle_outline_24"
+        android:background="@drawable/my_message"
+        android:textColor="#fff"
+        android:padding="10dp"
+        android:elevation="2dp"
+        android:textSize="18sp"
+        android:visibility="invisible"
+        android:layout_alignParentEnd="true"
+        />
+
 
 </RelativeLayout>
