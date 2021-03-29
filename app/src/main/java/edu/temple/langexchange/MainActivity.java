@@ -13,6 +13,7 @@ import edu.temple.langexchange.ui.login.LoginActivity;
 public class MainActivity extends AppCompatActivity {
 
     Button button, buttonStartChat;
+    int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +25,10 @@ public class MainActivity extends AppCompatActivity {
         buttonStartChat = findViewById(R.id.button3);
         Intent intentPrev = getIntent();
         String userName = intentPrev.getStringExtra("username");
-        int userId = intentPrev.getIntExtra("userID", 0);
+        userId = intentPrev.getIntExtra("userID", 0);
         System.out.println("username received from login: " + userName);
+        System.out.println("userId received from login: " + userId);
+
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

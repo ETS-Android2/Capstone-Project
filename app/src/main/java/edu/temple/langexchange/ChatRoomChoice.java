@@ -27,6 +27,7 @@ public class ChatRoomChoice extends AppCompatActivity {
         String userName = prevIntent.getStringExtra("username");
         int userId = prevIntent.getIntExtra("userId", 0);
 
+
         btnSpa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -34,6 +35,7 @@ public class ChatRoomChoice extends AppCompatActivity {
                 intent.putExtra("channelID", "K37YpRtGTMBC9JAZ");
                 intent.putExtra("langSelected", "SPANISH");
                 intent.putExtra("username", userName);
+
                 startActivity(intent);
             }
         });
@@ -45,6 +47,7 @@ public class ChatRoomChoice extends AppCompatActivity {
                 intent.putExtra("channelID", "iTzl5dVNhZweOFTo");
                 intent.putExtra("langSelected", "GERMAN");
                 intent.putExtra("username", userName);
+
                 startActivity(intent);
             }
         });
@@ -56,6 +59,7 @@ public class ChatRoomChoice extends AppCompatActivity {
                 intent.putExtra("channelID", "9Re6IIi9ZhoqxGbc");
                 intent.putExtra("langSelected", "ENGLISH");
                 intent.putExtra("username", userName);
+
                 startActivity(intent);
             }
         });
@@ -67,6 +71,7 @@ public class ChatRoomChoice extends AppCompatActivity {
                 intent.putExtra("channelID", "Pbf9jcw2NrgUxB2B");
                 intent.putExtra("langSelected", "FRENCH");
                 intent.putExtra("username", userName);
+
                 startActivity(intent);
             }
         });

@@ -100,6 +100,7 @@ public class FlashcardActivity extends AppCompatActivity {
                 Intent intent = new Intent(FlashcardActivity.this, DisplayFlashcard.class);
                 intent.putExtra("original", flashcardList.get(position).originalWord);
                 intent.putExtra("translation", flashcardList.get(position).translatedWord);
+                intent.putExtra("definition", flashcardList.get(position).definition);
                 startActivity(intent);
             }
         });
