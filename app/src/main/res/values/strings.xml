@@ -49,4 +49,8 @@
     <string name="german_room_btn">GERMAN</string>
     <string name="french_room_btn">FRENCH</string>
     <string name="english_room_btn">ENGLISH</string>
+    <string name="flashcards_img">flashcards_img</string>
+    <string name="chat_img">chat_img</string>
+    <string name="go_to_chat_btn">Go to Chat</string>
+    <string name="go_to_flashcards_btn">Go to Flashcards</string>
 </resources>

@@ -32,6 +32,7 @@ public class FlashcardActivity extends AppCompatActivity {
 
     Button makeFlashcardBtn;
     Button makeQuizBtn;
+    Button goToChat;
 
     List<Flashcards> flashcardList;
     DatabaseReference ref;
@@ -47,6 +48,7 @@ public class FlashcardActivity extends AppCompatActivity {
 
         makeFlashcardBtn = findViewById(R.id.createFlashcardBtn);
         makeQuizBtn = findViewById(R.id.createQuizBtn);
+        goToChat = findViewById(R.id.go_to_chat_btn);
 
         text.setText(R.string.flashcard_instructions);
 
@@ -116,6 +118,15 @@ public class FlashcardActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(FlashcardActivity.this, QuizActivity.class);
                 intent.putExtra("userId", userId);
+                startActivity(intent);
+            }
+        });
+
+        goToChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FlashcardActivity.this, ChatRoomChoice.class);
+                intent.putExtra("username", username);
                 startActivity(intent);
             }
         });
