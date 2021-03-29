@@ -13,8 +13,11 @@ public class DisplayFlashcard extends AppCompatActivity {
 
     TextView original;
     TextView translation;
+    TextView definition;
+
     Button exitActivity;
     Button showTranslation;
+
     boolean showingTranslation = false;
 
     @Override
@@ -25,6 +28,7 @@ public class DisplayFlashcard extends AppCompatActivity {
 
         original = findViewById(R.id.flashcardName);
         translation = findViewById(R.id.flashcardTranslation);
+        definition = findViewById(R.id.flashcardDefinition);
 
         exitActivity = findViewById(R.id.exitActivity);
         showTranslation = findViewById(R.id.showTranslation);
@@ -32,13 +36,19 @@ public class DisplayFlashcard extends AppCompatActivity {
         Intent intent = getIntent();
 
         original.setText(intent.getStringExtra("original"));
+
         translation.setText(intent.getStringExtra("translation"));
         translation.setVisibility(View.GONE);
 
-        original.setTextSize(32);
+        definition.setText(intent.getStringExtra("definition"));
+
+        original.setTextSize(40);
         original.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        translation.setTextSize(22);
+        definition.setTextSize(28);
+        definition.setGravity(Gravity.CENTER_HORIZONTAL);
+
+        translation.setTextSize(40);
         translation.setGravity(Gravity.CENTER_HORIZONTAL);
 
         exitActivity.setOnClickListener(new View.OnClickListener() {

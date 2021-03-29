@@ -67,9 +67,10 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
     private int userId;
     private CheckBox autoTranslate;
     private ImageButton micButton;
-    private boolean isAudioMessage = false;
+   // private boolean isAudioMessage = false;
     private TextToSpeech tts;
     private SpeechRecognizer sr;
+    private boolean isAutoTranslate=false;
     public static final Integer RecordAudioRequestCode = 1;
     private Button flashcardMaker;
     private String phrase;
@@ -81,9 +82,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         Intent intent = getIntent();
         userName = intent.getStringExtra("username");
         receivedLang = intent.getStringExtra("langSelected");
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
-            checkPermission();
-        }
+
         sr = SpeechRecognizer.createSpeechRecognizer(ChatSystem.this);
         final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -176,6 +175,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                     userId = Integer.parseInt(childSnapshot.child("id").getValue().toString());
                     targetLang = childSnapshot.child("learnLang").getValue().toString().toUpperCase();
                     prefLang = childSnapshot.child("prefLang").getValue().toString();
+                    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.getAudioCode(prefLang.toUpperCase()));
                     System.out.println("target lang is: " + targetLang);
                     System.out.println("pref lang is: " + prefLang);
                 }
@@ -210,6 +210,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                             if (isChecked) {
+                                isAutoTranslate = true;
                                 for(int i = 0; i < messagesView.getCount(); i++){
                                     View currentView = messagesView.getChildAt(i);
                                     TextView original = currentView.findViewById(R.id.message_body);
@@ -218,6 +219,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                     if(translation.getText().toString().isEmpty()) {
                                         translation.setText(Translator.translate(original.getText().toString(), prefLang, ChatSystem.this));
                                     }
+                                    original.setText(original.getText().toString() + "//autotranslate//");
                                     original.setVisibility(View.INVISIBLE);
                                     translation.setVisibility(View.VISIBLE);
                                     flashcardMaker.setVisibility(View.INVISIBLE);
@@ -226,8 +228,11 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
 
                             } else {
                                 for(int i = 0; i < messagesView.getCount(); i++){
+                                    isAutoTranslate=false;
                                     View currentView = messagesView.getChildAt(i);
                                     TextView original = currentView.findViewById(R.id.message_body);
+                                    String removeTag = original.getText().toString();
+                                    removeTag.replace("//autotranslate//","");
                                     TextView translation = currentView.findViewById(R.id.translation);
                                     Button flashcardMaker = currentView.findViewById(R.id.makeFlashcard);
                                     original.setVisibility(View.VISIBLE);
@@ -245,27 +250,14 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                         @Override
                         public boolean onTouch(View view, MotionEvent motionEvent) {
                             if (motionEvent.getAction() == MotionEvent.ACTION_UP){
-                               // sr.stopListening();
+                               sr.stopListening();
                                 micButton.setBackground(getDrawable(R.drawable.baseline_mic_none_24));
                             }
                             if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-                               // micButton.setBackground(getDrawable(R.drawable.baseline_mic_24));
-                                String voiceMessage;
-                                switch (receivedLang){
-                                    case "ENGLISH":
-                                        voiceMessage = "Hello, what's up?";
-                                        break;
-                                    case "SPANISH":
-                                        voiceMessage = "Hola, que tal?";
-                                        break;
-                                    case "FRENCH":
-                                        voiceMessage = "Bonjour, comment vas-tu?";
-                                        break;
-                                    default:
-                                        voiceMessage = "Hallo, wie geht's dir?";
-                                        break;
+                                if(ContextCompat.checkSelfPermission(ChatSystem.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
+                                    checkPermission();
+                                    return false;
                                 }
-                                //sendVoiceMessage(voiceMessage);
                                 micButton.setBackground(getDrawable(R.drawable.baseline_mic_24));
                                 sr.startListening(speechRecognizerIntent);
                             }
@@ -283,7 +275,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                 playButton.setImageResource(R.drawable.baseline_play_circle_filled_24);
                                 TextView message = (TextView) view.findViewById(R.id.message_body);
                                 String toSpeak = message.getText().toString().replace("//audio//","");
-                                tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                                tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
                                 playButton.setImageResource(R.drawable.baseline_play_circle_outline_24);
                             }
                         }
@@ -333,8 +325,9 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                             String textToTranslate = original.getText().toString().replace("//audio//","");
                                             phrase = textToTranslate;
                                             translateView = "\n\n Translation: " + Translator.translate(textToTranslate, prefLang, ChatSystem.this);
+
                                         } else {
-                                            translateView = original.getText().toString() + "\n\n Translation: " + Translator.translate(original.getText().toString(), prefLang, ChatSystem.this);
+                                            translateView = original.getText().toString() + "\n\nTranslation: " + Translator.translate(original.getText().toString(), prefLang, ChatSystem.this);
                                         }
                                         myTranslation.setText(translateView);
                                     }
@@ -343,7 +336,9 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                         original.setVisibility(View.INVISIBLE);
                                     } else {
                                         myTranslation.setVisibility(View.INVISIBLE);
-                                        original.setVisibility(View.VISIBLE);
+                                        if(view.findViewById(R.id.playButton).getVisibility() == View.INVISIBLE) {
+                                            original.setVisibility(View.VISIBLE);
+                                        }
                                     }
                                     return true;
                                 }
