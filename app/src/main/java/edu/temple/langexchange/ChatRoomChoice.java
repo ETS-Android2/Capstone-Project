@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ChatRoomChoice extends AppCompatActivity {
 
-    Button btnSpa, btnGer, btnEng, btnFre;
+    Button btnSpa, btnGer, btnEng, btnFre, goToFlashcards;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -21,10 +21,12 @@ public class ChatRoomChoice extends AppCompatActivity {
         btnEng = findViewById(R.id.EnglishRoomBtn);
         btnGer = findViewById(R.id.GermanRoomBtn);
         btnFre = findViewById(R.id.FrenchRoomBtn);
+        goToFlashcards = findViewById(R.id.go_to_flashcards_btn);
 
         Intent prevIntent = getIntent();
         String userName = prevIntent.getStringExtra("username");
-      ;
+        int userId = prevIntent.getIntExtra("userId", 0);
+
 
         btnSpa.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +72,16 @@ public class ChatRoomChoice extends AppCompatActivity {
                 intent.putExtra("langSelected", "FRENCH");
                 intent.putExtra("username", userName);
 
+                startActivity(intent);
+            }
+        });
+
+        goToFlashcards.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ChatRoomChoice.this, FlashcardActivity.class);
+                intent.putExtra("username", userName);
+                intent.putExtra("userId", userId);
                 startActivity(intent);
             }
         });
