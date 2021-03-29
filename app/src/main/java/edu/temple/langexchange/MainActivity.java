@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
           public void onClick(View v) {
               Intent intent = new Intent(MainActivity.this, ChatRoomChoice.class);
               intent.putExtra("username", userName);
-              intent.putExtra("userId", userId);
+
 
               startActivity(intent);
           }
