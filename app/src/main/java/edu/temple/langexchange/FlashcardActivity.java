@@ -63,8 +63,8 @@ public class FlashcardActivity extends AppCompatActivity {
         String username = intent.getStringExtra("username");
 
         // check Logcat to see if it assigned correctly
-       // Log.i("username - Flashcard", username);
-       // Log.i("userid - Flashcard", String.valueOf(userId));
+       Log.i("username - Flashcard", username);
+       Log.i("userid - Flashcard", String.valueOf(userId));
 
         // listen for changes on db
         ref.addValueEventListener(new ValueEventListener() {
