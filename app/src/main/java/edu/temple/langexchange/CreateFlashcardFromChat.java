@@ -38,7 +38,7 @@ public class CreateFlashcardFromChat extends AppCompatActivity {
 
 
         ArrayList<String> arrayList = new ArrayList<>();
-        String[] result = phrase.split("\\s+");
+        String[] result = phrase.replaceAll("[^a-zA-Z ]", "").toLowerCase().split("\\s+");
         String firstWord = result[0];
        //arrayList.add(result[0]);
        // result = phrase.split("\\s+");
@@ -74,6 +74,7 @@ public class CreateFlashcardFromChat extends AppCompatActivity {
                 // result code for previous activity set to RESULT_OK
                 setResult(RESULT_OK);
 
+                Toast.makeText(CreateFlashcardFromChat.this, "Added flashcard to database", Toast.LENGTH_SHORT).show();
                 // finish the activity
                 finish();
             }
