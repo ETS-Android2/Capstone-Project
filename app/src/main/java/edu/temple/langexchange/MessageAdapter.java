@@ -11,6 +11,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -29,6 +31,18 @@ public class MessageAdapter extends BaseAdapter {
         this.messages.add(message);
        // isAudioMessage = audioMessage;
         notifyDataSetChanged(); // to render the list we need to notify
+    }
+
+    public void translateAll(String prefLang) {
+        // translate all messages
+        for (int i = 0; i < getCount(); i++) {
+            String translation = Translator.translate(messages.get(i).getText(), prefLang, context);
+            Message message = messages.get(i).setText(translation);
+            messages.set(i, message);
+        }
+
+        // refresh list to display changes
+        notifyDataSetChanged();
     }
 
     @Override
