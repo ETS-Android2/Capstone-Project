@@ -204,18 +204,16 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
 
                     autoTranslate = findViewById(R.id.autoTranslate);
 
-
-
                     autoTranslate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                             if (isChecked) {
                                 isAutoTranslate = true;
-                                messageAdapter.translateAll(prefLang);
+                                messageAdapter.getTranslated(prefLang);
                             } else {
                                 isAutoTranslate = false;
+                                messageAdapter.getOriginal();
                             }
-
                         }
                     });
 
@@ -396,7 +394,6 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                 @Override
                 public void run() {
                     messageAdapter.add(message);
-
                     messagesView.setSelection(messagesView.getCount() - 1);
 
                 }
