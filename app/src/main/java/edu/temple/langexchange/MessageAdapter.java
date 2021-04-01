@@ -19,8 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageAdapter extends BaseAdapter {
-    List<Message> messages = new ArrayList<Message>();
-    List<Message> original = new ArrayList<Message>();
+    List<Message> messages = new ArrayList<>();
+    List<Message> original = new ArrayList<>();
+    List<Message> translated = new ArrayList<>();
     Context context;
     boolean isAudioMessage;
 
@@ -28,47 +29,27 @@ public class MessageAdapter extends BaseAdapter {
         this.context = context;
     }
 
-    public void add(Message message) {
-        this.messages.add(message);
+    public void add(Message message, String prefLang, boolean isAutoTranslate) {
         this.original.add(message); // store original messages
-       // isAudioMessage = audioMessage;
+
+        this.translated.add(new Message(Translator.translate(message.getText(), prefLang, context), message.getMemberData(), message.isBelongsToCurrentUser()));
+
+        if (isAutoTranslate ? this.messages.add(translated.get(getCount())) : this.messages.add(original.get(getCount())));
+
+        // isAudioMessage = audioMessage;
         notifyDataSetChanged(); // to render the list we need to notify
-    }
-
-    public void addTranslated(Message message, String prefLang) {
-        this.original.add(message);
-
-        String translation = Translator.translate(message.getText(), prefLang, context);
-        MemberData data = message.getMemberData();
-        boolean belongsToCurrentUser = message.isBelongsToCurrentUser();
-
-        this.messages.add(new Message(translation, data, belongsToCurrentUser));
     }
 
     public void getTranslated(String prefLang) {
         for (int i = 0; i < getCount(); i++) {
-            String translation = Translator.translate(messages.get(i).getText(), prefLang, context);
-            MemberData data = messages.get(i).getMemberData();
-            boolean belongsToCurrentUser = messages.get(i).isBelongsToCurrentUser();
-
-            Message message = new Message(translation, data, belongsToCurrentUser);
-
-            messages.set(i, message);
+            messages.set(i, translated.get(i));
         }
-
-        // refresh list to display changes
         notifyDataSetChanged();
     }
 
     public void getOriginal() {
         for (int i = 0; i < getCount(); i++) {
-            String text = original.get(i).getText();
-            MemberData data = messages.get(i).getMemberData();
-            boolean belongsToCurrentUser = messages.get(i).isBelongsToCurrentUser();
-
-            Message message = new Message(text, data, belongsToCurrentUser);
-
-            messages.set(i, message);
+            messages.set(i, original.get(i));
         }
         notifyDataSetChanged();
     }
@@ -119,18 +100,17 @@ public class MessageAdapter extends BaseAdapter {
             GradientDrawable drawable = (GradientDrawable) holder.avatar.getBackground();
             drawable.setColor(Color.parseColor(message.getMemberData().getColor()));
         }
-        if(holder.messageBody.getText().toString().contains("//audio//")){
+        if (holder.messageBody.getText().toString().contains("//audio//")) {
             holder.messageBody.setVisibility(View.INVISIBLE);
             holder.playButton.setVisibility(View.VISIBLE);
         }
-        if(holder.messageBody.getText().toString().contains("//autotranslate//")){
+        if (holder.messageBody.getText().toString().contains("//autotranslate//")) {
             holder.messageBody.setVisibility(View.INVISIBLE);
             holder.translation.setVisibility(View.VISIBLE);
         }
 
         return convertView;
     }
-
 
 
 }

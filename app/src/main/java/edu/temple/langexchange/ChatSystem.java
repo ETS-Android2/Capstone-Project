@@ -386,11 +386,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                 @Override
                 public void run() {
 
-                    if (isAutoTranslate) {
-                        messageAdapter.addTranslated(message, prefLang);
-                    } else {
-                        messageAdapter.add(message);
-                    }
+                    messageAdapter.add(message, prefLang, isAutoTranslate);
 
                     messagesView.setSelection(messagesView.getCount() - 1);
 
