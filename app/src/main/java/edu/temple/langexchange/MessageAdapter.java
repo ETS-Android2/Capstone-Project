@@ -35,6 +35,16 @@ public class MessageAdapter extends BaseAdapter {
         notifyDataSetChanged(); // to render the list we need to notify
     }
 
+    public void addTranslated(Message message, String prefLang) {
+        this.original.add(message);
+
+        String translation = Translator.translate(message.getText(), prefLang, context);
+        MemberData data = message.getMemberData();
+        boolean belongsToCurrentUser = message.isBelongsToCurrentUser();
+
+        this.messages.add(new Message(translation, data, belongsToCurrentUser));
+    }
+
     public void getTranslated(String prefLang) {
         for (int i = 0; i < getCount(); i++) {
             String translation = Translator.translate(messages.get(i).getText(), prefLang, context);
