@@ -215,37 +215,9 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                             } else {
                                 isAutoTranslate = false;
                             }
-//                                for(int i = 0; i < messagesView.getCount(); i++){
-//                                    View currentView = messagesView.getChildAt(i);
-//                                    TextView original = currentView.findViewById(R.id.message_body);
-//                                    TextView translation = currentView.findViewById(R.id.translation);
-//                                    Button flashcardMaker = currentView.findViewById(R.id.makeFlashcard);
-//                                    if(translation.getText().toString().isEmpty()) {
-//                                        translation.setText(Translator.translate(original.getText().toString(), prefLang, ChatSystem.this));
-//                                    }
-//                                    original.setText(original.getText().toString() + "//autotranslate//");
-//                                    original.setVisibility(View.INVISIBLE);
-//                                    translation.setVisibility(View.VISIBLE);
-//                                    flashcardMaker.setVisibility(View.INVISIBLE);
-//                                }
-//
-//
-//                            } else {
-//                                for(int i = 0; i < messagesView.getCount(); i++){
-//                                    isAutoTranslate=false;
-//                                    View currentView = messagesView.getChildAt(i);
-//                                    TextView original = currentView.findViewById(R.id.message_body);
-//                                    String removeTag = original.getText().toString();
-//                                    removeTag.replace("//autotranslate//","");
-//                                    TextView translation = currentView.findViewById(R.id.translation);
-//                                    Button flashcardMaker = currentView.findViewById(R.id.makeFlashcard);
-//                                    original.setVisibility(View.VISIBLE);
-//                                    translation.setVisibility(View.INVISIBLE);
-//                                    flashcardMaker.setVisibility(View.VISIBLE);
-//                                }
 
-                            }
-                        });
+                        }
+                    });
 
                     //Speech-to-text to send audio messages
 
