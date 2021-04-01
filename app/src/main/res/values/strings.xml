@@ -53,4 +53,17 @@
     <string name="chat_img">chat_img</string>
     <string name="go_to_chat_btn">Go to Chat</string>
     <string name="go_to_flashcards_btn">Go to Flashcards</string>
+    <string name="select_a_language">Select a Language</string>
+    <string name="create_room_Btn">Create Room</string>
+    <string-array name="languages_array">
+        <item>English</item>
+        <item>Spanish</item>
+        <item>German</item>
+        <item>Chinese</item>
+        <item>French</item>
+        <item>Vietnamese</item>
+        <item>Russian</item>
+        <item>Tagalog</item>
+        <item>Latin</item>
+    </string-array>
 </resources>
