@@ -6,15 +6,35 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class ChatRoomChoice extends AppCompatActivity {
 
 //    Button btnSpa, btnGer, btnEng, btnFre, goToFlashcards;
     Spinner spin;
     Button submitBtn;
+    ArrayList<String> channels = new ArrayList<String>(){
+        {
+            add("K37YpRtGTMBC9JAZ");
+            add("iTzl5dVNhZweOFTo");
+            add("9Re6IIi9ZhoqxGbc");
+            add("Pbf9jcw2NrgUxB2B");
+        }
+    };
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,12 +60,40 @@ public class ChatRoomChoice extends AppCompatActivity {
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String selected = spin.getSelectedItem().toString();
-                Intent intent = new Intent(ChatRoomChoice.this, ChatSystem.class);
-                intent.putExtra("username", userName);
-                intent.putExtra("langSelected", selected);
-                intent.putExtra("channelID","K37YpRtGTMBC9JAZ");
-                startActivity(intent);
+                final String[] selectedChannel = {channels.get(0)};
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("ChatRoom");
+                ref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        ArrayList<String> usedChannels = new ArrayList<>();
+                        for (DataSnapshot childSnapshot: snapshot.getChildren())
+                        {
+                            if(childSnapshot.hasChildren())
+                            {
+                                usedChannels.add(childSnapshot.child("channelId").getValue().toString());
+                            }
+                        }
+                        if (!usedChannels.contains(selectedChannel[0])) {
+                            channels.remove(0);
+                            String selectedLang = spin.getSelectedItem().toString();
+                            Intent intent = new Intent(ChatRoomChoice.this, ChatSystem.class);
+                            intent.putExtra("username", userName);
+                            intent.putExtra("langSelected", selectedLang);
+                            intent.putExtra("channelID", selectedChannel[0]);
+                            ChatRoom chatRoom = new ChatRoom(selectedChannel[0], 0, selectedLang);
+                            chatRoom.createRoom(chatRoom);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(ChatRoomChoice.this, "Room already exist", Toast.LENGTH_LONG).show();
+                            selectedChannel[0] = channels.get(0);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
 //        btnSpa.setOnClickListener(new View.OnClickListener() {

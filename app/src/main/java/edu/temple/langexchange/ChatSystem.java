@@ -356,6 +356,26 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                         public void onOpen() {
                             System.out.println("Scaledrone connection open");
                             scaledrone.subscribe(roomName, ChatSystem.this);
+                            final long[] updatedUser = {0};
+                            DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference("ChatRoom");
+                            Query query1 = ref1.orderByChild("channelId").equalTo(channelID).limitToFirst(1);
+                            query1.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for (DataSnapshot childSnapshot : snapshot.getChildren())
+                                    {
+                                        DatabaseReference childRef = ref.child("usersNo");
+                                        updatedUser[0] = (long) childSnapshot.child("usersNo").getValue() + 1;
+                                        childRef.setValue(updatedUser[0]);
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                         }
 
                         @Override
