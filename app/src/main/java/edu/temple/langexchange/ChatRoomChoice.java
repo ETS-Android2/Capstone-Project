@@ -26,15 +26,6 @@ public class ChatRoomChoice extends AppCompatActivity {
 //    Button btnSpa, btnGer, btnEng, btnFre, goToFlashcards;
     Spinner spin;
     Button submitBtn;
-    ArrayList<String> channels = new ArrayList<String>(){
-        {
-            add("K37YpRtGTMBC9JAZ");
-            add("iTzl5dVNhZweOFTo");
-            add("9Re6IIi9ZhoqxGbc");
-            add("Pbf9jcw2NrgUxB2B");
-        }
-    };
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,32 +51,28 @@ public class ChatRoomChoice extends AppCompatActivity {
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String[] selectedChannel = {channels.get(0)};
+                String selectedLang = spin.getSelectedItem().toString();
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("ChatRoom");
                 ref.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        ArrayList<String> usedChannels = new ArrayList<>();
+                        ArrayList<String> usedLang = new ArrayList<>();
+                        usedLang.add("");
                         for (DataSnapshot childSnapshot: snapshot.getChildren())
                         {
                             if(childSnapshot.hasChildren())
                             {
-                                usedChannels.add(childSnapshot.child("channelId").getValue().toString());
+                                usedLang.add(childSnapshot.child("langChosen").getValue().toString());
+                                System.out.println("used lang:" + usedLang);
                             }
                         }
-                        if (!usedChannels.contains(selectedChannel[0])) {
-                            channels.remove(0);
-                            String selectedLang = spin.getSelectedItem().toString();
+                        if (!usedLang.contains(selectedLang)) {
                             Intent intent = new Intent(ChatRoomChoice.this, ChatSystem.class);
                             intent.putExtra("username", userName);
                             intent.putExtra("langSelected", selectedLang);
-                            intent.putExtra("channelID", selectedChannel[0]);
-                            ChatRoom chatRoom = new ChatRoom(selectedChannel[0], 0, selectedLang);
-                            chatRoom.createRoom(chatRoom);
                             startActivity(intent);
-                        } else {
+                        } else if(usedLang.contains(selectedLang)){
                             Toast.makeText(ChatRoomChoice.this, "Room already exist", Toast.LENGTH_LONG).show();
-                            selectedChannel[0] = channels.get(0);
                         }
                     }
 
