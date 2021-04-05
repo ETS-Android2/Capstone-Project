@@ -55,6 +55,7 @@
     <string name="go_to_flashcards_btn">Go to Flashcards</string>
     <string name="select_a_language">Select a Language</string>
     <string name="create_room_Btn">Create Room</string>
+    <string name="available_rooms">Available Rooms</string>
     <string-array name="languages_array">
         <item>English</item>
         <item>Spanish</item>

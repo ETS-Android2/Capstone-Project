@@ -2,12 +2,14 @@ package edu.temple.langexchange;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.provider.ContactsContract;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -74,6 +76,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
     public static final Integer RecordAudioRequestCode = 1;
     private Button flashcardMaker;
     private String phrase;
+    private ChatRoom chatRoom;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -163,255 +166,62 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
             }
         });
         System.out.println(receivedLang);
-        DatabaseReference channelRef = FirebaseDatabase.getInstance().getReference().child("Channels");
-        Query channelQuery = channelRef.orderByKey().limitToFirst(1);
-        channelQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+        final int[] updatedUser = {1};
+        DatabaseReference roomRef = FirebaseDatabase.getInstance().getReference().child("ChatRoom").child(receivedLang);
+        roomRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot data : snapshot.getChildren())
+                if(snapshot.hasChildren())
                 {
-                    channelID = data.getValue().toString();
-                    data.getRef().removeValue();
-                    ChatRoom chatRoom = new ChatRoom(channelID, 0, receivedLang);
-                    chatRoom.createRoom(chatRoom);
-                    int userNameController = userName.indexOf("@");
-                    System.out.println("username received: " + userName);
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Account");
-                    Query query = ref.orderByChild("username").equalTo(userName).limitToFirst(1);
-                    query.addValueEventListener(new ValueEventListener() {
+                    channelID = snapshot.child("channelId").getValue().toString();
+                    DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference().child("ChatRoom").child(receivedLang).child("usersNo");
+                    ref1.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                                userId = Integer.parseInt(childSnapshot.child("id").getValue().toString());
-                                targetLang = childSnapshot.child("learnLang").getValue().toString().toUpperCase();
-                                prefLang = childSnapshot.child("prefLang").getValue().toString();
-                                speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.getAudioCode(prefLang.toUpperCase()));
-                                System.out.println("target lang is: " + targetLang);
-                                System.out.println("pref lang is: " + prefLang);
-                            }
-                            if(prefLang.toUpperCase().equals(receivedLang))
-                            {
-                                userName = userName.substring(0, userNameController) + " - Native";
-                            }
-                            else
-                            {
-                                userName = userName.substring(0, userNameController) + " - Learner";
-                            }
 
-                            if(channelID == "")
-                            {
-                                Toast.makeText(ChatSystem.this, "Unable to Connect to Chat", Toast.LENGTH_LONG).show();
-                                finish();
-                            }
-
-                            if(!isFinishing())
-                            {
-                                editText = (EditText) findViewById(R.id.editText);
-                                micButton = (ImageButton) findViewById(R.id.micButton);
-                                messageAdapter = new MessageAdapter(ChatSystem.this);
-                                messagesView = (ListView) findViewById(R.id.messages_view);
-                                messagesView.setAdapter(messageAdapter);
-
-                                autoTranslate = findViewById(R.id.autoTranslate);
-
-
-
-                                autoTranslate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
-                                    @Override
-                                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                        if (isChecked) {
-                                            isAutoTranslate = true;
-                                            for(int i = 0; i < messagesView.getCount(); i++){
-                                                View currentView = messagesView.getChildAt(i);
-                                                TextView original = currentView.findViewById(R.id.message_body);
-                                                TextView translation = currentView.findViewById(R.id.translation);
-                                                Button flashcardMaker = currentView.findViewById(R.id.makeFlashcard);
-                                                if(translation.getText().toString().isEmpty()) {
-                                                    translation.setText(Translator.translate(original.getText().toString(), prefLang, ChatSystem.this));
-                                                }
-                                                original.setText(original.getText().toString() + "//autotranslate//");
-                                                original.setVisibility(View.INVISIBLE);
-                                                translation.setVisibility(View.VISIBLE);
-                                                flashcardMaker.setVisibility(View.INVISIBLE);
-                                            }
-
-
-                                        } else {
-                                            for(int i = 0; i < messagesView.getCount(); i++){
-                                                isAutoTranslate=false;
-                                                View currentView = messagesView.getChildAt(i);
-                                                TextView original = currentView.findViewById(R.id.message_body);
-                                                String removeTag = original.getText().toString();
-                                                removeTag.replace("//autotranslate//","");
-                                                TextView translation = currentView.findViewById(R.id.translation);
-                                                Button flashcardMaker = currentView.findViewById(R.id.makeFlashcard);
-                                                original.setVisibility(View.VISIBLE);
-                                                translation.setVisibility(View.INVISIBLE);
-                                                flashcardMaker.setVisibility(View.VISIBLE);
-                                            }
-
-                                        }
-                                    }
-                                });
-
-                                //Speech-to-text to send audio messages
-
-                                micButton.setOnTouchListener(new View.OnTouchListener() {
-                                    @Override
-                                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                                        if (motionEvent.getAction() == MotionEvent.ACTION_UP){
-                                            sr.stopListening();
-                                            micButton.setBackground(getDrawable(R.drawable.baseline_mic_none_24));
-                                        }
-                                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-                                            if(ContextCompat.checkSelfPermission(ChatSystem.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
-                                                checkPermission();
-                                                return false;
-                                            }
-                                            micButton.setBackground(getDrawable(R.drawable.baseline_mic_24));
-                                            sr.startListening(speechRecognizerIntent);
-                                        }
-                                        return false;
-                                    }
-                                });
-
-                                MemberData data = new MemberData(userName, getRandomColor());
-
-                                messagesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        if(view.findViewById(R.id.playButton).getVisibility() == View.VISIBLE){
-                                            ImageView playButton = (ImageView) view.findViewById(R.id.playButton);
-                                            playButton.setImageResource(R.drawable.baseline_play_circle_filled_24);
-                                            TextView message = (TextView) view.findViewById(R.id.message_body);
-                                            String toSpeak = message.getText().toString().replace("//audio//","");
-                                            tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
-                                            playButton.setImageResource(R.drawable.baseline_play_circle_outline_24);
-                                        }
-                                    }
-                                });
-
-
-
-
-
-                                messagesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                                    @Override
-                                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                                        //View myView = parent.getAdapter().getView(position,null, parent);
-                                        // Toast.makeText(ChatSystem.this, userId, Toast.LENGTH_LONG).show();
-                                        TextView myTranslation = (TextView) view.findViewById(R.id.translation);
-                                        TextView original = (TextView) view.findViewById(R.id.message_body);
-                                        TextView flashcardMaker = view.findViewById(R.id.makeFlashcard);
-
-                                        if(flashcardMaker.getVisibility() == View.GONE){
-                                            flashcardMaker.setVisibility(View.VISIBLE);
-                                        } else{
-                                            flashcardMaker.setVisibility(View.GONE);
-                                        }
-
-                                        if(flashcardMaker.getVisibility() == View.VISIBLE){
-                                            phrase = original.getText().toString();
-                                        }
-                                        flashcardMaker.setOnClickListener(new View.OnClickListener(){
-                                            @Override
-                                            public void onClick(View v) {
-                                                Intent intent = new Intent(ChatSystem.this, CreateFlashcardFromChat.class);
-                                                intent.putExtra("phrase", phrase);
-                                                intent.putExtra("userId", userId);
-                                                intent.putExtra("prefLang",prefLang);
-
-                                                startActivity(intent);
-
-                                            }
-                                        });
-
-
-
-                                        if (myTranslation.getText().toString().isEmpty()) {
-                                            String translateView;
-                                            if (view.findViewById(R.id.playButton).getVisibility() == View.VISIBLE) {
-
-                                                String textToTranslate = original.getText().toString().replace("//audio//","");
-                                                phrase = textToTranslate;
-                                                translateView = "\n\n Translation: " + Translator.translate(textToTranslate, prefLang, ChatSystem.this);
-
-                                            } else {
-                                                translateView = original.getText().toString() + "\n\nTranslation: " + Translator.translate(original.getText().toString(), prefLang, ChatSystem.this);
-                                            }
-                                            myTranslation.setText(translateView);
-                                        }
-                                        if (myTranslation.getVisibility() == View.INVISIBLE) {
-                                            myTranslation.setVisibility(View.VISIBLE);
-                                            original.setVisibility(View.INVISIBLE);
-                                        } else {
-                                            myTranslation.setVisibility(View.INVISIBLE);
-                                            if(view.findViewById(R.id.playButton).getVisibility() == View.INVISIBLE) {
-                                                original.setVisibility(View.VISIBLE);
-                                            }
-                                        }
-                                        return true;
-                                    }
-                                });
-
-
-                                String welcomeString = "Welcome to " + receivedLang + " Channel";
-                                System.out.println(welcomeString);
-                                System.out.println("channelID received: " + channelID);
-                                System.out.println("targetLang received: " + targetLang);
-                                scaledrone = new Scaledrone(channelID, data);
-                                Toast.makeText(ChatSystem.this, welcomeString, Toast.LENGTH_LONG).show();
-                                scaledrone.connect(new Listener() {
-                                    @Override
-                                    public void onOpen() {
-                                        System.out.println("Scaledrone connection open");
-                                        scaledrone.subscribe(roomName, ChatSystem.this);
-                                        long[] updatedUser = {0};
-                                        DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference().child("ChatRoom");
-                                        Query query1 = ref1.orderByChild("channelId").equalTo(channelID).limitToFirst(1);
-                                        query1.addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                for (DataSnapshot childSnapshot : snapshot.getChildren())
-                                                {
-                                                    updatedUser[0] = (long) childSnapshot.child("usersNo").getValue() + 1;
-                                                    System.out.println("Got from database: " + childSnapshot.child("usersNo").getValue());
-                                                    System.out.println("being pushed: " + updatedUser[0]);
-                                                    query1.getRef().child("usersNo").setValue(updatedUser[0]);
-                                                }
-
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                            }
-                                        });
-                                    }
-
-                                    @Override
-                                    public void onOpenFailure(Exception ex) {
-                                        System.err.println(ex);
-                                    }
-
-                                    @Override
-                                    public void onFailure(Exception ex) {
-                                        System.err.println(ex);
-                                    }
-
-                                    @Override
-                                    public void onClosed(String reason) {
-                                        System.err.println(reason);
-
-                                    }
-                                });
-                            }
-
+                            updatedUser[0] = Integer.parseInt(snapshot.getValue().toString());
+                            updatedUser[0] += 1;
+                            System.out.println("usersNo from database: " + snapshot.getValue());
+                            System.out.println("updated usersNo: " + updatedUser[0]);
+                            ref1.setValue(updatedUser[0]);
+                            ChatSystemFunction(channelID, speechRecognizerIntent);
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            System.out.println("The read failed: " + error.getCode());
+
+                        }
+                    });
+
+                }
+                else if(!snapshot.hasChildren())
+                {
+                    DatabaseReference channelRef = FirebaseDatabase.getInstance().getReference().child("Channels");
+                    Query channelQuery = channelRef.orderByKey().limitToFirst(1);
+                    channelQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(!snapshot.exists())
+                            {
+                                Toast.makeText(ChatSystem.this,  "Maximum Number of Chatrooms reached", Toast.LENGTH_LONG).show();
+                                finish();
+                            }
+                            else
+                            {
+                                for (DataSnapshot data : snapshot.getChildren()){
+                                    channelID = data.getValue().toString();
+                                    data.getRef().removeValue();
+
+                                }
+                                ChatSystemFunction(channelID, speechRecognizerIntent);
+                                chatRoom = new ChatRoom(channelID, updatedUser[0], receivedLang);
+                                chatRoom.createRoom(chatRoom);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
                         }
                     });
                 }
@@ -422,10 +232,231 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
 
             }
         });
-
     }
 
+    public void ChatSystemFunction(String channel, Intent intent)
+    {
+        int userNameController = userName.indexOf("@");
+        System.out.println("username received: " + userName);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Account");
+        Query query = ref.orderByChild("username").equalTo(userName).limitToFirst(1);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                    userId = Integer.parseInt(childSnapshot.child("id").getValue().toString());
+                    targetLang = childSnapshot.child("learnLang").getValue().toString().toUpperCase();
+                    prefLang = childSnapshot.child("prefLang").getValue().toString();
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.getAudioCode(prefLang.toUpperCase()));
+                    System.out.println("target lang is: " + targetLang);
+                    System.out.println("pref lang is: " + prefLang);
+                }
+                String langController = receivedLang.toUpperCase();
+                if(prefLang.toUpperCase().equals(langController))
+                {
+                    userName = userName.substring(0, userNameController) + " - Native";
+                }
+                else
+                {
+                    userName = userName.substring(0, userNameController) + " - Learner";
+                }
 
+                if(channel == "")
+                {
+                    Toast.makeText(ChatSystem.this, "Unable to Connect to Chat", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+
+                if(!isFinishing())
+                {
+                    editText = (EditText) findViewById(R.id.editText);
+                    micButton = (ImageButton) findViewById(R.id.micButton);
+                    messageAdapter = new MessageAdapter(ChatSystem.this);
+                    messagesView = (ListView) findViewById(R.id.messages_view);
+                    messagesView.setAdapter(messageAdapter);
+
+                    autoTranslate = findViewById(R.id.autoTranslate);
+
+
+
+                    autoTranslate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            if (isChecked) {
+                                isAutoTranslate = true;
+                                for(int i = 0; i < messagesView.getCount(); i++){
+                                    View currentView = messagesView.getChildAt(i);
+                                    TextView original = currentView.findViewById(R.id.message_body);
+                                    TextView translation = currentView.findViewById(R.id.translation);
+                                    Button flashcardMaker = currentView.findViewById(R.id.makeFlashcard);
+                                    if(translation.getText().toString().isEmpty()) {
+                                        translation.setText(Translator.translate(original.getText().toString(), prefLang, ChatSystem.this));
+                                    }
+                                    original.setText(original.getText().toString() + "//autotranslate//");
+                                    original.setVisibility(View.INVISIBLE);
+                                    translation.setVisibility(View.VISIBLE);
+                                    flashcardMaker.setVisibility(View.INVISIBLE);
+                                }
+
+
+                            } else {
+                                for(int i = 0; i < messagesView.getCount(); i++){
+                                    isAutoTranslate=false;
+                                    View currentView = messagesView.getChildAt(i);
+                                    TextView original = currentView.findViewById(R.id.message_body);
+                                    String removeTag = original.getText().toString();
+                                    removeTag.replace("//autotranslate//","");
+                                    TextView translation = currentView.findViewById(R.id.translation);
+                                    Button flashcardMaker = currentView.findViewById(R.id.makeFlashcard);
+                                    original.setVisibility(View.VISIBLE);
+                                    translation.setVisibility(View.INVISIBLE);
+                                    flashcardMaker.setVisibility(View.VISIBLE);
+                                }
+
+                            }
+                        }
+                    });
+
+                    //Speech-to-text to send audio messages
+
+                    micButton.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+                            if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+                                sr.stopListening();
+                                micButton.setBackground(getDrawable(R.drawable.baseline_mic_none_24));
+                            }
+                            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                                if(ContextCompat.checkSelfPermission(ChatSystem.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
+                                    checkPermission();
+                                    return false;
+                                }
+                                micButton.setBackground(getDrawable(R.drawable.baseline_mic_24));
+                                sr.startListening(intent);
+                            }
+                            return false;
+                        }
+                    });
+
+                    MemberData data = new MemberData(userName, getRandomColor());
+
+                    messagesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            if(view.findViewById(R.id.playButton).getVisibility() == View.VISIBLE){
+                                ImageView playButton = (ImageView) view.findViewById(R.id.playButton);
+                                playButton.setImageResource(R.drawable.baseline_play_circle_filled_24);
+                                TextView message = (TextView) view.findViewById(R.id.message_body);
+                                String toSpeak = message.getText().toString().replace("//audio//","");
+                                tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
+                                playButton.setImageResource(R.drawable.baseline_play_circle_outline_24);
+                            }
+                        }
+                    });
+
+
+
+
+
+                    messagesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                            //View myView = parent.getAdapter().getView(position,null, parent);
+                            // Toast.makeText(ChatSystem.this, userId, Toast.LENGTH_LONG).show();
+                            TextView myTranslation = (TextView) view.findViewById(R.id.translation);
+                            TextView original = (TextView) view.findViewById(R.id.message_body);
+                            TextView flashcardMaker = view.findViewById(R.id.makeFlashcard);
+
+                            if(flashcardMaker.getVisibility() == View.GONE){
+                                flashcardMaker.setVisibility(View.VISIBLE);
+                            } else{
+                                flashcardMaker.setVisibility(View.GONE);
+                            }
+
+                            if(flashcardMaker.getVisibility() == View.VISIBLE){
+                                phrase = original.getText().toString();
+                            }
+                            flashcardMaker.setOnClickListener(new View.OnClickListener(){
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(ChatSystem.this, CreateFlashcardFromChat.class);
+                                    intent.putExtra("phrase", phrase);
+                                    intent.putExtra("userId", userId);
+                                    intent.putExtra("prefLang",prefLang);
+
+                                    startActivity(intent);
+
+                                }
+                            });
+
+
+
+                            if (myTranslation.getText().toString().isEmpty()) {
+                                String translateView;
+                                if (view.findViewById(R.id.playButton).getVisibility() == View.VISIBLE) {
+
+                                    String textToTranslate = original.getText().toString().replace("//audio//","");
+                                    phrase = textToTranslate;
+                                    translateView = "\n\n Translation: " + Translator.translate(textToTranslate, prefLang, ChatSystem.this);
+
+                                } else {
+                                    translateView = original.getText().toString() + "\n\nTranslation: " + Translator.translate(original.getText().toString(), prefLang, ChatSystem.this);
+                                }
+                                myTranslation.setText(translateView);
+                            }
+                            if (myTranslation.getVisibility() == View.INVISIBLE) {
+                                myTranslation.setVisibility(View.VISIBLE);
+                                original.setVisibility(View.INVISIBLE);
+                            } else {
+                                myTranslation.setVisibility(View.INVISIBLE);
+                                if(view.findViewById(R.id.playButton).getVisibility() == View.INVISIBLE) {
+                                    original.setVisibility(View.VISIBLE);
+                                }
+                            }
+                            return true;
+                        }
+                    });
+
+
+                    String welcomeString = "Welcome to " + receivedLang + " Channel";
+                    System.out.println(welcomeString);
+                    System.out.println("channelID received: " + channel);
+                    System.out.println("targetLang received: " + targetLang);
+                    scaledrone = new Scaledrone(channel, data);
+                    Toast.makeText(ChatSystem.this, welcomeString, Toast.LENGTH_LONG).show();
+                    scaledrone.connect(new Listener() {
+                        @Override
+                        public void onOpen() {
+                            System.out.println("Scaledrone connection open");
+                            scaledrone.subscribe(roomName, ChatSystem.this);
+                        }
+
+                        @Override
+                        public void onOpenFailure(Exception ex) {
+                            System.err.println(ex);
+                        }
+
+                        @Override
+                        public void onFailure(Exception ex) {
+                            System.err.println(ex);
+                        }
+
+                        @Override
+                        public void onClosed(String reason) {
+                            System.err.println(reason);
+
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println("The read failed: " + error.getCode());
+            }
+        });
+    }
     public void sendMessage(View view) {
         String message = editText.getText().toString();
         if (message.length() > 0) {
@@ -488,8 +519,29 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
     }
     @Override
     protected void onDestroy() {
-        DatabaseReference channelRef = FirebaseDatabase.getInstance().getReference().child("Channels");
-        channelRef.push().setValue(channelID);
+        long[] updatedUser = {0};
+        DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference().child("ChatRoom").child(receivedLang).child("usersNo");
+        ref1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists())
+                {
+                    updatedUser[0] = (long) snapshot.getValue() - 1;
+                    ref1.setValue(updatedUser[0]);
+                    if(updatedUser[0] <= 0)
+                    {
+                        DatabaseReference channelRef = FirebaseDatabase.getInstance().getReference().child("Channels");
+                        channelRef.push().setValue(channelID);
+                        FirebaseDatabase.getInstance().getReference().child("ChatRoom").child(receivedLang).removeValue();
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         sr.destroy();
         tts.shutdown();
         super.onDestroy();

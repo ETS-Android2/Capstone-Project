@@ -52,8 +52,13 @@ public class ChatRoom {
 
     public void createRoom(ChatRoom chatroom)
     {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ChatRoom");
-        ref.push().setValue(chatroom);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("ChatRoom").child(chatroom.getLangChosen());
+        ref.setValue(chatroom);
     }
 
+    public void deleteRoom(String lang)
+    {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("ChatRoom").child(lang);
+        ref.removeValue();
+    }
 }
