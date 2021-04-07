@@ -11,13 +11,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MessageAdapter extends BaseAdapter {
-    List<Message> messages = new ArrayList<Message>();
+    List<Message> messages = new ArrayList<>();
+    List<Message> original = new ArrayList<>();
+    List<Message> translated = new ArrayList<>();
     Context context;
     boolean isAudioMessage;
 
@@ -25,10 +29,29 @@ public class MessageAdapter extends BaseAdapter {
         this.context = context;
     }
 
-    public void add(Message message) {
-        this.messages.add(message);
-       // isAudioMessage = audioMessage;
+    public void add(Message message, String prefLang, boolean isAutoTranslate) {
+        this.original.add(message); // store original messages
+
+        this.translated.add(new Message(Translator.translate(message.getText(), prefLang, context), message.getMemberData(), message.isBelongsToCurrentUser()));
+
+        if (isAutoTranslate ? this.messages.add(translated.get(getCount())) : this.messages.add(original.get(getCount())));
+
+        // isAudioMessage = audioMessage;
         notifyDataSetChanged(); // to render the list we need to notify
+    }
+
+    public void getTranslated(String prefLang) {
+        for (int i = 0; i < getCount(); i++) {
+            messages.set(i, translated.get(i));
+        }
+        notifyDataSetChanged();
+    }
+
+    public void getOriginal() {
+        for (int i = 0; i < getCount(); i++) {
+            messages.set(i, original.get(i));
+        }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -77,18 +100,17 @@ public class MessageAdapter extends BaseAdapter {
             GradientDrawable drawable = (GradientDrawable) holder.avatar.getBackground();
             drawable.setColor(Color.parseColor(message.getMemberData().getColor()));
         }
-        if(holder.messageBody.getText().toString().contains("//audio//")){
+        if (holder.messageBody.getText().toString().contains("//audio//")) {
             holder.messageBody.setVisibility(View.INVISIBLE);
             holder.playButton.setVisibility(View.VISIBLE);
         }
-        if(holder.messageBody.getText().toString().contains("//autotranslate//")){
+        if (holder.messageBody.getText().toString().contains("//autotranslate//")) {
             holder.messageBody.setVisibility(View.INVISIBLE);
             holder.translation.setVisibility(View.VISIBLE);
         }
 
         return convertView;
     }
-
 
 
 }
