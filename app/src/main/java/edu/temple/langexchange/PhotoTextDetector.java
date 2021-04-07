@@ -27,14 +27,13 @@ import java.io.InputStream;
 public class PhotoTextDetector {
 
     private static boolean connected;
-    static Task<Text> result;
+    private static Task<Text> result;
+    private static InputImage image;
 
 
     public static String detectText(Context context, TextView textView, int imageId) throws IOException {
         TextRecognizer recognizer = TextRecognition.getClient();
-        InputStream is = context.getResources().openRawResource(R.raw.welcomeeveryone);
         Uri uri= Uri.parse("android.resource://"+ context.getPackageName() +"/" + imageId);
-        InputImage image = null;
         try {
             image = InputImage.fromFilePath(context, uri);
         } catch (IOException e){

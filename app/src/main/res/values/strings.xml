@@ -53,4 +53,5 @@
     <string name="chat_img">chat_img</string>
     <string name="go_to_chat_btn">Go to Chat</string>
     <string name="go_to_flashcards_btn">Go to Flashcards</string>
+    <string name="title_activity_photo_translation_test">PhotoTranslationTest</string>
 </resources>
