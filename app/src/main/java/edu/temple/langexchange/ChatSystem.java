@@ -69,16 +69,14 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
     private int userId;
     private CheckBox autoTranslate;
     private ImageButton micButton;
-    // private boolean isAudioMessage = false;
+   // private boolean isAudioMessage = false;
     private TextToSpeech tts;
     private SpeechRecognizer sr;
-    private boolean isAutoTranslate = false;
+    private boolean isAutoTranslate=false;
     public static final Integer RecordAudioRequestCode = 1;
     private Button flashcardMaker;
     private String phrase;
-
     private ChatRoom chatRoom;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +88,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
 
         sr = SpeechRecognizer.createSpeechRecognizer(ChatSystem.this);
         final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.getAudioCode(receivedLang));
         sr.setRecognitionListener(new RecognitionListener() {
             @Override
@@ -148,9 +146,9 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         tts = new TextToSpeech(ChatSystem.this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                if (status != TextToSpeech.ERROR) {
+                if(status != TextToSpeech.ERROR){
                     System.out.println("Successful tts connection!");
-                    switch (receivedLang) {
+                    switch (receivedLang){
                         case "ENGLISH":
                             tts.setLanguage(Locale.ENGLISH);
                             break;
@@ -253,12 +251,13 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                     System.out.println("target lang is: " + targetLang);
                     System.out.println("pref lang is: " + prefLang);
                 }
-
                 String langController = receivedLang.toUpperCase();
                 if(prefLang.toUpperCase().equals(langController))
                 {
                     userName = userName.substring(0, userNameController) + " - Native";
-                } else {
+                }
+                else
+                {
                     userName = userName.substring(0, userNameController) + " - Learner";
                 }
 
@@ -268,7 +267,8 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                     finish();
                 }
 
-                if (!isFinishing()) {
+                if(!isFinishing())
+                {
                     editText = (EditText) findViewById(R.id.editText);
                     micButton = (ImageButton) findViewById(R.id.micButton);
                     messageAdapter = new MessageAdapter(ChatSystem.this);
@@ -277,15 +277,42 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
 
                     autoTranslate = findViewById(R.id.autoTranslate);
 
-                    autoTranslate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+
+                    autoTranslate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                             if (isChecked) {
                                 isAutoTranslate = true;
-                                messageAdapter.getTranslated(prefLang);
+                                for(int i = 0; i < messagesView.getCount(); i++){
+                                    View currentView = messagesView.getChildAt(i);
+                                    TextView original = currentView.findViewById(R.id.message_body);
+                                    TextView translation = currentView.findViewById(R.id.translation);
+                                    Button flashcardMaker = currentView.findViewById(R.id.makeFlashcard);
+                                    if(translation.getText().toString().isEmpty()) {
+                                        translation.setText(Translator.translate(original.getText().toString(), prefLang, ChatSystem.this));
+                                    }
+                                    original.setText(original.getText().toString() + "//autotranslate//");
+                                    original.setVisibility(View.INVISIBLE);
+                                    translation.setVisibility(View.VISIBLE);
+                                    flashcardMaker.setVisibility(View.INVISIBLE);
+                                }
+
+
                             } else {
-                                isAutoTranslate = false;
-                                messageAdapter.getOriginal();
+                                for(int i = 0; i < messagesView.getCount(); i++){
+                                    isAutoTranslate=false;
+                                    View currentView = messagesView.getChildAt(i);
+                                    TextView original = currentView.findViewById(R.id.message_body);
+                                    String removeTag = original.getText().toString();
+                                    removeTag.replace("//autotranslate//","");
+                                    TextView translation = currentView.findViewById(R.id.translation);
+                                    Button flashcardMaker = currentView.findViewById(R.id.makeFlashcard);
+                                    original.setVisibility(View.VISIBLE);
+                                    translation.setVisibility(View.INVISIBLE);
+                                    flashcardMaker.setVisibility(View.VISIBLE);
+                                }
+
                             }
                         }
                     });
@@ -299,8 +326,8 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                 sr.stopListening();
                                 micButton.setBackground(getDrawable(R.drawable.baseline_mic_none_24));
                             }
-                            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                                if (ContextCompat.checkSelfPermission(ChatSystem.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                                if(ContextCompat.checkSelfPermission(ChatSystem.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
                                     checkPermission();
                                     return false;
                                 }
@@ -316,11 +343,11 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                     messagesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            if (view.findViewById(R.id.playButton).getVisibility() == View.VISIBLE) {
+                            if(view.findViewById(R.id.playButton).getVisibility() == View.VISIBLE){
                                 ImageView playButton = (ImageView) view.findViewById(R.id.playButton);
                                 playButton.setImageResource(R.drawable.baseline_play_circle_filled_24);
                                 TextView message = (TextView) view.findViewById(R.id.message_body);
-                                String toSpeak = message.getText().toString().replace("//audio//", "");
+                                String toSpeak = message.getText().toString().replace("//audio//","");
                                 tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
                                 playButton.setImageResource(R.drawable.baseline_play_circle_outline_24);
                             }
@@ -328,33 +355,8 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                     });
 
 
-                    messagesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                        @Override
-                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                            //View myView = parent.getAdapter().getView(position,null, parent);
-                            // Toast.makeText(ChatSystem.this, userId, Toast.LENGTH_LONG).show();
-                            TextView myTranslation = (TextView) view.findViewById(R.id.translation);
-                            TextView original = (TextView) view.findViewById(R.id.message_body);
-                            TextView flashcardMaker = view.findViewById(R.id.makeFlashcard);
 
-                            if (flashcardMaker.getVisibility() == View.GONE) {
-                                flashcardMaker.setVisibility(View.VISIBLE);
-                            } else {
-                                flashcardMaker.setVisibility(View.GONE);
-                            }
 
-                            if (flashcardMaker.getVisibility() == View.VISIBLE) {
-                                phrase = original.getText().toString();
-                            }
-                            flashcardMaker.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(ChatSystem.this, CreateFlashcardFromChat.class);
-                                    intent.putExtra("phrase", phrase);
-                                    intent.putExtra("userId", userId);
-                                    intent.putExtra("prefLang", prefLang);
-
-                                    startActivity(intent);
 
                     messagesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                         @Override
@@ -416,33 +418,6 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                     });
 
 
-                            if (myTranslation.getText().toString().isEmpty()) {
-                                String translateView;
-                                if (view.findViewById(R.id.playButton).getVisibility() == View.VISIBLE) {
-
-                                    String textToTranslate = original.getText().toString().replace("//audio//", "");
-                                    phrase = textToTranslate;
-                                    translateView = "\n\n Translation: " + Translator.translate(textToTranslate, prefLang, ChatSystem.this);
-
-                                } else {
-                                    translateView = original.getText().toString() + "\n\nTranslation: " + Translator.translate(original.getText().toString(), prefLang, ChatSystem.this);
-                                }
-                                myTranslation.setText(translateView);
-                            }
-                            if (myTranslation.getVisibility() == View.INVISIBLE) {
-                                myTranslation.setVisibility(View.VISIBLE);
-                                original.setVisibility(View.INVISIBLE);
-                            } else {
-                                myTranslation.setVisibility(View.INVISIBLE);
-                                if (view.findViewById(R.id.playButton).getVisibility() == View.INVISIBLE) {
-                                    original.setVisibility(View.VISIBLE);
-                                }
-                            }
-                            return true;
-                        }
-                    });
-
-
                     String welcomeString = "Welcome to " + receivedLang + " Channel";
                     System.out.println(welcomeString);
                     System.out.println("channelID received: " + channel);
@@ -490,11 +465,11 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         }
     }
 
-    public void sendVoiceMessage(String message) {
-        if (!message.isEmpty()) {
+    public void sendVoiceMessage(String message){
+        if(!message.isEmpty()){
             String audioMessage = message + "//audio//";
             scaledrone.publish(roomName, audioMessage);
-            //  isAudioMessage = true;
+          //  isAudioMessage = true;
         }
     }
 
@@ -518,8 +493,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-
-                    messageAdapter.add(message, prefLang, isAutoTranslate);
+                    messageAdapter.add(message);
 
                     messagesView.setSelection(messagesView.getCount() - 1);
 
@@ -533,18 +507,16 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
     private String getRandomColor() {
         Random r = new Random();
         StringBuffer sb = new StringBuffer("#");
-        while (sb.length() < 7) {
+        while(sb.length() < 7){
             sb.append(Integer.toHexString(r.nextInt()));
         }
         return sb.toString().substring(0, 7);
     }
-
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, RecordAudioRequestCode);
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.RECORD_AUDIO},RecordAudioRequestCode);
         }
     }
-
     @Override
     protected void onDestroy() {
         long[] updatedUser = {0};
