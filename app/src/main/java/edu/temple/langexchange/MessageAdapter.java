@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageAdapter extends BaseAdapter {
-    List<Message> messages = new ArrayList<Message>();
+    List<Message> messages = new ArrayList<>();
+    List<Message> original = new ArrayList<>();
+    List<Message> translated = new ArrayList<>();
     Context context;
     boolean isAudioMessage;
 
@@ -25,10 +27,28 @@ public class MessageAdapter extends BaseAdapter {
         this.context = context;
     }
 
-    public void add(Message message) {
-        this.messages.add(message);
+    public void add(Message message, String prefLang, boolean isAutoTranslate) {
+        this.original.add(message);
+        this.translated.add(new Message(Translator.translate(message.getText(), prefLang, context), message.getMemberData(), message.isBelongsToCurrentUser()));
+
+        if (isAutoTranslate ? this.messages.add(translated.get(getCount())) : this.messages.add(original.get(getCount())));
+
        // isAudioMessage = audioMessage;
         notifyDataSetChanged(); // to render the list we need to notify
+    }
+
+    public void getTranslated() {
+        for (int i = 0; i < getCount(); i++) {
+            messages.set(i, translated.get(i));
+        }
+        notifyDataSetChanged();
+    }
+
+    public void getOriginal() {
+        for (int i = 0; i < getCount(); i++) {
+            messages.set(i, original.get(i));
+        }
+        notifyDataSetChanged();
     }
 
     @Override
