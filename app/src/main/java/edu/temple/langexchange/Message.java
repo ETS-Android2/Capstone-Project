@@ -15,11 +15,6 @@ public class Message {
         return text;
     }
 
-    public Message setText(String text) {
-        this.text = text;
-        return this;
-    }
-
     public MemberData getMemberData() {
         return memberData;
     }

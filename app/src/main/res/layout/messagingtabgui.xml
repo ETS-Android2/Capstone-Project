@@ -12,7 +12,8 @@
         android:id="@+id/autoTranslate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Auto-Translate" />
+        android:text="Auto-Translate"
+        android:visibility="gone"/>
 
     <ListView
         android:id="@+id/messages_view"
