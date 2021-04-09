@@ -81,8 +81,9 @@ public class LoginActivity extends AppCompatActivity {
                                     userId = account.getId();
                                     System.out.println("username sent: " + userName);
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    ((MyAccount) getApplication()).setUserId(userId);
                                     intent.putExtra("username", userName);
-                                    intent.putExtra("userID", userId);
+//                                    intent.putExtra("userID", userId);
                                     startActivity(intent);
                                 }
                                 else{

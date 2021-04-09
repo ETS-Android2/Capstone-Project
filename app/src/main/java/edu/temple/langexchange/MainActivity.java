@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         buttonStartChat = findViewById(R.id.button3);
         Intent intentPrev = getIntent();
         String userName = intentPrev.getStringExtra("username");
-        userId = intentPrev.getIntExtra("userID", 0);
+        userId = ((MyAccount) getApplication()).getUserId();
         System.out.println("username received from login: " + userName);
         System.out.println("userId received from login: " + userId);
 
@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, FlashcardActivity.class);
-                intent.putExtra("userId", userId);
                 intent.putExtra("username", userName);
                 startActivity(intent);
             }
