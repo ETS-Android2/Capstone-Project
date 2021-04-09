@@ -80,7 +80,6 @@ public class ChatRoomChoice extends AppCompatActivity {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             Intent intent = new Intent(ChatRoomChoice.this, ChatSystem.class);
-                            intent.putExtra("username", userName);
                             intent.putExtra("langSelected", availableRooms.get(position));
                             System.out.println("Available Room passed: " + availableRooms.get(position));
                             startActivity(intent);
@@ -117,7 +116,6 @@ public class ChatRoomChoice extends AppCompatActivity {
 
                         if (!usedLang.contains(selectedLang)) {
                             Intent intent = new Intent(ChatRoomChoice.this, ChatSystem.class);
-                            intent.putExtra("username", userName);
                             intent.putExtra("langSelected", selectedLang);
                             startActivity(intent);
                         } else if(usedLang.contains(selectedLang)){

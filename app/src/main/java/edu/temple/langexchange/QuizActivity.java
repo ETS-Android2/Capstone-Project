@@ -56,11 +56,8 @@ public class QuizActivity extends AppCompatActivity {
         questions = new ArrayList<String>();
         answers = new ArrayList<String>();
 
-        // retrieve intent
-        Intent intent = getIntent();
-
         // retrieve passed in data
-        int userId = intent.getIntExtra("userId", 0);
+        int userId = ((MyAccount) getApplication()).getUserId();
 
         // connect to the database
         ref = FirebaseDatabase.getInstance().getReference().child("Flashcards");

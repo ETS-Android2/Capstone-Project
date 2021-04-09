@@ -59,9 +59,6 @@ public class FlashcardActivity extends AppCompatActivity {
 
         int userId = ((MyAccount) getApplication()).getUserId();
 
-        Intent intent = getIntent();
-        String username = intent.getStringExtra("username");
-
         // listen for changes on db
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -119,7 +116,6 @@ public class FlashcardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FlashcardActivity.this, ChatRoomChoice.class);
-                intent.putExtra("username", username);
                 startActivity(intent);
             }
         });

@@ -77,13 +77,14 @@ public class LoginActivity extends AppCompatActivity {
                                 Account account = childSnapshot.getValue(Account.class);
 
                                 if(account.password.equals(passwordEditText.getText().toString())) {
-                                    String userName = account.username;
+                                    String userName = account.getUsername();
                                     userId = account.getId();
-                                    System.out.println("username sent: " + userName);
+
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
                                     ((MyAccount) getApplication()).setUserId(userId);
-                                    intent.putExtra("username", userName);
-//                                    intent.putExtra("userID", userId);
+                                    ((MyAccount) getApplication()).setUsername(userName);
+
                                     startActivity(intent);
                                 }
                                 else{

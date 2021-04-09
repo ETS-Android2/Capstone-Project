@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, FlashcardActivity.class);
-                intent.putExtra("username", userName);
                 startActivity(intent);
             }
         });
@@ -42,8 +41,6 @@ public class MainActivity extends AppCompatActivity {
         buttonStartChat.setOnClickListener(new View.OnClickListener() {
           public void onClick(View v) {
               Intent intent = new Intent(MainActivity.this, ChatRoomChoice.class);
-              intent.putExtra("username", userName);
-              intent.putExtra("userId", userId);
               startActivity(intent);
           }
         });

@@ -82,8 +82,9 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.messagingtabgui);
 
+        userName = ((MyAccount) getApplication()).getUsername();
+
         Intent intent = getIntent();
-        userName = intent.getStringExtra("username");
         receivedLang = intent.getStringExtra("langSelected");
 
         sr = SpeechRecognizer.createSpeechRecognizer(ChatSystem.this);
@@ -355,8 +356,8 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                 @Override
                                 public void onClick(View v) {
                                     Intent intent = new Intent(ChatSystem.this, CreateFlashcardFromChat.class);
+
                                     intent.putExtra("phrase", phrase);
-                                    intent.putExtra("userId", userId);
                                     intent.putExtra("prefLang",prefLang);
 
                                     startActivity(intent);
