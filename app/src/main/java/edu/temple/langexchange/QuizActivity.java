@@ -2,6 +2,7 @@ package edu.temple.langexchange;
 
 import android.app.LauncherActivity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -89,7 +90,7 @@ public class QuizActivity extends AppCompatActivity {
 
                 QuizAdapter adapter = new QuizAdapter(QuizActivity.this, flashcardList);
                 list.setAdapter(adapter);
-
+                inputAnswers.addAll(questions);
             }
 
             @Override
@@ -101,12 +102,15 @@ public class QuizActivity extends AppCompatActivity {
         button = findViewById(R.id.quizDisplayBtn);
         submitBtn = findViewById(R.id.submitBtn);
 
+
+
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(QuizActivity.this, QuizTaking.class);
                 correctAnswer = answers.get(position);
                 indexAnswered = position;
+                list.getChildAt(indexAnswered).setBackgroundColor(getResources().getColor(R.color.common_google_signin_btn_text_dark_disabled));
                 startActivityForResult(intent, 1);
             }
         });
@@ -122,9 +126,11 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                answers.removeAll(inputAnswers);
+                grade = inputAnswers.size() - answers.size();
                 Intent intent = new Intent(QuizActivity.this, QuizResult.class);
                 intent.putExtra("grade", grade);
-                intent.putExtra("wrongAnswers", inputAnswers);
+                intent.putExtra("wrongAnswers", answers);
                 intent.putExtra("totalQuestions", questions.size());
                 intent.putExtra("userId", userId);
                 startActivity(intent);
@@ -140,8 +146,7 @@ public class QuizActivity extends AppCompatActivity {
 
         if(requestCode == 1 && resultCode == RESULT_OK){
             res = data.getStringExtra("QuizAnswer");
-            if(inputAnswers.con)
-            inputAnswers.add(res);
+            inputAnswers.set(indexAnswered, res);
         }
     }
 }
