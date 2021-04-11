@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.temple.langexchange">
 
-
     <queries>
         <intent>
             <action android:name="android.intent.action.TTS_SERVICE" />
@@ -12,12 +11,12 @@
     </queries> <!-- <uses-feature android:name="android.hardware.type.watch" /> -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-feature android:name="android.hardware.camera"
+
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="false" />
 
-
     <application
-
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -25,19 +24,12 @@
         android:supportsRtl="true"
         android:testOnly="false"
         android:theme="@style/Theme.LangExchange">
+        <activity android:name=".RealTimeTranslation"></activity>
+
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="ocr" />
 
-        <activity
-            android:name=".PhotoTranslationTest"
-            android:label="@string/title_activity_photo_translation_test">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity android:name=".CreateFlashcardFromChat" />
         <activity
             android:name=".LoginActivity"

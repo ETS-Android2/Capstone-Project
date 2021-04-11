@@ -12,7 +12,7 @@ import edu.temple.langexchange.ui.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button button, buttonStartChat;
+    Button button, buttonStartChat, button2;
     int userId;
 
     @Override
@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         button = findViewById(R.id.button);
         buttonStartChat = findViewById(R.id.button3);
+        button2 = findViewById(R.id.button2);
         Intent intentPrev = getIntent();
         String userName = intentPrev.getStringExtra("username");
         userId = intentPrev.getIntExtra("userID", 0);
@@ -47,6 +48,14 @@ public class MainActivity extends AppCompatActivity {
               intent.putExtra("userId", userId);
               startActivity(intent);
           }
+        });
+
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RealTimeTranslation.class);
+                startActivity(intent);
+            }
         });
 
     }
