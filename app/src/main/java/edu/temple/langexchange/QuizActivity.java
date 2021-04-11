@@ -2,6 +2,7 @@ package edu.temple.langexchange;
 
 import android.app.LauncherActivity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -34,8 +35,9 @@ public class QuizActivity extends AppCompatActivity {
     private static String correctAnswer = "";
     private static String res = "";
     private static int indexAnswered = 0;
+    private static int grade = 0;
 
-    Button button;
+    Button button, submitBtn;
     ListView list;
 
     DatabaseReference ref;
@@ -43,6 +45,7 @@ public class QuizActivity extends AppCompatActivity {
 
     ArrayList<String> questions;
     ArrayList<String> answers;
+    ArrayList<String> inputAnswers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +58,11 @@ public class QuizActivity extends AppCompatActivity {
         flashcardList = new ArrayList<Flashcards>();
         questions = new ArrayList<String>();
         answers = new ArrayList<String>();
+        inputAnswers = new ArrayList<String>();
 
         // retrieve passed in data
         int userId = ((MyAccount) getApplication()).getUserId();
+
 
         // connect to the database
         ref = FirebaseDatabase.getInstance().getReference().child("Flashcards");
@@ -82,6 +87,7 @@ public class QuizActivity extends AppCompatActivity {
 
                 QuizAdapter adapter = new QuizAdapter(QuizActivity.this, flashcardList);
                 list.setAdapter(adapter);
+                inputAnswers.addAll(questions);
             }
 
             @Override
@@ -90,33 +96,10 @@ public class QuizActivity extends AppCompatActivity {
             }
         });
 
-
-//        if(getIntent().getSerializableExtra("flashcardArr") == null) {
-//            //test = new Flashcards[5];
-//            test.add(new Flashcards(1, "Hi", "Hola", "A Word You Use to Greet People in Spanish"));
-//            test.add(new Flashcards(2, "One", "Uno", "Number One"));
-//            test.add(new Flashcards(3, "Two", "Dos", "Number Two"));
-//            test.add(new Flashcards(4, "Three", "Tres", "Number Three"));
-//            test.add(new Flashcards(5, "Four", "Cuatro", "Number Four"));
-//        }
-//        else{
-//            test = (ArrayList<Flashcards>) getIntent().getSerializableExtra("flashcardArr");
-//        }
-
-//        FlashcardAdapter adapter = new FlashcardAdapter(this, test);
-
         button = findViewById(R.id.quizDisplayBtn);
+        submitBtn = findViewById(R.id.submitBtn);
 
 
-//        for(Flashcards card : test)
-//        {
-//            questions.add(card.definition);
-//            correctAnswer.add(card.originalWord.toUpperCase());
-//        }
-//
-//        System.out.println(correctAnswer);
-//        QuizAdapter adapter = new QuizAdapter(this, questions);
-//        list.setAdapter(adapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -124,6 +107,7 @@ public class QuizActivity extends AppCompatActivity {
                 Intent intent = new Intent(QuizActivity.this, QuizTaking.class);
                 correctAnswer = answers.get(position);
                 indexAnswered = position;
+                list.getChildAt(indexAnswered).setBackgroundColor(getResources().getColor(R.color.common_google_signin_btn_text_dark_disabled));
                 startActivityForResult(intent, 1);
             }
         });
@@ -131,6 +115,22 @@ public class QuizActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
+            }
+        });
+
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                answers.removeAll(inputAnswers);
+                grade = inputAnswers.size() - answers.size();
+                Intent intent = new Intent(QuizActivity.this, QuizResult.class);
+                intent.putExtra("grade", grade);
+                intent.putExtra("wrongAnswers", answers);
+                intent.putExtra("totalQuestions", questions.size());
+                intent.putExtra("userId", userId);
+                startActivity(intent);
                 finish();
             }
         });
@@ -143,17 +143,7 @@ public class QuizActivity extends AppCompatActivity {
 
         if(requestCode == 1 && resultCode == RESULT_OK){
             res = data.getStringExtra("QuizAnswer");
-            if(res.equals(correctAnswer))
-            {
-                System.out.println("CORRECT");
-                list.getChildAt(indexAnswered).setBackgroundColor(getResources().getColor(R.color.correct_color));
-
-            }
-            else{
-                System.out.println("INCORRECT");
-                list.getChildAt(indexAnswered).setBackgroundColor(getResources().getColor(R.color.incorrect_color));
-            }
-            System.out.println(res);
+            inputAnswers.set(indexAnswered, res);
         }
     }
 }

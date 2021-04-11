@@ -1,6 +1,7 @@
 package edu.temple.langexchange;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -31,14 +32,11 @@ public class PhotoTextDetector {
     private static InputImage image;
 
 
-    public static String detectText(Context context, TextView textView, int imageId) throws IOException {
+    public static void detectText(Context context, TextView textView, Bitmap bitmap) {
         TextRecognizer recognizer = TextRecognition.getClient();
-        Uri uri= Uri.parse("android.resource://"+ context.getPackageName() +"/" + imageId);
-        try {
-            image = InputImage.fromFilePath(context, uri);
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+       // Uri uri= Uri.parse("android.resource://"+ context.getPackageName() +"/" + imageId);
+        image = InputImage.fromBitmap(bitmap, 90);
+
 
         result = recognizer.process(image)
                         .addOnSuccessListener(new OnSuccessListener<Text>() {
@@ -63,7 +61,7 @@ public class PhotoTextDetector {
                                         // ...
                                     }
                                 });
-        return result.getResult().getText();
+        //return result.getResult().getText();
     }
 
 
