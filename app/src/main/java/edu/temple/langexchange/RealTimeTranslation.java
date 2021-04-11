@@ -1,12 +1,15 @@
 package edu.temple.langexchange;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
@@ -20,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,17 +33,21 @@ import java.util.Locale;
 
 public class RealTimeTranslation extends AppCompatActivity {
 
-
+    private static final int CAMERA_REQUEST = 1888;
+    private static final int MY_CAMERA_PERMISSION_CODE = 100;
     private Spinner learning;
     private  EditText beforeTranslate;
     private TextView afterTranslate;
     private ImageButton micButtonAT, camera;
-    private  Button translateButton;
+    private  Button translateButton, detectTextButton;
     private  String learningLangSelected;
     private SpeechRecognizer sr;
+    private ImageView imageView;
     public static final Integer RecordAudioRequestCode = 1;
     private TextToSpeech tts;
     String audioMessage;
+    private Bitmap photo;
+
 
 
 
@@ -58,6 +66,9 @@ public class RealTimeTranslation extends AppCompatActivity {
         micButtonAT = findViewById(R.id.micButtonAT);
         camera = findViewById(R.id.camera);
         translateButton = findViewById(R.id.translate);
+        imageView = findViewById(R.id.photo);
+        detectTextButton = findViewById(R.id.detectText);
+        detectTextButton.setVisibility(View.INVISIBLE);
 
         sr = SpeechRecognizer.createSpeechRecognizer(RealTimeTranslation.this);
 
@@ -158,18 +169,80 @@ public class RealTimeTranslation extends AppCompatActivity {
             }
         });
 
+camera.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v)
+    {
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+        {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
+        }
+        else
+        {
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            detectTextButton.setVisibility(View.VISIBLE);
 
+        }
+    }
+
+});
+
+        detectTextButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                PhotoTextDetector.detectText(RealTimeTranslation.this, beforeTranslate, photo);
+            }
+        });
 
 
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_CAMERA_PERMISSION_CODE)
+        {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            }
+            else
+            {
+                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            photo = (Bitmap) data.getExtras().get("data");
+
+            imageView.setImageBitmap(photo);
+        }
+    }
+
+
+
+
+
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.RECORD_AUDIO},RecordAudioRequestCode);
         }
 
 
-
         sr.destroy();
         tts.shutdown();
     }
+
+
+
+
 }
