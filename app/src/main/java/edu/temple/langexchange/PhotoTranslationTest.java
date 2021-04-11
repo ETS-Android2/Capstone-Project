@@ -2,15 +2,10 @@ package edu.temple.langexchange;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,19 +14,6 @@ import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.mlkit.vision.common.InputImage;
-import com.google.mlkit.vision.text.Text;
-import com.google.mlkit.vision.text.TextRecognition;
-import com.google.mlkit.vision.text.TextRecognizer;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 public class PhotoTranslationTest extends Activity {
 
@@ -45,9 +27,9 @@ public class PhotoTranslationTest extends Activity {
         public void onCreate(Bundle savedInstanceState)
         {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_photo_translation_test);
-            imageView = (ImageView)this.findViewById(R.id.photo);
-            textView = (TextView)this.findViewById(R.id.detectedText);
+           // setContentView(R.layout.activity_camera_r_t);
+           // imageView = (ImageView)this.findViewById(R.id.dddddphoto);
+           // textView = (TextView)this.findViewById(R.id.detectedText);
             Button photoButton = (Button) this.findViewById(R.id.button);
             Button detectTextButton = (Button) this.findViewById(R.id.button2);
             photoButton.setOnClickListener(new View.OnClickListener()
