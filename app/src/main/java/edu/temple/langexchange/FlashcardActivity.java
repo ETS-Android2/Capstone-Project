@@ -57,16 +57,7 @@ public class FlashcardActivity extends AppCompatActivity {
         // access the database
         ref = FirebaseDatabase.getInstance().getReference().child("Flashcards");
 
-        // get data from intent
-        Intent intent = getIntent();
-
-        // assign data from intent to a variable
-        int userId = intent.getIntExtra("userId", 0);
-        String username = intent.getStringExtra("username");
-
-        // check Logcat to see if it assigned correctly
-       Log.i("username - Flashcard", username);
-       Log.i("userid - Flashcard", String.valueOf(userId));
+        int userId = ((MyAccount) getApplication()).getUserId();
 
         // listen for changes on db
         ref.addValueEventListener(new ValueEventListener() {
@@ -109,7 +100,6 @@ public class FlashcardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FlashcardActivity.this, MakeFlashcard.class);
-                intent.putExtra("userId", userId);
                 startActivityForResult(intent, 1);
             }
         });
@@ -118,7 +108,6 @@ public class FlashcardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FlashcardActivity.this, QuizActivity.class);
-                intent.putExtra("userId", userId);
                 startActivity(intent);
             }
         });
@@ -127,7 +116,6 @@ public class FlashcardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FlashcardActivity.this, ChatRoomChoice.class);
-                intent.putExtra("username", username);
                 startActivity(intent);
             }
         });

@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         button2 = findViewById(R.id.button2);
         Intent intentPrev = getIntent();
         String userName = intentPrev.getStringExtra("username");
-        userId = intentPrev.getIntExtra("userID", 0);
+        userId = ((MyAccount) getApplication()).getUserId();
         System.out.println("username received from login: " + userName);
         System.out.println("userId received from login: " + userId);
 
@@ -35,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, FlashcardActivity.class);
-                intent.putExtra("userId", userId);
-                intent.putExtra("username", userName);
                 startActivity(intent);
             }
         });
@@ -44,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
         buttonStartChat.setOnClickListener(new View.OnClickListener() {
           public void onClick(View v) {
               Intent intent = new Intent(MainActivity.this, ChatRoomChoice.class);
-              intent.putExtra("username", userName);
-              intent.putExtra("userId", userId);
               startActivity(intent);
           }
         });

@@ -60,11 +60,8 @@ public class QuizActivity extends AppCompatActivity {
         answers = new ArrayList<String>();
         inputAnswers = new ArrayList<String>();
 
-        // retrieve intent
-        Intent intent = getIntent();
-
         // retrieve passed in data
-        int userId = intent.getIntExtra("userId", 0);
+        int userId = ((MyAccount) getApplication()).getUserId();
 
 
         // connect to the database
