@@ -88,16 +88,17 @@ public class Register extends AppCompatActivity {
                 if (emailList.contains(username.toUpperCase())) {
                     Toast.makeText(Register.this, "That email is already associated with an account", Toast.LENGTH_SHORT).show();
                 } else {
-                    account = new Account(newId + 1, learnLang, password, prefLang, username);
+                    int userId = newId + 1;
+                    account = new Account(userId, learnLang, password, prefLang, username);
 
                     // add new entry into db
                     ref.push().setValue(account);
+                    Toast.makeText(Register.this, "Welcome, " + username + "!", Toast.LENGTH_SHORT).show();
 
-                    // pass new id back to login
-                    Intent data = new Intent();
-                    data.putExtra("newId", newId);
+                    ((MyAccount) getApplication()).setUserId(userId);
+                    ((MyAccount) getApplication()).setUsername(username);
 
-                    setResult(RESULT_OK, data);
+                    setResult(RESULT_OK);
 
                     // destroy resources
                     finish();

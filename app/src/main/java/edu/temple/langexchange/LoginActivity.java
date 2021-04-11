@@ -112,11 +112,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            Intent intent = new Intent(LoginActivity.this, FlashcardActivity.class);
-            userId = data.getIntExtra("newId", 0);
-            intent.putExtra("userId", userId);
-            Intent intent2  = new Intent(LoginActivity.this, LoginActivity.class);
-            startActivity(intent2);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
         }
     }
 }
