@@ -11,7 +11,8 @@
     </queries> <!-- <uses-feature android:name="android.hardware.type.watch" /> -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-
+    <uses-permission android:name="android.permission.CAMERA"/>
+    
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -79,7 +80,9 @@
         <activity android:name=".MakeFlashcard" />
         <activity android:name=".Register" />
         <activity android:name=".ChatRoomChoice" />
+        <activity android:name=".PhotoTranslationTest" />
         <activity android:name=".QuizResult"/>
+
     </application>
 
 </manifest>
