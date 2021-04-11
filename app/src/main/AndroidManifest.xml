@@ -12,6 +12,7 @@
     </queries> <!-- <uses-feature android:name="android.hardware.type.watch" /> -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA"/>
     <uses-feature android:name="android.hardware.camera"
         android:required="false" />
 
@@ -29,15 +30,7 @@
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="ocr" />
 
-        <activity
-            android:name=".PhotoTranslationTest"
-            android:label="@string/title_activity_photo_translation_test">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity android:name=".CreateFlashcardFromChat" />
         <activity
             android:name=".LoginActivity"
@@ -87,6 +80,8 @@
         <activity android:name=".MakeFlashcard" />
         <activity android:name=".Register" />
         <activity android:name=".ChatRoomChoice" />
+        <activity android:name=".PhotoTranslationTest" />
+
     </application>
 
 </manifest>
