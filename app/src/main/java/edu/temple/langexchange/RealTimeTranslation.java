@@ -16,6 +16,7 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
+import android.text.method.ScrollingMovementMethod;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -62,7 +63,9 @@ public class RealTimeTranslation extends AppCompatActivity {
 
         learning = findViewById(R.id.learning);
         beforeTranslate = findViewById(R.id.beforeTranslate);
+        beforeTranslate.setMovementMethod(new ScrollingMovementMethod());
         afterTranslate = findViewById(R.id.afterTranslate);
+        afterTranslate.setMovementMethod(new ScrollingMovementMethod());
         micButtonAT = findViewById(R.id.micButtonAT);
         camera = findViewById(R.id.camera);
         translateButton = findViewById(R.id.translate);
@@ -154,11 +157,12 @@ public class RealTimeTranslation extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP){
                     sr.stopListening();
-
+                    beforeTranslate.setHint("");
                     micButtonAT.setBackground(getDrawable(R.drawable.baseline_mic_none_24));
 
                 }
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                    afterTranslate.setText("");
                     if(ContextCompat.checkSelfPermission(RealTimeTranslation.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
                         checkPermission();
                         return false;
