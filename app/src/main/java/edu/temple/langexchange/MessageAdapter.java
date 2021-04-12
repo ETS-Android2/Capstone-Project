@@ -29,7 +29,10 @@ public class MessageAdapter extends BaseAdapter {
 
     public void add(Message message, String prefLang, boolean isAutoTranslate) {
         this.original.add(message);
-        this.translated.add(new Message(Translator.translate(message.getText(), prefLang, context), message.getMemberData(), message.isBelongsToCurrentUser()));
+        String toTranslate = message.getText();
+        System.out.println(toTranslate);
+        toTranslate.replace("// audio //","");
+        this.translated.add(new Message(Translator.translate(toTranslate, prefLang, context), message.getMemberData(), message.isBelongsToCurrentUser()));
 
         if (isAutoTranslate ? this.messages.add(translated.get(getCount())) : this.messages.add(original.get(getCount())));
 

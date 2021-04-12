@@ -69,11 +69,12 @@ public class RealTimeTranslation extends AppCompatActivity {
         imageView = findViewById(R.id.photo);
         detectTextButton = findViewById(R.id.detectText);
         detectTextButton.setVisibility(View.INVISIBLE);
+        String prefLang = ((MyAccount) getApplication()).getPrefLang();
 
         sr = SpeechRecognizer.createSpeechRecognizer(RealTimeTranslation.this);
 
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.languages_array, android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, Translator.getLanguages());
         learning.setAdapter(adapter);
 
 
@@ -83,7 +84,8 @@ public class RealTimeTranslation extends AppCompatActivity {
         Intent intent = getIntent();
         final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.getAudioCode(learning.getSelectedItem().toString()));
+
+
         sr.setRecognitionListener(new RecognitionListener() {
             @Override
             public void onReadyForSpeech(Bundle params) {
@@ -142,7 +144,7 @@ public class RealTimeTranslation extends AppCompatActivity {
             public void onClick(View v) {
                 String text = beforeTranslate.getText().toString();
                 learningLangSelected = learning.getSelectedItem().toString();
-                String translatedText = Translator.translate(text, learningLangSelected, RealTimeTranslation.this);
+                String translatedText = Translator.translate(text, prefLang, RealTimeTranslation.this);
                 afterTranslate.setText(translatedText);
             }
         });
@@ -162,6 +164,11 @@ public class RealTimeTranslation extends AppCompatActivity {
                         return false;
                     }
                     micButtonAT.setBackground(getDrawable(R.drawable.baseline_mic_24));
+                    System.out.println(learning.getSelectedItem().toString());
+                    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.speechLanguageCodes.get(learning.getSelectedItem().toString()));
+                    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, Translator.speechLanguageCodes.get(learning.getSelectedItem().toString()));
+                    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE, Translator.speechLanguageCodes.get(learning.getSelectedItem().toString()));
+
                     sr.startListening(intent);
 
                 }

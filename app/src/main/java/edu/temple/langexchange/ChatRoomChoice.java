@@ -54,7 +54,7 @@ public class ChatRoomChoice extends AppCompatActivity {
         String userName = prevIntent.getStringExtra("username");
 //        int userId = prevIntent.getIntExtra("userId", 0);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.languages_array, android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Translator.getLanguages());
         spin.setAdapter(adapter);
 
 

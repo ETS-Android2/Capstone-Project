@@ -33,6 +33,7 @@ public class Translator {
         put("Danish", "da");
         put("English", "en");
         put("Finnish", "fi");
+        put("Filipino", "fil");
         put("French", "fr");
         put("German", "de");
         put("Gujarati", "gu");
@@ -65,15 +66,68 @@ public class Translator {
     }};
 
     final static Map<String, String> audioLanguageCodes = new HashMap<String, String>(){{
-        put("ENGLISH", "en-US");
-        put("FRENCH", "fr-FR");
-        put("SPANISH", "es-US");
-        put("GERMAN", "de-DE");
+        put("Arabic", "ar-XA");
+        put("Bengali", "bn-IN");
+        put("Chinese", "cmn-CN");
+        put("Chinese(Simplified)", "zh-CN");
+        put("Chinese(Traditional)", "zh-TW");
+        put("Danish", "da-DK");
+        put("English", "en-US");
+        put("Filipino", "fil-PH");
+        put("Finnish", "fi-FI");
+        put("French", "fr-FR");
+        put("German", "de-DE");
+        put("Gujarati", "gu-IN");
+        put("Hindi", "hi-IN");
+        put("Hungarian", "hu-HU");
+        put("Italian", "it-IT");
+        put("Japanese", "ja-JP");
+        put("Korean", "ko-KR");
+        put("Malay", "ml-IN");
+        put("Portuguese", "pt-BR");
+        put("Punjabi", "pa");
+        put("Russian", "ru-RU");
+        put("Spanish", "es-US");
+        put("Swedish", "sv-SE");
+        put("Tamil", "ta-IN");
+        put("Thai", "th-TH");
+        put("Turkish", "tr-TR");
+        put("Vietnamese", "vi-VN");
+    }};
+
+    final static Map<String, String> speechLanguageCodes = new HashMap<String, String>(){{
+        put("Arabic", "ar");
+        put("Bengali", "bn");
+        put("Chinese", "zh");
+        put("Chinese(Simplified)", "zh_cn");
+        put("Chinese(Traditional)", "zh_tw");
+        put("Danish", "da");
+        put("English", "en");
+        put("Filipino", "fil");
+        put("Finnish", "fi");
+        put("French", "fr");
+        put("German", "de");
+        put("Gujarati", "gu");
+        put("Hindi", "hi");
+        put("Hungarian", "hu");
+        put("Italian", "it");
+        put("Japanese", "ja");
+        put("Korean", "ko");
+        put("Malay", "ms");
+        put("Portuguese", "pt_BR");
+       // put("Punjabi", "pa");
+        put("Russian", "ru");
+        put("Spanish", "es_419");
+        put("Swedish", "sv");
+        put("Tamil", "ta");
+        put("Thai", "th");
+        put("Turkish", "tr");
+        put("Vietnamese", "vi");
     }};
 
     public static ArrayList<String> getLanguages(){
         ArrayList<String>languages = new ArrayList<>();
-        for(String key : languageCodes.keySet()){
+        for(String key : audioLanguageCodes.keySet()){
             languages.add(key);
 
         }
