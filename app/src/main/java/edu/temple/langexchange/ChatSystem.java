@@ -77,6 +77,8 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
     private Button flashcardMaker;
     private String phrase;
     private ChatRoom chatRoom;
+    String langCode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,10 +89,12 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         Intent intent = getIntent();
         receivedLang = intent.getStringExtra("langSelected");
 
+        // langCode = Translator.speechLanguageCodes.get(receivedLang);
+        // Locale thisLocale = new Locale(langCode);
         sr = SpeechRecognizer.createSpeechRecognizer(ChatSystem.this);
         final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.getAudioCode(receivedLang));
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.languageCodes.get(receivedLang));
         sr.setRecognitionListener(new RecognitionListener() {
             @Override
             public void onReadyForSpeech(Bundle params) {
@@ -149,20 +153,8 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
             public void onInit(int status) {
                 if(status != TextToSpeech.ERROR){
                     System.out.println("Successful tts connection!");
-                    switch (receivedLang){
-                        case "ENGLISH":
-                            tts.setLanguage(Locale.ENGLISH);
-                            break;
-                        case "SPANISH":
-                            tts.setLanguage(new Locale("es"));
-                            break;
-                        case "FRENCH":
-                            tts.setLanguage(Locale.FRENCH);
-                            break;
-                        default:
-                            tts.setLanguage(Locale.GERMAN);
-                            break;
-                    }
+                    langCode = Translator.languageCodes.get(receivedLang);
+                    tts.setLanguage(new Locale(langCode));
                 }
             }
         });

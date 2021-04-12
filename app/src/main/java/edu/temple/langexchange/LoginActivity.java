@@ -79,11 +79,14 @@ public class LoginActivity extends AppCompatActivity {
                                 if(account.password.equals(passwordEditText.getText().toString())) {
                                     String userName = account.getUsername();
                                     userId = account.getId();
+                                    String prefLang = account.getPrefLang();
 
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 
                                     ((MyAccount) getApplication()).setUserId(userId);
                                     ((MyAccount) getApplication()).setUsername(userName);
+                                    ((MyAccount) getApplication()).setPrefLang(prefLang);
+
 
                                     startActivity(intent);
                                 }
