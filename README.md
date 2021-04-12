@@ -6,5 +6,5 @@ The app is divided into four tabs: profile, chatting, studying, and translating.
 # Contributors
 Talia IrgangLaden
 Alyssa Dominico
-Duy Nyugen
+Duy Nguyen
 Robert Ni
