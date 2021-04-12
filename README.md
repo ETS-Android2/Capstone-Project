@@ -11,5 +11,5 @@ QA Testing Document:
 # Contributors
 Talia IrgangLaden
 Alyssa Dominico
-Duy Nyugen
+Duy Nguyen
 Robert Ni
