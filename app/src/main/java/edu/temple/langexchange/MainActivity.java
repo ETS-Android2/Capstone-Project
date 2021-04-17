@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 ((MyAccount) getApplication()).setUsername("");
                 ((MyAccount) getApplication()).setPrefLang("");
                 Intent intent = new Intent(MainActivity.this, edu.temple.langexchange.LoginActivity.class);
+                finish();
                 startActivity(intent);
             }
         });

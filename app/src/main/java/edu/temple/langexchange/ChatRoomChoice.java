@@ -117,6 +117,7 @@ public class ChatRoomChoice extends AppCompatActivity {
                         if (!usedLang.contains(selectedLang)) {
                             Intent intent = new Intent(ChatRoomChoice.this, ChatSystem.class);
                             intent.putExtra("langSelected", selectedLang);
+                            finish();
                             startActivity(intent);
                         } else if(usedLang.contains(selectedLang)){
                             Toast.makeText(ChatRoomChoice.this, "Room already exist", Toast.LENGTH_LONG).show();
