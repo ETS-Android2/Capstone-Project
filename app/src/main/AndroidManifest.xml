@@ -27,7 +27,6 @@
         android:supportsRtl="true"
         android:testOnly="false"
         android:theme="@style/Theme.LangExchange">
-        <activity android:name=".NavTest"></activity>
         <activity android:name=".RealTimeTranslation" />
 
         <meta-data
