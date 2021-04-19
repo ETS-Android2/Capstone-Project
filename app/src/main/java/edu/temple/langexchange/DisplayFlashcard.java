@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+
 public class DisplayFlashcard extends AppCompatActivity {
 
     TextView original;
@@ -25,6 +27,8 @@ public class DisplayFlashcard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.display_flashcard);
         getSupportActionBar().setTitle(R.string.flashcard_title);
+
+
 
         original = findViewById(R.id.flashcardName);
         translation = findViewById(R.id.flashcardTranslation);
@@ -72,5 +76,12 @@ public class DisplayFlashcard extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setupBottomNavigationView(){
+        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.navBar);
+        BottomNavigationHelper.enableNavigation(DisplayFlashcard.this, bottomNavigationViewEx);
+
+        // BottomNavigationHelper.setupBottomNavigationView(bottomNavigationViewEx);
     }
 }

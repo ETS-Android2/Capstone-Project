@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class ChatRoomChoice extends AppCompatActivity {
 //        btnGer = findViewById(R.id.GermanRoomBtn);
 //        btnFre = findViewById(R.id.FrenchRoomBtn);
 //        goToFlashcards = findViewById(R.id.go_to_flashcards_btn);
-
+        setupBottomNavigationView();
         spin = findViewById(R.id.spinner);
         submitBtn = findViewById(R.id.selectLangBtn);
         listView = findViewById(R.id.availableRoom);
@@ -188,5 +189,13 @@ public class ChatRoomChoice extends AppCompatActivity {
 //                startActivity(intent);
 //            }
 //        });
+
+
+
+    }
+    private void setupBottomNavigationView(){
+        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.navBar);
+        BottomNavigationHelper.enableNavigation(this, bottomNavigationViewEx);
+
     }
 }

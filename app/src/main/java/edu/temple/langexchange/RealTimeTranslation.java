@@ -29,6 +29,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -60,7 +62,7 @@ public class RealTimeTranslation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_real_time_translation);
 
-
+        setupBottomNavigationView();
         learning = findViewById(R.id.learning);
         beforeTranslate = findViewById(R.id.beforeTranslate);
         beforeTranslate.setMovementMethod(new ScrollingMovementMethod());
@@ -255,5 +257,13 @@ camera.setOnClickListener(new View.OnClickListener() {
 
 
 
+
+    private void setupBottomNavigationView(){
+        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.navBar);
+        BottomNavigationHelper.enableNavigation(RealTimeTranslation.this, bottomNavigationViewEx);
+
+
+        // BottomNavigationHelper.setupBottomNavigationView(bottomNavigationViewEx);
+    }
 
 }

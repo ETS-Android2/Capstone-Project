@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+
 import edu.temple.langexchange.ui.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        setupBottomNavigationView();
         button = findViewById(R.id.button);
         buttonStartChat = findViewById(R.id.button3);
         button2 = findViewById(R.id.button2);
@@ -68,5 +70,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void setupBottomNavigationView(){
+        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.navBar);
+        BottomNavigationHelper.enableNavigation(MainActivity.this, bottomNavigationViewEx);
+
+        // BottomNavigationHelper.setupBottomNavigationView(bottomNavigationViewEx);
     }
 }
