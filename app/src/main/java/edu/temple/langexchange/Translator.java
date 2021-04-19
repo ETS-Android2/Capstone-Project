@@ -68,7 +68,7 @@ public class Translator {
     final static Map<String, String> audioLanguageCodes = new HashMap<String, String>(){{
         put("Arabic", "ar-XA");
         put("Bengali", "bn-IN");
-        put("Chinese", "cmn-CN");
+        put("Chinese", "zh-CN");
         put("Chinese(Simplified)", "zh-CN");
         put("Chinese(Traditional)", "zh-TW");
         put("Danish", "da-DK");
@@ -93,36 +93,6 @@ public class Translator {
         put("Thai", "th-TH");
         put("Turkish", "tr-TR");
         put("Vietnamese", "vi-VN");
-    }};
-
-    final static Map<String, String> speechLanguageCodes = new HashMap<String, String>(){{
-        put("Arabic", "ar");
-        put("Bengali", "bn");
-        put("Chinese", "zh");
-        put("Chinese(Simplified)", "zh_cn");
-        put("Chinese(Traditional)", "zh_tw");
-        put("Danish", "da");
-        put("English", "en");
-        put("Filipino", "fil");
-        put("Finnish", "fi");
-        put("French", "fr");
-        put("German", "de");
-        put("Gujarati", "gu");
-        put("Hindi", "hi");
-        put("Hungarian", "hu");
-        put("Italian", "it");
-        put("Japanese", "ja");
-        put("Korean", "ko");
-        put("Malay", "ms");
-        put("Portuguese", "pt_BR");
-       // put("Punjabi", "pa");
-        put("Russian", "ru");
-        put("Spanish", "es_419");
-        put("Swedish", "sv");
-        put("Tamil", "ta");
-        put("Thai", "th");
-        put("Turkish", "tr");
-        put("Vietnamese", "vi");
     }};
 
     public static ArrayList<String> getLanguages(){

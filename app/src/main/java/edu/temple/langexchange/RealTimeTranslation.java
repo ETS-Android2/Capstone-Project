@@ -169,11 +169,11 @@ public class RealTimeTranslation extends AppCompatActivity {
                     }
                     micButtonAT.setBackground(getDrawable(R.drawable.baseline_mic_24));
                     System.out.println(learning.getSelectedItem().toString());
-                    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.speechLanguageCodes.get(learning.getSelectedItem().toString()));
-                    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, Translator.speechLanguageCodes.get(learning.getSelectedItem().toString()));
-                    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE, Translator.speechLanguageCodes.get(learning.getSelectedItem().toString()));
+                    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.getAudioCode(learning.getSelectedItem().toString()));
+                    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, Translator.getAudioCode(learning.getSelectedItem().toString()));
+                    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE, Translator.getAudioCode(learning.getSelectedItem().toString()));
 
-                    sr.startListening(intent);
+                    sr.startListening(speechRecognizerIntent);
 
                 }
                 return false;
