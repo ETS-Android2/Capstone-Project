@@ -27,7 +27,9 @@
         android:supportsRtl="true"
         android:testOnly="false"
         android:theme="@style/Theme.LangExchange">
-        <activity android:name=".RealTimeTranslation" />
+
+        <activity android:name=".RealTimeTranslation"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
 
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
