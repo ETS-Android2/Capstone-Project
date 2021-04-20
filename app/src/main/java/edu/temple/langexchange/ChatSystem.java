@@ -72,6 +72,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
    // private boolean isAudioMessage = false;
     private TextToSpeech tts;
     private SpeechRecognizer sr;
+    private Intent speechRecognizerIntent;
     private boolean isAutoTranslate=false;
     public static final Integer RecordAudioRequestCode = 1;
     private Button flashcardMaker;
@@ -92,9 +93,11 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         // langCode = Translator.speechLanguageCodes.get(receivedLang);
         // Locale thisLocale = new Locale(langCode);
         sr = SpeechRecognizer.createSpeechRecognizer(ChatSystem.this);
-        final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.languageCodes.get(receivedLang));
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.getAudioCode(receivedLang));
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, Translator.getAudioCode(receivedLang));
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE, Translator.getAudioCode(receivedLang));
         sr.setRecognitionListener(new RecognitionListener() {
             @Override
             public void onReadyForSpeech(Bundle params) {
@@ -240,7 +243,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                     userId = Integer.parseInt(childSnapshot.child("id").getValue().toString());
                     targetLang = childSnapshot.child("learnLang").getValue().toString().toUpperCase();
                     prefLang = childSnapshot.child("prefLang").getValue().toString();
-                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.getAudioCode(prefLang.toUpperCase()));
+                    //speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.getAudioCode(prefLang));
                     System.out.println("target lang is: " + targetLang);
                     System.out.println("pref lang is: " + prefLang);
                 }
@@ -300,7 +303,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                     return false;
                                 }
                                 micButton.setBackground(getDrawable(R.drawable.baseline_mic_24));
-                                sr.startListening(intent);
+                                sr.startListening(speechRecognizerIntent);
                             }
                             return false;
                         }
