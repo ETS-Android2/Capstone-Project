@@ -26,11 +26,12 @@ public class QuizResult extends AppCompatActivity {
         listView = findViewById(R.id.wrongAnswerList);
 
         Intent intent = getIntent();
-        ArrayList<String> wrongAnswers = (ArrayList<String>) intent.getSerializableExtra("wrongAnswers");
-        if(wrongAnswers.isEmpty())
+        ArrayList<String> shownList = (ArrayList<String>) intent.getSerializableExtra("questions");
+        if(shownList.isEmpty())
         {
-            wrongAnswers.add("NONE");
+            shownList.add("NONE");
         }
+        ArrayList<String> answers = (ArrayList<String>) intent.getStringArrayListExtra("answers");
         int grade = intent.getIntExtra("grade", 0);
         int userId = intent.getIntExtra("userId", 0);
         int total = intent.getIntExtra("totalQuestions", 0);
@@ -45,8 +46,9 @@ public class QuizResult extends AppCompatActivity {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_list_item_1,
-                wrongAnswers);
+                shownList);
         listView.setAdapter(arrayAdapter);
+
 
         QuizGrade userGrade = new QuizGrade(userId, grade);
         userGrade.postGrade(userGrade);

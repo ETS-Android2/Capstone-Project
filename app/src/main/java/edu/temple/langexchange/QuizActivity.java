@@ -125,12 +125,17 @@ public class QuizActivity extends AppCompatActivity {
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                for(int i = 0; i < questions.size(); i++)
+                {
+                    questions.set(i, questions.get(i) + " - " + answers.get(i));
+                    System.out.println(questions.get(i));
+                }
                 answers.removeAll(inputAnswers);
                 grade = inputAnswers.size() - answers.size();
                 Intent intent = new Intent(QuizActivity.this, QuizResult.class);
                 intent.putExtra("grade", grade);
-                intent.putExtra("wrongAnswers", answers);
+                intent.putExtra("questions", questions);
+                intent.putExtra("answers", answers);
                 intent.putExtra("totalQuestions", questions.size());
                 intent.putExtra("userId", userId);
                 startActivity(intent);
