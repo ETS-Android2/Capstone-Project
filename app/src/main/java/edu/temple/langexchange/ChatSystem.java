@@ -86,6 +86,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         setContentView(R.layout.messagingtabgui);
 
         userName = ((MyAccount) getApplication()).getUsername();
+        userId = ((MyAccount) getApplication()).getUserId();
 
         Intent intent = getIntent();
         receivedLang = intent.getStringExtra("langSelected");
@@ -240,7 +241,6 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                    userId = Integer.parseInt(childSnapshot.child("id").getValue().toString());
                     targetLang = childSnapshot.child("learnLang").getValue().toString().toUpperCase();
                     prefLang = childSnapshot.child("prefLang").getValue().toString();
                     //speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.getAudioCode(prefLang));
@@ -394,7 +394,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                     System.out.println("channelID received: " + channel);
                     System.out.println("targetLang received: " + targetLang);
                     scaledrone = new Scaledrone(channel, data);
-                    Toast.makeText(ChatSystem.this, welcomeString, Toast.LENGTH_LONG).show();
+                    Toast.makeText(ChatSystem.this, welcomeString, Toast.LENGTH_SHORT).show();
                     scaledrone.connect(new Listener() {
                         @Override
                         public void onOpen() {
@@ -491,14 +491,14 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
     @Override
     protected void onDestroy() {
         long[] updatedUser = {0};
-        DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference().child("ChatRoom").child(receivedLang).child("usersNo");
-        ref1.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("ChatRoom").child(receivedLang).child("usersNo");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists())
                 {
                     updatedUser[0] = (long) snapshot.getValue() - 1;
-                    ref1.setValue(updatedUser[0]);
+                    ref.setValue(updatedUser[0]);
                     if(updatedUser[0] <= 0)
                     {
                         DatabaseReference channelRef = FirebaseDatabase.getInstance().getReference().child("Channels");

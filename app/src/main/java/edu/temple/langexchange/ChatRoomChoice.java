@@ -36,33 +36,31 @@ public class ChatRoomChoice extends AppCompatActivity {
     ListView listView;
     ArrayList<String> availableRooms = new ArrayList<>();
 
+    DatabaseReference ref;
+
+    ArrayAdapter sAdapter;
+    ArrayAdapter lAdapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chatroom_choice);
 
-//        btnSpa = findViewById(R.id.SpanishRoomBtn);
-//        btnEng = findViewById(R.id.EnglishRoomBtn);
-//        btnGer = findViewById(R.id.GermanRoomBtn);
-//        btnFre = findViewById(R.id.FrenchRoomBtn);
-//        goToFlashcards = findViewById(R.id.go_to_flashcards_btn);
+        System.out.println("New instance of ChatRoomChoice");
+
         setupBottomNavigationView();
         spin = findViewById(R.id.spinner);
         submitBtn = findViewById(R.id.selectLangBtn);
         listView = findViewById(R.id.availableRoom);
 
-        Intent prevIntent = getIntent();
-        String userName = prevIntent.getStringExtra("username");
-//        int userId = prevIntent.getIntExtra("userId", 0);
+        sAdapter = new ArrayAdapter(ChatRoomChoice.this, android.R.layout.simple_spinner_item, Translator.getLanguages());
+        spin.setAdapter(sAdapter);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Translator.getLanguages());
-        spin.setAdapter(adapter);
+        lAdapter = new ArrayAdapter(ChatRoomChoice.this, android.R.layout.simple_list_item_1, availableRooms);
+        listView.setAdapter(lAdapter);
 
-
-
-        availableRooms.add("");
-        DatabaseReference roomRef = FirebaseDatabase.getInstance().getReference().child("ChatRoom");
-        roomRef.addValueEventListener(new ValueEventListener() {
+        ref = FirebaseDatabase.getInstance().getReference().child("ChatRoom");
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 availableRooms.clear();
@@ -75,8 +73,6 @@ public class ChatRoomChoice extends AppCompatActivity {
                 }
                 if(!availableRooms.isEmpty())
                 {
-                    ArrayAdapter adapter = new ArrayAdapter<String>(ChatRoomChoice.this, android.R.layout.simple_list_item_1, availableRooms);
-                    listView.setAdapter(adapter);
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -86,8 +82,8 @@ public class ChatRoomChoice extends AppCompatActivity {
                             startActivity(intent);
                         }
                     });
-
                 }
+                lAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -100,12 +96,10 @@ public class ChatRoomChoice extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String selectedLang = spin.getSelectedItem().toString();
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("ChatRoom");
                 ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         ArrayList<String> usedLang = new ArrayList<>();
-                        usedLang.add("");
                         for(DataSnapshot childSnap : snapshot.getChildren())
                         {
                             if(snapshot.getChildren() != null)
@@ -118,7 +112,6 @@ public class ChatRoomChoice extends AppCompatActivity {
                         if (!usedLang.contains(selectedLang)) {
                             Intent intent = new Intent(ChatRoomChoice.this, ChatSystem.class);
                             intent.putExtra("langSelected", selectedLang);
-                            finish();
                             startActivity(intent);
                         } else if(usedLang.contains(selectedLang)){
                             Toast.makeText(ChatRoomChoice.this, "Room already exist", Toast.LENGTH_LONG).show();
@@ -189,9 +182,6 @@ public class ChatRoomChoice extends AppCompatActivity {
 //                startActivity(intent);
 //            }
 //        });
-
-
-
     }
     private void setupBottomNavigationView(){
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.navBar);
