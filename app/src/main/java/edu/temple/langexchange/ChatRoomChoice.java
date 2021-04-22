@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class ChatRoomChoice extends AppCompatActivity {
 //        btnGer = findViewById(R.id.GermanRoomBtn);
 //        btnFre = findViewById(R.id.FrenchRoomBtn);
 //        goToFlashcards = findViewById(R.id.go_to_flashcards_btn);
-
+        setupBottomNavigationView();
         spin = findViewById(R.id.spinner);
         submitBtn = findViewById(R.id.selectLangBtn);
         listView = findViewById(R.id.availableRoom);
@@ -54,7 +55,7 @@ public class ChatRoomChoice extends AppCompatActivity {
         String userName = prevIntent.getStringExtra("username");
 //        int userId = prevIntent.getIntExtra("userId", 0);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.languages_array, android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Translator.getLanguages());
         spin.setAdapter(adapter);
 
 
@@ -80,7 +81,6 @@ public class ChatRoomChoice extends AppCompatActivity {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             Intent intent = new Intent(ChatRoomChoice.this, ChatSystem.class);
-                            intent.putExtra("username", userName);
                             intent.putExtra("langSelected", availableRooms.get(position));
                             System.out.println("Available Room passed: " + availableRooms.get(position));
                             startActivity(intent);
@@ -117,8 +117,8 @@ public class ChatRoomChoice extends AppCompatActivity {
 
                         if (!usedLang.contains(selectedLang)) {
                             Intent intent = new Intent(ChatRoomChoice.this, ChatSystem.class);
-                            intent.putExtra("username", userName);
                             intent.putExtra("langSelected", selectedLang);
+                            finish();
                             startActivity(intent);
                         } else if(usedLang.contains(selectedLang)){
                             Toast.makeText(ChatRoomChoice.this, "Room already exist", Toast.LENGTH_LONG).show();
@@ -189,5 +189,13 @@ public class ChatRoomChoice extends AppCompatActivity {
 //                startActivity(intent);
 //            }
 //        });
+
+
+
+    }
+    private void setupBottomNavigationView(){
+        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.navBar);
+        BottomNavigationHelper.enableNavigation(this, bottomNavigationViewEx);
+
     }
 }

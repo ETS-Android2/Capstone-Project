@@ -45,8 +45,7 @@ public class MakeFlashcard extends AppCompatActivity {
         addFlashcardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = getIntent();
-                int userId = intent.getIntExtra("userId", 0);
+                int userId = ((MyAccount) getApplication()).getUserId();
 
                 String original = originalWordInput.getText().toString();
                 String translation = translatedWordInput.getText().toString();

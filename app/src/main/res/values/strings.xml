@@ -56,6 +56,7 @@
     <string name="select_a_language">Select a Language</string>
     <string name="create_room_Btn">Create Room</string>
     <string name="available_rooms">Available Rooms</string>
+    <string name="title_activity_photo_translation_test">PhotoTranslationText</string>
     <string name="submit_quiz_btn">Submit</string>
     <string name="your_average_grade_text">Your Grade</string>
     <string name="wrong_answers_text">Results</string>

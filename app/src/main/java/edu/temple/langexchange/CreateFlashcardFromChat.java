@@ -29,10 +29,10 @@ public class CreateFlashcardFromChat extends AppCompatActivity {
         ref = FirebaseDatabase.getInstance().getReference().child("Flashcards");
         listView = findViewById(R.id.listView);
 
+        int userID = ((MyAccount) getApplication()).getUserId();
 
         Intent intent = getIntent();
         String phrase = intent.getExtras().getString("phrase");
-        int userID = intent.getExtras().getInt("userId");
         String prefLang = intent.getExtras().getString("prefLang");
 
 

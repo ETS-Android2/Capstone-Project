@@ -72,24 +72,32 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
    // private boolean isAudioMessage = false;
     private TextToSpeech tts;
     private SpeechRecognizer sr;
+    private Intent speechRecognizerIntent;
     private boolean isAutoTranslate=false;
     public static final Integer RecordAudioRequestCode = 1;
     private Button flashcardMaker;
     private String phrase;
     private ChatRoom chatRoom;
+    String langCode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.messagingtabgui);
 
+        userName = ((MyAccount) getApplication()).getUsername();
+
         Intent intent = getIntent();
-        userName = intent.getStringExtra("username");
         receivedLang = intent.getStringExtra("langSelected");
 
+        // langCode = Translator.speechLanguageCodes.get(receivedLang);
+        // Locale thisLocale = new Locale(langCode);
         sr = SpeechRecognizer.createSpeechRecognizer(ChatSystem.this);
-        final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.getAudioCode(receivedLang));
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, Translator.getAudioCode(receivedLang));
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE, Translator.getAudioCode(receivedLang));
         sr.setRecognitionListener(new RecognitionListener() {
             @Override
             public void onReadyForSpeech(Bundle params) {
@@ -148,20 +156,8 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
             public void onInit(int status) {
                 if(status != TextToSpeech.ERROR){
                     System.out.println("Successful tts connection!");
-                    switch (receivedLang){
-                        case "ENGLISH":
-                            tts.setLanguage(Locale.ENGLISH);
-                            break;
-                        case "SPANISH":
-                            tts.setLanguage(new Locale("es"));
-                            break;
-                        case "FRENCH":
-                            tts.setLanguage(Locale.FRENCH);
-                            break;
-                        default:
-                            tts.setLanguage(Locale.GERMAN);
-                            break;
-                    }
+                    langCode = Translator.languageCodes.get(receivedLang);
+                    tts.setLanguage(new Locale(langCode));
                 }
             }
         });
@@ -247,7 +243,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                     userId = Integer.parseInt(childSnapshot.child("id").getValue().toString());
                     targetLang = childSnapshot.child("learnLang").getValue().toString().toUpperCase();
                     prefLang = childSnapshot.child("prefLang").getValue().toString();
-                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.getAudioCode(prefLang.toUpperCase()));
+                    //speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.getAudioCode(prefLang));
                     System.out.println("target lang is: " + targetLang);
                     System.out.println("pref lang is: " + prefLang);
                 }
@@ -307,7 +303,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                     return false;
                                 }
                                 micButton.setBackground(getDrawable(R.drawable.baseline_mic_24));
-                                sr.startListening(intent);
+                                sr.startListening(speechRecognizerIntent);
                             }
                             return false;
                         }
@@ -355,8 +351,8 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                 @Override
                                 public void onClick(View v) {
                                     Intent intent = new Intent(ChatSystem.this, CreateFlashcardFromChat.class);
+
                                     intent.putExtra("phrase", phrase);
-                                    intent.putExtra("userId", userId);
                                     intent.putExtra("prefLang",prefLang);
 
                                     startActivity(intent);

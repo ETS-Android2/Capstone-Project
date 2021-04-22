@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+
 import edu.temple.langexchange.ui.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button button, buttonStartChat;
+    Button button, buttonStartChat, button2, logout;
     int userId;
 
     @Override
@@ -20,12 +22,15 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        setupBottomNavigationView();
         button = findViewById(R.id.button);
         buttonStartChat = findViewById(R.id.button3);
+        button2 = findViewById(R.id.button2);
+        logout = findViewById(R.id.logout);
+
         Intent intentPrev = getIntent();
         String userName = intentPrev.getStringExtra("username");
-        userId = intentPrev.getIntExtra("userID", 0);
+        userId = ((MyAccount) getApplication()).getUserId();
         System.out.println("username received from login: " + userName);
         System.out.println("userId received from login: " + userId);
 
@@ -34,8 +39,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, FlashcardActivity.class);
-                intent.putExtra("userId", userId);
-                intent.putExtra("username", userName);
                 startActivity(intent);
             }
         });
@@ -43,11 +46,36 @@ public class MainActivity extends AppCompatActivity {
         buttonStartChat.setOnClickListener(new View.OnClickListener() {
           public void onClick(View v) {
               Intent intent = new Intent(MainActivity.this, ChatRoomChoice.class);
-              intent.putExtra("username", userName);
-              intent.putExtra("userId", userId);
               startActivity(intent);
           }
         });
 
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RealTimeTranslation.class);
+                startActivity(intent);
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MyAccount) getApplication()).setUserId(-1);
+                ((MyAccount) getApplication()).setUsername("");
+                ((MyAccount) getApplication()).setPrefLang("");
+                Intent intent = new Intent(MainActivity.this, edu.temple.langexchange.LoginActivity.class);
+                finish();
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    private void setupBottomNavigationView(){
+        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.navBar);
+        BottomNavigationHelper.enableNavigation(MainActivity.this, bottomNavigationViewEx);
+
+        // BottomNavigationHelper.setupBottomNavigationView(bottomNavigationViewEx);
     }
 }

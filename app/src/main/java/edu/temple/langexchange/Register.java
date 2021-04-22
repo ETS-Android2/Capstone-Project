@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,8 +41,14 @@ public class Register extends AppCompatActivity {
         mTextView = (TextView) findViewById(R.id.text);
         final EditText usernameEditText = findViewById(R.id.editTextEmail);
         final EditText passwordEditText = findViewById(R.id.editTextPassword);
-        final EditText targetEditText = findViewById(R.id.editTextTargetLang);
-        final EditText nativeEditText = findViewById(R.id.editTextNativeLang);
+        final Spinner targetSpinner = findViewById(R.id.editTextTargetLang);
+        final Spinner nativeSpinner = findViewById(R.id.editTextNativeLang);
+
+        ArrayAdapter<String>targetAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, Translator.getLanguages());
+        targetSpinner.setAdapter(targetAdapter);
+
+        ArrayAdapter<String>nativeAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, Translator.getLanguages());
+        nativeSpinner.setAdapter(nativeAdapter);
 
 
         Button submitButton = (Button) findViewById(R.id.submitButton);
@@ -82,22 +90,25 @@ public class Register extends AppCompatActivity {
 
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
-                String learnLang = targetEditText.getText().toString();
-                String prefLang = nativeEditText.getText().toString();
+                String learnLang = targetSpinner.getSelectedItem().toString();
+                String prefLang = nativeSpinner.getSelectedItem().toString();
 
                 if (emailList.contains(username.toUpperCase())) {
                     Toast.makeText(Register.this, "That email is already associated with an account", Toast.LENGTH_SHORT).show();
                 } else {
-                    account = new Account(newId + 1, learnLang, password, prefLang, username);
+                    int userId = newId + 1;
+                    account = new Account(userId, learnLang, password, prefLang, username);
 
                     // add new entry into db
                     ref.push().setValue(account);
+                    Toast.makeText(Register.this, "Welcome, " + username + "!", Toast.LENGTH_SHORT).show();
 
-                    // pass new id back to login
-                    Intent data = new Intent();
-                    data.putExtra("newId", newId);
+                    ((MyAccount) getApplication()).setUserId(userId);
+                    ((MyAccount) getApplication()).setUsername(username);
+                    ((MyAccount) getApplication()).setPrefLang(prefLang);
 
-                    setResult(RESULT_OK, data);
+
+                    setResult(RESULT_OK);
 
                     // destroy resources
                     finish();

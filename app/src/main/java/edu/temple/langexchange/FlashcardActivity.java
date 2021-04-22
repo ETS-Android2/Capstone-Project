@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,6 @@ public class FlashcardActivity extends AppCompatActivity {
 
     Button makeFlashcardBtn;
     Button makeQuizBtn;
-    Button goToChat;
 
     List<Flashcards> flashcardList;
     DatabaseReference ref;
@@ -43,12 +43,14 @@ public class FlashcardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_flashcard);
         getSupportActionBar().setTitle(R.string.flashcard_title);
 
+
+        setupBottomNavigationView();
+
         text = findViewById(R.id.flashcardText);
         gridView = findViewById(R.id.flashcardGrid);
 
         makeFlashcardBtn = findViewById(R.id.createFlashcardBtn);
         makeQuizBtn = findViewById(R.id.createQuizBtn);
-        goToChat = findViewById(R.id.go_to_chat_btn);
 
         text.setText(R.string.flashcard_instructions);
 
@@ -57,16 +59,7 @@ public class FlashcardActivity extends AppCompatActivity {
         // access the database
         ref = FirebaseDatabase.getInstance().getReference().child("Flashcards");
 
-        // get data from intent
-        Intent intent = getIntent();
-
-        // assign data from intent to a variable
-        int userId = intent.getIntExtra("userId", 0);
-        String username = intent.getStringExtra("username");
-
-        // check Logcat to see if it assigned correctly
-       Log.i("username - Flashcard", username);
-       Log.i("userid - Flashcard", String.valueOf(userId));
+        int userId = ((MyAccount) getApplication()).getUserId();
 
         // listen for changes on db
         ref.addValueEventListener(new ValueEventListener() {
@@ -109,7 +102,6 @@ public class FlashcardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FlashcardActivity.this, MakeFlashcard.class);
-                intent.putExtra("userId", userId);
                 startActivityForResult(intent, 1);
             }
         });
@@ -118,19 +110,11 @@ public class FlashcardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FlashcardActivity.this, QuizActivity.class);
-                intent.putExtra("userId", userId);
                 startActivity(intent);
             }
         });
 
-        goToChat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(FlashcardActivity.this, ChatRoomChoice.class);
-                intent.putExtra("username", username);
-                startActivity(intent);
-            }
-        });
+
     }
 
     @Override
@@ -141,4 +125,12 @@ public class FlashcardActivity extends AppCompatActivity {
             Toast.makeText(FlashcardActivity.this, "Added flashcard to database", Toast.LENGTH_SHORT).show();
         }
     }
+    private void setupBottomNavigationView(){
+        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.navBar);
+        BottomNavigationHelper.enableNavigation(FlashcardActivity.this, bottomNavigationViewEx);
+
+        // BottomNavigationHelper.setupBottomNavigationView(bottomNavigationViewEx);
+    }
+
+
 }
