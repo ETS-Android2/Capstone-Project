@@ -34,7 +34,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="48dp"
-            android:layout_marginEnd="234dp"
+            android:layout_marginEnd="220dp"
             android:layout_marginBottom="89dp"
             android:text="Add Flashcard"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -48,7 +48,7 @@ public class QuizActivity extends AppCompatActivity {
 
     ArrayList<String> questions;
     ArrayList<String> answers;
-    ArrayList<String> inputAnswers;
+    ArrayList<String> inputAnswers, toCompare;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class QuizActivity extends AppCompatActivity {
         questions = new ArrayList<String>();
         answers = new ArrayList<String>();
         inputAnswers = new ArrayList<String>();
-
+        toCompare = new ArrayList<String>();
         // retrieve passed in data
         int userId = ((MyAccount) getApplication()).getUserId();
 
@@ -91,6 +91,7 @@ public class QuizActivity extends AppCompatActivity {
                 QuizAdapter adapter = new QuizAdapter(QuizActivity.this, flashcardList);
                 list.setAdapter(adapter);
                 inputAnswers.addAll(questions);
+                toCompare.addAll(answers);
             }
 
             @Override
@@ -125,12 +126,18 @@ public class QuizActivity extends AppCompatActivity {
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                for(int i = 0; i < questions.size(); i++)
+                {
+                    questions.set(i, questions.get(i) + " - " + answers.get(i));
+                    System.out.println(questions.get(i));
+                }
                 answers.removeAll(inputAnswers);
                 grade = inputAnswers.size() - answers.size();
                 Intent intent = new Intent(QuizActivity.this, QuizResult.class);
                 intent.putExtra("grade", grade);
-                intent.putExtra("wrongAnswers", answers);
+                intent.putExtra("questions", questions);
+                intent.putExtra("stringCompare", toCompare);
+                intent.putExtra("answers", inputAnswers);
                 intent.putExtra("totalQuestions", questions.size());
                 intent.putExtra("userId", userId);
                 startActivity(intent);
