@@ -3,6 +3,9 @@ package edu.temple.langexchange;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -64,5 +67,31 @@ public class MakeFlashcard extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch ((item.getItemId())){
+            case R.id.ic_logout:{
+                ((MyAccount) getApplication()).setUserId(-1);
+                ((MyAccount) getApplication()).setUsername("");
+                ((MyAccount) getApplication()).setPrefLang("");
+                Intent intent = new Intent(MakeFlashcard.this, edu.temple.langexchange.LoginActivity.class);
+                finish();
+                startActivity(intent);
+                break;
+            }
+            case R.id.ic_account_settings:{
+                Intent intent = new Intent(MakeFlashcard.this, AccountPage.class);
+                startActivity(intent);
+                break;
+            }
+        }
+        return  super.onOptionsItemSelected(item);
     }
 }

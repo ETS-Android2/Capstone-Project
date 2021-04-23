@@ -67,6 +67,8 @@ dependencies {
     compileOnly 'com.google.android.wearable:wearable:2.6.0'
     implementation 'com.github.ittianyu:BottomNavigationViewEx:2.0.4'
 
+    compileOnly 'com.android.support:appcompat-v7:+'
+
 
 
 

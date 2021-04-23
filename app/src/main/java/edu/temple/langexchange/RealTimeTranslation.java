@@ -17,6 +17,9 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.text.method.ScrollingMovementMethod;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -28,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
@@ -52,6 +56,8 @@ public class RealTimeTranslation extends AppCompatActivity {
     private Bitmap photo;
 
 
+Toolbar toolbar;
+
 
 
 
@@ -63,6 +69,9 @@ public class RealTimeTranslation extends AppCompatActivity {
         setContentView(R.layout.activity_real_time_translation);
 
         setupBottomNavigationView();
+
+
+
         learning = findViewById(R.id.learning);
         beforeTranslate = findViewById(R.id.beforeTranslate);
         beforeTranslate.setMovementMethod(new ScrollingMovementMethod());
@@ -187,7 +196,7 @@ camera.setOnClickListener(new View.OnClickListener() {
     public void onClick(View v)
     {
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-        {
+        { 
             requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
         }
         else
@@ -265,5 +274,34 @@ camera.setOnClickListener(new View.OnClickListener() {
 
         // BottomNavigationHelper.setupBottomNavigationView(bottomNavigationViewEx);
     }
+
+
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch ((item.getItemId())){
+            case R.id.ic_logout:{
+                ((MyAccount) getApplication()).setUserId(-1);
+                ((MyAccount) getApplication()).setUsername("");
+                ((MyAccount) getApplication()).setPrefLang("");
+                Intent intent = new Intent(RealTimeTranslation.this, edu.temple.langexchange.LoginActivity.class);
+                finish();
+                startActivity(intent);
+                break;
+            }
+            case R.id.ic_account_settings:{
+                Intent intent = new Intent(RealTimeTranslation.this, AccountPage.class);
+                startActivity(intent);
+                break;
+            }
+        }
+        return  super.onOptionsItemSelected(item);
+    }
+
+
 
 }

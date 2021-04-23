@@ -8,8 +8,11 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
+        android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_anchor="@+id/relativeLayout2"
+        app:layout_anchorGravity="center">
 
         <TextView
             android:id="@+id/textView"
@@ -17,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/spinner"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="128dp"
+            android:layout_marginEnd="120dp"
             android:layout_marginBottom="20dp"
             android:gravity="center"
             android:text="@string/select_a_language"
@@ -35,8 +38,8 @@
             android:layout_height="36dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="128dp"
-            android:layout_marginBottom="578dp"
+            android:layout_marginEnd="121dp"
+            android:layout_marginBottom="552dp"
             app:layout_constraintBottom_toTopOf="@+id/selectLangBtn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -61,8 +64,8 @@
             android:layout_height="271dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="21dp"
-            android:layout_marginBottom="128dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="84dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -97,6 +100,11 @@
             <include layout="@layout/layout_navigation_bar" />
 
         </RelativeLayout>
+
+
+
+
     </RelativeLayout>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

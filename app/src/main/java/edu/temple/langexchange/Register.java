@@ -101,6 +101,10 @@ public class Register extends AppCompatActivity {
 
                     // add new entry into db
                     ref.push().setValue(account);
+
+                   // ((MyAccount) getApplication()).setKey(ref.push().getKey());
+
+
                     Toast.makeText(Register.this, "Welcome, " + username + "!", Toast.LENGTH_SHORT).show();
 
                     ((MyAccount) getApplication()).setUserId(userId);
@@ -125,38 +129,25 @@ public class Register extends AppCompatActivity {
                 /*
                     try {
                         account = new Account(1, usernameEditText.getText().toString(), passwordEditText.getText().toString(), nativeEditText.getText().toString(), targetEditText.getText().toString());
-
                         //Toast.makeText(Register.this, account.toString(), Toast.LENGTH_SHORT).show();
                     }
                     catch(Exception e){
                         Toast.makeText(Register.this, "Error creating customer", Toast.LENGTH_SHORT).show();
                         account = new Account(1, "error","error","error","error");
                     }
-
-
                     AccountDatabase accountDatabase = new AccountDatabase();
-
                     boolean success = accountDatabase.addUser(account);
-
                     if(success == true){
                         Toast.makeText(Register.this, "Sucess", Toast.LENGTH_SHORT).show();
-
                     }
                     else {
                        // Toast.makeText(Register.this, "Register Failed", Toast.LENGTH_SHORT).show();
-
                     }
                     startActivity(new Intent(Register.this, FlashcardActivity.class));
-
                 }
             });
-
-
             }
 }
-
         // Enables Always-on
         //setAmbientEnabled();
-
                  */
-
