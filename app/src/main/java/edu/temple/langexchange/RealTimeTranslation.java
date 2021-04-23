@@ -38,7 +38,8 @@ public class RealTimeTranslation extends AppCompatActivity {
 
     private static final int CAMERA_REQUEST = 1888;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
-    private Spinner learning;
+    private Spinner originalLang;
+    private Spinner translateLang;
     private  EditText beforeTranslate;
     private TextView afterTranslate;
     private ImageButton micButtonAT, camera;
@@ -63,7 +64,8 @@ public class RealTimeTranslation extends AppCompatActivity {
         setContentView(R.layout.activity_real_time_translation);
 
         setupBottomNavigationView();
-        learning = findViewById(R.id.learning);
+        originalLang = findViewById(R.id.originalLang);
+        translateLang = findViewById(R.id.translateLang);
         beforeTranslate = findViewById(R.id.beforeTranslate);
         beforeTranslate.setMovementMethod(new ScrollingMovementMethod());
         afterTranslate = findViewById(R.id.afterTranslate);
@@ -80,8 +82,10 @@ public class RealTimeTranslation extends AppCompatActivity {
 
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, Translator.getLanguages());
-        learning.setAdapter(adapter);
+        originalLang.setAdapter(adapter);
 
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, Translator.getLanguages());
+        translateLang.setAdapter(adapter2);
 
 
 
@@ -148,8 +152,8 @@ public class RealTimeTranslation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String text = beforeTranslate.getText().toString();
-                learningLangSelected = learning.getSelectedItem().toString();
-                String translatedText = Translator.translate(text, prefLang, RealTimeTranslation.this);
+                learningLangSelected = originalLang.getSelectedItem().toString();
+                String translatedText = Translator.translate(text, translateLang.getSelectedItem().toString(), RealTimeTranslation.this);
                 afterTranslate.setText(translatedText);
             }
         });
@@ -170,10 +174,10 @@ public class RealTimeTranslation extends AppCompatActivity {
                         return false;
                     }
                     micButtonAT.setBackground(getDrawable(R.drawable.baseline_mic_24));
-                    System.out.println(learning.getSelectedItem().toString());
-                    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.getAudioCode(learning.getSelectedItem().toString()));
-                    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, Translator.getAudioCode(learning.getSelectedItem().toString()));
-                    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE, Translator.getAudioCode(learning.getSelectedItem().toString()));
+                    System.out.println(originalLang.getSelectedItem().toString());
+                    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.getAudioCode(originalLang.getSelectedItem().toString()));
+                    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, Translator.getAudioCode(originalLang.getSelectedItem().toString()));
+                    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE, Translator.getAudioCode(originalLang.getSelectedItem().toString()));
 
                     sr.startListening(speechRecognizerIntent);
 
