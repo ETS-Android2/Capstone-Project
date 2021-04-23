@@ -7,6 +7,15 @@ public class MyAccount extends Application {
     private static int userId;
     private static String username;
     private static String prefLang;
+    private static String key;
+
+    public static String getKey() {
+        return key;
+    }
+
+    public static void setKey(String key) {
+        MyAccount.key = key;
+    }
 
     public int getUserId() {
         return userId;

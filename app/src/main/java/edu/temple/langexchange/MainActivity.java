@@ -5,8 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toolbar;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
@@ -22,7 +25,12 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         setupBottomNavigationView();
+
+        //Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        //setSupportActionBar(myToolbar);
+
         button = findViewById(R.id.button);
         buttonStartChat = findViewById(R.id.button3);
         button2 = findViewById(R.id.button2);
@@ -77,5 +85,11 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationHelper.enableNavigation(MainActivity.this, bottomNavigationViewEx);
 
         // BottomNavigationHelper.setupBottomNavigationView(bottomNavigationViewEx);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_menu, menu);
+        return true;
     }
 }

@@ -2,6 +2,10 @@ package edu.temple.langexchange;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -122,5 +126,31 @@ public class ChatRoomChoice extends AppCompatActivity {
     private void setupBottomNavigationView() {
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.navBar);
         BottomNavigationHelper.enableNavigation(this, bottomNavigationViewEx);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch ((item.getItemId())){
+            case R.id.ic_logout:{
+                ((MyAccount) getApplication()).setUserId(-1);
+                ((MyAccount) getApplication()).setUsername("");
+                ((MyAccount) getApplication()).setPrefLang("");
+                Intent intent = new Intent(ChatRoomChoice.this, edu.temple.langexchange.LoginActivity.class);
+                finish();
+                startActivity(intent);
+                break;
+            }
+            case R.id.ic_account_settings:{
+                Intent intent = new Intent(ChatRoomChoice.this, AccountPage.class);
+                startActivity(intent);
+                break;
+            }
+        }
+        return  super.onOptionsItemSelected(item);
     }
 }

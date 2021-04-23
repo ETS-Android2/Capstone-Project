@@ -81,12 +81,12 @@ public class LoginActivity extends AppCompatActivity {
                                     userId = account.getId();
                                     String prefLang = account.getPrefLang();
 
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    Intent intent = new Intent(LoginActivity.this, FlashcardActivity.class);
 
                                     ((MyAccount) getApplication()).setUserId(userId);
                                     ((MyAccount) getApplication()).setUsername(userName);
                                     ((MyAccount) getApplication()).setPrefLang(prefLang);
-
+                                   // ((MyAccount) getApplication()).setKey(ref.push().getKey());
 
                                     startActivity(intent);
                                 }
@@ -115,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this, FlashcardActivity.class);
             startActivity(intent);
         }
     }
