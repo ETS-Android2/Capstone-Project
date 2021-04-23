@@ -93,6 +93,7 @@ public class Register extends AppCompatActivity {
                 String learnLang = targetSpinner.getSelectedItem().toString();
                 String prefLang = nativeSpinner.getSelectedItem().toString();
 
+
                 if (emailList.contains(username.toUpperCase())) {
                     Toast.makeText(Register.this, "That email is already associated with an account", Toast.LENGTH_SHORT).show();
                 } else {
@@ -110,6 +111,8 @@ public class Register extends AppCompatActivity {
                     ((MyAccount) getApplication()).setUserId(userId);
                     ((MyAccount) getApplication()).setUsername(username);
                     ((MyAccount) getApplication()).setPrefLang(prefLang);
+                    ((MyAccount) getApplication()).setPassword(password);
+                    ((MyAccount) getApplication()).setLearnLang(learnLang);
 
 
                     setResult(RESULT_OK);

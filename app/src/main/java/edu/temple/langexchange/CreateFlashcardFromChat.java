@@ -76,6 +76,7 @@ public class CreateFlashcardFromChat extends AppCompatActivity {
 
                 Toast.makeText(CreateFlashcardFromChat.this, "Added flashcard to database", Toast.LENGTH_SHORT).show();
                 // finish the activity
+
                 finish();
             }
         });

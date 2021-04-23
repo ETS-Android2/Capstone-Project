@@ -80,12 +80,17 @@ public class LoginActivity extends AppCompatActivity {
                                     String userName = account.getUsername();
                                     userId = account.getId();
                                     String prefLang = account.getPrefLang();
+                                    String password = account.getPassword();
+                                    String learnLang = account.getLearnLang();
+
 
                                     Intent intent = new Intent(LoginActivity.this, FlashcardActivity.class);
 
                                     ((MyAccount) getApplication()).setUserId(userId);
                                     ((MyAccount) getApplication()).setUsername(userName);
                                     ((MyAccount) getApplication()).setPrefLang(prefLang);
+                                    ((MyAccount) getApplication()).setPassword(password);
+                                    ((MyAccount) getApplication()).setLearnLang(learnLang);
                                    // ((MyAccount) getApplication()).setKey(ref.push().getKey());
 
                                     startActivity(intent);

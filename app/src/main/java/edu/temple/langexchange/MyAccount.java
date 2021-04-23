@@ -8,6 +8,24 @@ public class MyAccount extends Application {
     private static String username;
     private static String prefLang;
     private static String key;
+    private static String password;
+    private static  String learnLang;
+
+    public static String getLearnLang() {
+        return learnLang;
+    }
+
+    public static void setLearnLang(String learnLang) {
+        MyAccount.learnLang = learnLang;
+    }
+
+    public static String getPassword() {
+        return password;
+    }
+
+    public static void setPassword(String password) {
+        MyAccount.password = password;
+    }
 
     public static String getKey() {
         return key;

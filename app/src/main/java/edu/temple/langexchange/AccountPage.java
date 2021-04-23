@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.Editable;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,7 +26,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +40,8 @@ public class AccountPage extends AppCompatActivity {
     EditText passwordUpdate, username;
     Spinner prefLangUpdate, learningLangUpdate;
     DatabaseReference ref;
-    String userName,Password;
+    String userName,Password, learnLang, nativeLang;
+    int learnSelection, nativeSelection;
   //  public String  key;
 
     @Override
@@ -47,6 +51,9 @@ public class AccountPage extends AppCompatActivity {
 
 
         userName = ((MyAccount) getApplication()).getUsername();
+        Password = ((MyAccount) getApplication()).getPassword();
+      nativeLang= ((MyAccount) getApplication()).getPrefLang();
+        learnLang = ((MyAccount) getApplication()).getLearnLang();
 
         button = findViewById(R.id.updateButton);
         passwordUpdate = findViewById(R.id.passwordUpdate);
@@ -55,71 +62,67 @@ public class AccountPage extends AppCompatActivity {
         username = findViewById(R.id.usernameDisplay);
 
         username.setText(userName);
+        passwordUpdate.setText(Password);
+
+        setupBottomNavigationView();
+
+
+
 
 
         ArrayAdapter<String> targetAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, Translator.getLanguages());
         learningLangUpdate.setAdapter(targetAdapter);
 
-        ArrayAdapter<String>nativeAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, Translator.getLanguages());
+        ArrayAdapter<String> nativeAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, Translator.getLanguages());
         prefLangUpdate.setAdapter(nativeAdapter);
+
+
+        ArrayList lang = Translator.getLanguages();
+
+        learningLangUpdate.setSelection(lang.indexOf(learnLang));
+
+        prefLangUpdate.setSelection(lang.indexOf(nativeLang));
 
 
         int userNameController = userName.indexOf("@");
         System.out.println("username received: " + userName);
         ref = FirebaseDatabase.getInstance().getReference().child("Account");
-        Map<String, Object> updates = new HashMap<String,Object>();
-
+        Map<String, Object> updates = new HashMap<String, Object>();
 
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String pass = passwordUpdate.getText().toString();
-                String userNameUPdate = username.getText().toString();
-                String learnLang = learningLangUpdate.getSelectedItem().toString();
-                String prefLang = prefLangUpdate.getSelectedItem().toString();
-                String keyName;
 
-
-
-                DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference().child("Account");
-
-
-               // String key = ((MyAccount) getApplication()).getKey();
-
-
-                DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-                db.child("Account")
-                        .orderByChild("username")
-                        .equalTo(userName)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                                    String key = snapshot.getKey();
-                                    updates.put(key +"/username" , userNameUPdate);
-                                    updates.put(key +"/password" , pass);
-                                    updates.put(key +"/learnLang" , learnLang);
-                                    updates.put(key +"/prefLang" , prefLang);
-
-
-                                }
+                int userId = ((MyAccount) getApplication()).getUserId();
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Account");
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                            Account account = childSnapshot.getValue(Account.class);
+                            if (account.id == userId) {
+                                String key = childSnapshot.getKey();
+                                account.username = username.getText().toString();
+                                account.password = passwordUpdate.getText().toString();
+                                account.prefLang = prefLangUpdate.getSelectedItem().toString();
+                                account.learnLang = learningLangUpdate.getSelectedItem().toString();
+                                ref.child(key).setValue(account);
                             }
+                        }
+                    }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-                            }
-                        });
+                    }
+                });
 
-                ref2.updateChildren(updates);
-                Toast.makeText(AccountPage.this, "Your account information was successfully updated.", Toast.LENGTH_SHORT).show();
+
 
             }
         });
-
-
 
     }
 
@@ -154,4 +157,12 @@ public class AccountPage extends AppCompatActivity {
     }
 
 
+
+    private void setupBottomNavigationView(){
+        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.navBar);
+        BottomNavigationHelper.enableNavigation(AccountPage.this, bottomNavigationViewEx);
+
+
+        // BottomNavigationHelper.setupBottomNavigationView(bottomNavigationViewEx);
+    }
 }
