@@ -78,7 +78,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/translation"
-        android:layout_alignStart="@+id/message_body"
+        android:layout_toRightOf="@+id/hideFlashcardMaker"
+        android:layout_marginLeft="5dp"
         android:text="Make Flashcard"
         android:textSize="10dp"
         android:visibility="gone" />
@@ -87,9 +88,8 @@
         android:id="@+id/hideFlashcardMaker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/makeFlashcard"
         android:layout_below="@+id/translation"
-        android:layout_marginRight="5dp"
+        android:layout_alignStart="@+id/message_body"
         android:text="Hide"
         android:textSize="10dp"
         android:visibility="gone"/>
