@@ -111,7 +111,7 @@ public class QuizActivity extends AppCompatActivity {
                 Intent intent = new Intent(QuizActivity.this, QuizTaking.class);
                 correctAnswer = answers.get(position);
                 indexAnswered = position;
-                list.getChildAt(indexAnswered).setBackgroundColor(getResources().getColor(R.color.common_google_signin_btn_text_dark_disabled));
+                getViewByPosition(position, list).setBackgroundColor(getResources().getColor(R.color.common_google_signin_btn_text_dark_disabled));
                 startActivityForResult(intent, 1);
             }
         });
@@ -180,5 +180,17 @@ public class QuizActivity extends AppCompatActivity {
             }
         }
         return  super.onOptionsItemSelected(item);
+    }
+
+    public View getViewByPosition(int position, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+        if (position < firstListItemPosition || position > lastListItemPosition ) {
+            return listView.getAdapter().getView(position, listView.getChildAt(position), listView);
+        } else {
+            final int childIndex = position - firstListItemPosition;
+            return listView.getChildAt(childIndex);
+        }
     }
 }
