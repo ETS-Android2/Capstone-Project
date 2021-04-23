@@ -40,7 +40,7 @@ public class QuizAdapter extends BaseAdapter {
 
         ArrayList<String> flashcards = new ArrayList<>();
         for (Flashcards card : items) {
-            flashcards.add(card.getTranslatedWord());
+            flashcards.add(card.getOriginalWord());
         }
 
         TextView textView;

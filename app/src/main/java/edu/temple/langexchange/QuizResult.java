@@ -64,7 +64,7 @@ public class QuizResult extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(answers.get(position).equals(toCompare.get(position)))
+                if(toCompare.get(position).equals(answers.get(position)))
                 {
                     listView.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.correct_color));
                 }

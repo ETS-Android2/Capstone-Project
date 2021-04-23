@@ -84,14 +84,14 @@ public class QuizActivity extends AppCompatActivity {
                 }
 
                 for (Flashcards card : flashcardList) {
-                    questions.add(card.getTranslatedWord());
-                    answers.add(card.getOriginalWord().toUpperCase());
+                    questions.add(card.getOriginalWord());
+                    answers.add(card.getTranslatedWord().toUpperCase());
                 }
 
                 QuizAdapter adapter = new QuizAdapter(QuizActivity.this, flashcardList);
                 list.setAdapter(adapter);
-                inputAnswers.addAll(questions);
-                toCompare.addAll(answers);
+                inputAnswers.addAll(answers);
+                toCompare.addAll(questions);
             }
 
             @Override
@@ -131,8 +131,8 @@ public class QuizActivity extends AppCompatActivity {
                     questions.set(i, questions.get(i) + " - " + answers.get(i));
                     System.out.println(questions.get(i));
                 }
-                answers.removeAll(inputAnswers);
-                grade = inputAnswers.size() - answers.size();
+                answers.removeAll(toCompare);
+                grade = toCompare.size() - answers.size();
                 Intent intent = new Intent(QuizActivity.this, QuizResult.class);
                 intent.putExtra("grade", grade);
                 intent.putExtra("questions", questions);
@@ -153,7 +153,7 @@ public class QuizActivity extends AppCompatActivity {
 
         if(requestCode == 1 && resultCode == RESULT_OK){
             res = data.getStringExtra("QuizAnswer");
-            inputAnswers.set(indexAnswered, res);
+            toCompare.set(indexAnswered, res);
         }
     }
     public boolean onCreateOptionsMenu(Menu menu){
