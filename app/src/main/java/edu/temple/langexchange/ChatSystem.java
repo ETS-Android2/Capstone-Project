@@ -289,64 +289,63 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                             }
                         }
                     });
-
-
+                  
                     messagesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                         @Override
                         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                             TextView myTranslation = view.findViewById(R.id.translation);
                             TextView original = view.findViewById(R.id.message_body);
-                            TextView flashcardMaker = view.findViewById(R.id.makeFlashcard);
+                          
+                            Button flashcardMaker = view.findViewById(R.id.makeFlashcard);
+                            Button hideFlashcardMaker = view.findViewById(R.id.hideFlashcardMaker);
 
-                            if (flashcardMaker.getVisibility() == View.GONE) {
-                                flashcardMaker.setVisibility(View.VISIBLE);
-                            } else {
-                                flashcardMaker.setVisibility(View.GONE);
-                            }
-
-                            if (flashcardMaker.getVisibility() == View.VISIBLE) {
-                                phrase = original.getText().toString();
-                            }
-                            flashcardMaker.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(ChatSystem.this, CreateFlashcardFromChat.class);
-
-                                    intent.putExtra("phrase", phrase);
-                                    intent.putExtra("prefLang", prefLang);
-
-                                    startActivity(intent);
-
-                                }
-                            });
-
-
-                            if (myTranslation.getText().toString().isEmpty()) {
+                            if (myTranslation.getText().toString().isEmpty()) { // translation is empty
                                 String translateView;
-                                if (view.findViewById(R.id.playButton).getVisibility() == View.VISIBLE) {
-
+                                if (view.findViewById(R.id.playButton).getVisibility() == View.VISIBLE) { // input is audio
                                     String textToTranslate = original.getText().toString().replace("//audio//", "");
                                     phrase = textToTranslate;
-                                    translateView = "\n\n Translation: " + Translator.translate(textToTranslate, prefLang, ChatSystem.this);
-
+                                    translateView = "\n\nTranslation: " + Translator.translate(textToTranslate, prefLang, ChatSystem.this);
                                 } else {
                                     translateView = original.getText().toString() + "\n\nTranslation: " + Translator.translate(original.getText().toString(), prefLang, ChatSystem.this);
                                 }
                                 myTranslation.setText(translateView);
                             }
-                            if (myTranslation.getVisibility() == View.INVISIBLE) {
-                                myTranslation.setVisibility(View.VISIBLE);
-                                original.setVisibility(View.INVISIBLE);
-                            } else {
-                                myTranslation.setVisibility(View.INVISIBLE);
-                                if (view.findViewById(R.id.playButton).getVisibility() == View.INVISIBLE) {
-                                    original.setVisibility(View.VISIBLE);
+
+                            if (!myTranslation.getText().toString().isEmpty()) {
+                                if (myTranslation.getVisibility() == View.VISIBLE) {
+                                    myTranslation.setVisibility(View.GONE);
+                                    flashcardMaker.setVisibility(View.GONE);
+                                    hideFlashcardMaker.setVisibility(View.GONE);
+                                } else {
+                                    myTranslation.setVisibility(View.VISIBLE);
+                                    flashcardMaker.setVisibility(View.VISIBLE);
+                                    hideFlashcardMaker.setVisibility(View.VISIBLE);
+                                    phrase = original.getText().toString();
                                 }
                             }
-                            return true;
+
+                            flashcardMaker.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(ChatSystem.this, CreateFlashcardFromChat.class);
+                                    intent.putExtra("phrase", phrase);
+                                    intent.putExtra("prefLang", prefLang);
+                                    startActivity(intent);
+                                }
+                            });
+
+                            hideFlashcardMaker.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    myTranslation.setVisibility(View.GONE);
+                                    flashcardMaker.setVisibility(View.GONE);
+                                    hideFlashcardMaker.setVisibility(View.GONE);
+                                }
+                            });
+
+                            return false;
                         }
                     });
-
 
                     String welcomeString = "Welcome to " + receivedLang + " Channel";
                     System.out.println(welcomeString);
@@ -449,6 +448,12 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
+  
     @Override
     protected void onDestroy() {
         long[] updatedUser = {0};
