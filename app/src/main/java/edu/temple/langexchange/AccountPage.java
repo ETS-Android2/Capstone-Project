@@ -114,7 +114,7 @@ public class AccountPage extends AppCompatActivity {
                         });
 
                 ref2.updateChildren(updates);
-
+                Toast.makeText(AccountPage.this, "Your account information was successfully updated.", Toast.LENGTH_SHORT).show();
 
             }
         });
