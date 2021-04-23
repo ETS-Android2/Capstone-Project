@@ -64,13 +64,13 @@ public class QuizResult extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(answers.get(position).equals(toCompare.get(position)))
+                if(toCompare.get(position).equals(answers.get(position)))
                 {
-                    listView.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.correct_color));
+                    getViewByPosition(position, listView).setBackgroundColor(getResources().getColor(R.color.correct_color));
                 }
                 else
                 {
-                    listView.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.incorrect_color));
+                    getViewByPosition(position, listView).setBackgroundColor(getResources().getColor(R.color.incorrect_color));
                 }
             }
         });
@@ -78,5 +78,16 @@ public class QuizResult extends AppCompatActivity {
         QuizGrade userGrade = new QuizGrade(userId, grade);
         userGrade.postGrade(userGrade);
 
+    }
+    public View getViewByPosition(int position, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+        if (position < firstListItemPosition || position > lastListItemPosition ) {
+            return listView.getAdapter().getView(position, listView.getChildAt(position), listView);
+        } else {
+            final int childIndex = position - firstListItemPosition;
+            return listView.getChildAt(childIndex);
+        }
     }
 }
