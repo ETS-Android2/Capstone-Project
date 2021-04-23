@@ -113,7 +113,6 @@ public class AccountPage extends AppCompatActivity {
                             }
                         });
 
-
                 ref2.updateChildren(updates);
 
 
