@@ -488,6 +488,13 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.RECORD_AUDIO},RecordAudioRequestCode);
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
+
     @Override
     protected void onDestroy() {
         long[] updatedUser = {0};
