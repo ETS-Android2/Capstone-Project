@@ -2,14 +2,10 @@ package edu.temple.langexchange;
 
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.provider.ContactsContract;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -17,14 +13,12 @@ import android.speech.tts.TextToSpeech;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +28,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,15 +36,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.scaledrone.lib.Listener;
-import com.scaledrone.lib.Member;
 import com.scaledrone.lib.Room;
 import com.scaledrone.lib.RoomListener;
 import com.scaledrone.lib.Scaledrone;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -64,7 +53,6 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
     private MessageAdapter messageAdapter;
     private ListView messagesView;
     private String userName, targetLang, prefLang, receivedLang;
-    private int userId;
     private CheckBox autoTranslate;
     private ImageButton micButton;
     private TextToSpeech tts;
@@ -82,13 +70,10 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         setContentView(R.layout.messagingtabgui);
 
         userName = ((MyAccount) getApplication()).getUsername();
-        userId = ((MyAccount) getApplication()).getUserId();
 
         Intent intent = getIntent();
         receivedLang = intent.getStringExtra("langSelected");
 
-        // langCode = Translator.speechLanguageCodes.get(receivedLang);
-        // Locale thisLocale = new Locale(langCode);
         sr = SpeechRecognizer.createSpeechRecognizer(ChatSystem.this);
         speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -309,8 +294,8 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                     messagesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                         @Override
                         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                            TextView myTranslation = (TextView) view.findViewById(R.id.translation);
-                            TextView original = (TextView) view.findViewById(R.id.message_body);
+                            TextView myTranslation = view.findViewById(R.id.translation);
+                            TextView original = view.findViewById(R.id.message_body);
                             TextView flashcardMaker = view.findViewById(R.id.makeFlashcard);
 
                             if (flashcardMaker.getVisibility() == View.GONE) {
@@ -415,7 +400,6 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         if (!message.isEmpty()) {
             String audioMessage = message + "//audio//";
             scaledrone.publish(roomName, audioMessage);
-            //  isAudioMessage = true;
         }
     }
 
