@@ -2,14 +2,10 @@ package edu.temple.langexchange;
 
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.provider.ContactsContract;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -17,14 +13,12 @@ import android.speech.tts.TextToSpeech;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +28,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,39 +36,30 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.scaledrone.lib.Listener;
-import com.scaledrone.lib.Member;
 import com.scaledrone.lib.Room;
 import com.scaledrone.lib.RoomListener;
 import com.scaledrone.lib.Scaledrone;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
 
 public class ChatSystem extends AppCompatActivity implements RoomListener {
-
-    // replace this with a real channelID from Scaledrone dashboard
     private String channelID = "";
     private final String roomName = "observable-room";
     private EditText editText;
     private Scaledrone scaledrone;
     private MessageAdapter messageAdapter;
     private ListView messagesView;
-    private String userName, targetLang, prefLang, receivedLang = "";
-    private int userId;
+    private String userName, targetLang, prefLang, receivedLang;
     private CheckBox autoTranslate;
     private ImageButton micButton;
-   // private boolean isAudioMessage = false;
     private TextToSpeech tts;
     private SpeechRecognizer sr;
     private Intent speechRecognizerIntent;
-    private boolean isAutoTranslate=false;
+    private boolean isAutoTranslate = false;
     public static final Integer RecordAudioRequestCode = 1;
-    private Button flashcardMaker;
     private String phrase;
     private ChatRoom chatRoom;
     String langCode;
@@ -90,11 +74,9 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         Intent intent = getIntent();
         receivedLang = intent.getStringExtra("langSelected");
 
-        // langCode = Translator.speechLanguageCodes.get(receivedLang);
-        // Locale thisLocale = new Locale(langCode);
         sr = SpeechRecognizer.createSpeechRecognizer(ChatSystem.this);
         speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.getAudioCode(receivedLang));
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, Translator.getAudioCode(receivedLang));
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE, Translator.getAudioCode(receivedLang));
@@ -137,8 +119,6 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                 String audioMessage = data.get(0);
                 sendVoiceMessage(audioMessage);
                 editText.setHint("Write a message");
-
-
             }
 
             @Override
@@ -154,7 +134,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         tts = new TextToSpeech(ChatSystem.this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                if(status != TextToSpeech.ERROR){
+                if (status != TextToSpeech.ERROR) {
                     System.out.println("Successful tts connection!");
                     langCode = Translator.languageCodes.get(receivedLang);
                     tts.setLanguage(new Locale(langCode));
@@ -167,8 +147,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         roomRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChildren())
-                {
+                if (snapshot.hasChildren()) {
                     channelID = snapshot.child("channelId").getValue().toString();
                     DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference().child("ChatRoom").child(receivedLang).child("usersNo");
                     ref1.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -189,22 +168,17 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                         }
                     });
 
-                }
-                else if(!snapshot.hasChildren())
-                {
+                } else if (!snapshot.hasChildren()) {
                     DatabaseReference channelRef = FirebaseDatabase.getInstance().getReference().child("Channels");
                     Query channelQuery = channelRef.orderByKey().limitToFirst(1);
                     channelQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if(!snapshot.exists())
-                            {
-                                Toast.makeText(ChatSystem.this,  "Maximum Number of Chatrooms reached", Toast.LENGTH_LONG).show();
+                            if (!snapshot.exists()) {
+                                Toast.makeText(ChatSystem.this, "Maximum Number of Chatrooms reached", Toast.LENGTH_LONG).show();
                                 finish();
-                            }
-                            else
-                            {
-                                for (DataSnapshot data : snapshot.getChildren()){
+                            } else {
+                                for (DataSnapshot data : snapshot.getChildren()) {
                                     channelID = data.getValue().toString();
                                     data.getRef().removeValue();
 
@@ -230,8 +204,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         });
     }
 
-    public void ChatSystemFunction(String channel, Intent intent)
-    {
+    public void ChatSystemFunction(String channel, Intent intent) {
         int userNameController = userName.indexOf("@");
         System.out.println("username received: " + userName);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Account");
@@ -240,42 +213,34 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                    userId = Integer.parseInt(childSnapshot.child("id").getValue().toString());
                     targetLang = childSnapshot.child("learnLang").getValue().toString().toUpperCase();
                     prefLang = childSnapshot.child("prefLang").getValue().toString();
-                    //speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Translator.getAudioCode(prefLang));
                     System.out.println("target lang is: " + targetLang);
                     System.out.println("pref lang is: " + prefLang);
                 }
                 String langController = receivedLang.toUpperCase();
-                if(prefLang.toUpperCase().equals(langController))
-                {
+                if (prefLang.toUpperCase().equals(langController)) {
                     userName = userName.substring(0, userNameController) + " - Native";
-                }
-                else
-                {
+                } else {
                     userName = userName.substring(0, userNameController) + " - Learner";
                 }
 
-                if(channel == "")
-                {
+                if (channel == "") {
                     Toast.makeText(ChatSystem.this, "Unable to Connect to Chat", Toast.LENGTH_LONG).show();
                     finish();
                 }
 
-                if(!isFinishing())
-                {
-                    editText = (EditText) findViewById(R.id.editText);
-                    micButton = (ImageButton) findViewById(R.id.micButton);
+                if (!isFinishing()) {
+                    editText = findViewById(R.id.editText);
+                    micButton = findViewById(R.id.micButton);
                     messageAdapter = new MessageAdapter(ChatSystem.this);
-                    messagesView = (ListView) findViewById(R.id.messages_view);
+                    messagesView = findViewById(R.id.messages_view);
                     messagesView.setAdapter(messageAdapter);
 
                     autoTranslate = findViewById(R.id.autoTranslate);
 
 
-
-                    autoTranslate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+                    autoTranslate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                             if (isChecked) {
@@ -293,12 +258,12 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                     micButton.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View view, MotionEvent motionEvent) {
-                            if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+                            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                                 sr.stopListening();
                                 micButton.setBackground(getDrawable(R.drawable.baseline_mic_none_24));
                             }
-                            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-                                if(ContextCompat.checkSelfPermission(ChatSystem.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
+                            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                                if (ContextCompat.checkSelfPermission(ChatSystem.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                                     checkPermission();
                                     return false;
                                 }
@@ -314,22 +279,23 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                     messagesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            if(view.findViewById(R.id.playButton).getVisibility() == View.VISIBLE){
+                            if (view.findViewById(R.id.playButton).getVisibility() == View.VISIBLE) {
                                 ImageView playButton = (ImageView) view.findViewById(R.id.playButton);
                                 playButton.setImageResource(R.drawable.baseline_play_circle_filled_24);
                                 TextView message = (TextView) view.findViewById(R.id.message_body);
-                                String toSpeak = message.getText().toString().replace("//audio//","");
+                                String toSpeak = message.getText().toString().replace("//audio//", "");
                                 tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
                                 playButton.setImageResource(R.drawable.baseline_play_circle_outline_24);
                             }
                         }
                     });
-
+                  
                     messagesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                         @Override
                         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                             TextView myTranslation = view.findViewById(R.id.translation);
                             TextView original = view.findViewById(R.id.message_body);
+                          
                             Button flashcardMaker = view.findViewById(R.id.makeFlashcard);
                             Button hideFlashcardMaker = view.findViewById(R.id.hideFlashcardMaker);
 
@@ -386,7 +352,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                     System.out.println("channelID received: " + channel);
                     System.out.println("targetLang received: " + targetLang);
                     scaledrone = new Scaledrone(channel, data);
-                    Toast.makeText(ChatSystem.this, welcomeString, Toast.LENGTH_LONG).show();
+                    Toast.makeText(ChatSystem.this, welcomeString, Toast.LENGTH_SHORT).show();
                     scaledrone.connect(new Listener() {
                         @Override
                         public void onOpen() {
@@ -420,6 +386,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
             }
         });
     }
+
     public void sendMessage(View view) {
         String message = editText.getText().toString();
         if (message.length() > 0) {
@@ -428,11 +395,10 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         }
     }
 
-    public void sendVoiceMessage(String message){
-        if(!message.isEmpty()){
+    public void sendVoiceMessage(String message) {
+        if (!message.isEmpty()) {
             String audioMessage = message + "//audio//";
             scaledrone.publish(roomName, audioMessage);
-          //  isAudioMessage = true;
         }
     }
 
@@ -470,14 +436,15 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
     private String getRandomColor() {
         Random r = new Random();
         StringBuffer sb = new StringBuffer("#");
-        while(sb.length() < 7){
+        while (sb.length() < 7) {
             sb.append(Integer.toHexString(r.nextInt()));
         }
         return sb.toString().substring(0, 7);
     }
+
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.RECORD_AUDIO},RecordAudioRequestCode);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, RecordAudioRequestCode);
         }
     }
 
@@ -486,26 +453,25 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
         super.onPause();
         finish();
     }
-
+  
     @Override
     protected void onDestroy() {
         long[] updatedUser = {0};
-        DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference().child("ChatRoom").child(receivedLang).child("usersNo");
-        ref1.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("ChatRoom").child(receivedLang).child("usersNo");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists())
-                {
+                if (snapshot.exists()) {
                     updatedUser[0] = (long) snapshot.getValue() - 1;
-                    ref1.setValue(updatedUser[0]);
-                    if(updatedUser[0] <= 0)
-                    {
+                    ref.setValue(updatedUser[0]);
+                    if (updatedUser[0] <= 0) {
                         DatabaseReference channelRef = FirebaseDatabase.getInstance().getReference().child("Channels");
                         channelRef.push().setValue(channelID);
                         FirebaseDatabase.getInstance().getReference().child("ChatRoom").child(receivedLang).removeValue();
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
