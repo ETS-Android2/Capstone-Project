@@ -38,7 +38,7 @@ public class AccountPage extends AppCompatActivity {
     Spinner prefLangUpdate, learningLangUpdate;
     DatabaseReference ref;
     String userName,Password;
-    public static String test;
+  //  public String  key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +76,10 @@ public class AccountPage extends AppCompatActivity {
             public void onClick(View v) {
 
                 String pass = passwordUpdate.getText().toString();
-                String userName = username.getText().toString();
+                String userNameUPdate = username.getText().toString();
                 String learnLang = learningLangUpdate.getSelectedItem().toString();
                 String prefLang = prefLangUpdate.getSelectedItem().toString();
-
+                String keyName;
 
 
 
@@ -91,12 +91,19 @@ public class AccountPage extends AppCompatActivity {
 
                 DatabaseReference db = FirebaseDatabase.getInstance().getReference();
                 db.child("Account")
+                        .orderByChild("username")
+                        .equalTo(userName)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for(DataSnapshot childSnapshot : snapshot.getChildren()){
-                                    Object key = childSnapshot.getKey();
-                                    test = key.toString();
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String key = snapshot.getKey();
+                                    updates.put(key +"/username" , userNameUPdate);
+                                    updates.put(key +"/password" , pass);
+                                    updates.put(key +"/learnLang" , learnLang);
+                                    updates.put(key +"/prefLang" , prefLang);
+
+
                                 }
                             }
 
@@ -107,13 +114,6 @@ public class AccountPage extends AppCompatActivity {
                         });
 
 
-                Toast.makeText(AccountPage.this, test , Toast.LENGTH_SHORT).show();
-
-
-                updates.put("-MYyARQXGTJcau-8xy2p/username" , userName);
-                updates.put("-MYyARQXGTJcau-8xy2p/password" , pass);
-                updates.put("-MYyARQXGTJcau-8xy2p/learnLang" , learnLang);
-                updates.put("-MYyARQXGTJcau-8xy2p/prefLang" , prefLang);
                 ref2.updateChildren(updates);
 
 
