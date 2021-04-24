@@ -321,7 +321,11 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                                     myTranslation.setVisibility(View.VISIBLE);
                                     flashcardMaker.setVisibility(View.VISIBLE);
                                     hideFlashcardMaker.setVisibility(View.VISIBLE);
-                                    phrase = original.getText().toString();
+                                    if (original.getText().toString().contains("//audio//")) {
+                                        phrase = original.getText().toString().replace("//audio//", "");
+                                    } else {
+                                        phrase = original.getText().toString();
+                                    }
                                 }
                             }
 
