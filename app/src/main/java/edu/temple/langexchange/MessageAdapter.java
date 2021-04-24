@@ -32,11 +32,15 @@ public class MessageAdapter extends BaseAdapter {
         String toTranslate;
         if (message.getText().contains("//audio//")) {
             toTranslate = message.getText().replace("//audio//", "");
+            toTranslate = Translator.translate(toTranslate,prefLang,context);
+            toTranslate+="//audio//";
         } else {
             toTranslate = message.getText();
+            toTranslate = Translator.translate(toTranslate,prefLang,context);
         }
 
-        this.translated.add(new Message(Translator.translate(toTranslate, prefLang, context), message.getMemberData(), message.isBelongsToCurrentUser()));
+
+        this.translated.add(new Message(toTranslate, message.getMemberData(), message.isBelongsToCurrentUser()));
 
         if (isAutoTranslate ? this.messages.add(translated.get(getCount())) : this.messages.add(original.get(getCount())));
 

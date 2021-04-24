@@ -44,7 +44,7 @@ public class DisplayFlashcard extends AppCompatActivity {
         translation.setText(intent.getStringExtra("translation"));
         translation.setVisibility(View.GONE);
 
-       // definition.setText(intent.getStringExtra("definition"));
+       definition.setText(intent.getStringExtra("definition"));
 
         original.setTextSize(40);
         original.setGravity(Gravity.CENTER_HORIZONTAL);
