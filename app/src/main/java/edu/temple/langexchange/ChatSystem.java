@@ -54,6 +54,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
     private MessageAdapter messageAdapter;
     private ListView messagesView;
     private String userName, targetLang, prefLang, receivedLang;
+    private Locale chatLocale, prefLocale;
     private CheckBox autoTranslate;
     private ImageButton micButton;
     private TextToSpeech tts;
@@ -74,6 +75,8 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
 
         Intent intent = getIntent();
         receivedLang = intent.getStringExtra("langSelected");
+        chatLocale = new Locale(Translator.languageCodes.get(receivedLang));
+
 
         sr = SpeechRecognizer.createSpeechRecognizer(ChatSystem.this);
         speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -138,7 +141,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                 if (status != TextToSpeech.ERROR) {
                     System.out.println("Successful tts connection!");
                     langCode = Translator.languageCodes.get(receivedLang);
-                    tts.setLanguage(new Locale(langCode));
+                    tts.setLanguage(chatLocale);
                 }
             }
         });
@@ -239,6 +242,7 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                     messagesView.setAdapter(messageAdapter);
 
                     autoTranslate = findViewById(R.id.autoTranslate);
+                    prefLocale = new Locale(Translator.languageCodes.get(prefLang));
 
 
                     autoTranslate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -247,9 +251,11 @@ public class ChatSystem extends AppCompatActivity implements RoomListener {
                             if (isChecked) {
                                 isAutoTranslate = true;
                                 messageAdapter.getTranslated();
+                                tts.setLanguage(prefLocale);
                             } else {
                                 isAutoTranslate = false;
                                 messageAdapter.getOriginal();
+                                tts.setLanguage(chatLocale);
                             }
                         }
                     });
