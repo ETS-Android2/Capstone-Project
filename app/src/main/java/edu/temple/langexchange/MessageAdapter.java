@@ -21,7 +21,6 @@ public class MessageAdapter extends BaseAdapter {
     List<Message> original = new ArrayList<>();
     List<Message> translated = new ArrayList<>();
     Context context;
-    boolean isAudioMessage;
 
     public MessageAdapter(Context context) {
         this.context = context;
@@ -29,14 +28,18 @@ public class MessageAdapter extends BaseAdapter {
 
     public void add(Message message, String prefLang, boolean isAutoTranslate) {
         this.original.add(message);
-        String toTranslate = message.getText();
-        System.out.println(toTranslate);
-        toTranslate.replace("// audio //","");
+
+        String toTranslate;
+        if (message.getText().contains("//audio//")) {
+            toTranslate = message.getText().replace("//audio//", "");
+        } else {
+            toTranslate = message.getText();
+        }
+
         this.translated.add(new Message(Translator.translate(toTranslate, prefLang, context), message.getMemberData(), message.isBelongsToCurrentUser()));
 
         if (isAutoTranslate ? this.messages.add(translated.get(getCount())) : this.messages.add(original.get(getCount())));
 
-       // isAudioMessage = audioMessage;
         notifyDataSetChanged(); // to render the list we need to notify
     }
 
