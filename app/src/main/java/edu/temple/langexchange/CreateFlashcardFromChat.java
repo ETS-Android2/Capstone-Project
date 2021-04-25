@@ -38,7 +38,7 @@ public class CreateFlashcardFromChat extends AppCompatActivity {
 
 
         ArrayList<String> arrayList = new ArrayList<>();
-        String[] result = phrase.replaceAll("[^a-zA-Z0-9'//s ]", "").toLowerCase().split("\\s+");
+        String[] result = phrase.replaceAll("[\\p{P}&&[^']]", "").toLowerCase().split("\\s+");
         String firstWord = result[0];
        //arrayList.add(result[0]);
        // result = phrase.split("\\s+");
