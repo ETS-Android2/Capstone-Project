@@ -109,6 +109,9 @@ public class AccountPage extends AppCompatActivity {
                                 account.prefLang = prefLangUpdate.getSelectedItem().toString();
                                 account.learnLang = learningLangUpdate.getSelectedItem().toString();
                                 ref.child(key).setValue(account);
+
+
+                                Toast.makeText(AccountPage.this, "Your information has been updated", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
